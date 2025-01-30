@@ -24,10 +24,10 @@
                 "classes": [
                     { "course_code": "PSYC 3XX" },
                     { "course_code": "PSYC 4XX" },
-                    { "course_code": "- PSYC 498" }
+                    { "course_code": "- PSYC 498" },
                     { "course_code": "- PSYC 499" }
                 ]
-            },
+            }
         ]
     }
 }

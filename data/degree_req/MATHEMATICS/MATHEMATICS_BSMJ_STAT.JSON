@@ -28,7 +28,7 @@
                     {"course_code": "MATH 437"},
                     {"course_code": "MATH 499"}
                 ]
-            }
+            },
             {
                 "id": 121,
                 "name": "Select one of the following five (5) cources:",
@@ -41,7 +41,7 @@
                     {"course_code": "MATH 457"},
                     {"course_code": "MATH 459"}
                 ]
-            }
+            },
             {
                 "id": 122,
                 "name": "Select one 300-400 level MATH elective (Cannot double-count with a course used above):",
@@ -67,14 +67,14 @@
                 {"course_code": "- MATH 432"},
                 {"course_code": "- MATH 496"}
                 ]
-            }
+            },
             {
                 "id": 130,
                 "name": "statistics concentration",
                 "req_credits": 3,
                 "selection_type": "ALL",
                 "classes": [
-                    {"course_code": "MATH 421"},
+                    {"course_code": "MATH 421"}
             ]
             },
             {
@@ -112,7 +112,8 @@
                     {"course_code": "CPSC 322"},
                     {"course_code": "CPSC 323"},
                     {"course_code": "CPSC 324"},
-                    {"course_code": "PSYC 450"},
+                    {"course_code": "PSYC 450"}
+                ]
             }
         ]
     }
