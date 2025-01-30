@@ -1,0 +1,100 @@
+{
+    "degree_program": "B.A. Psychology",
+    "college": "College of Arts & Sciences",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "None specified.",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "lower division",
+                "req_credits": 9,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "PSYC 101" },
+                    { "course_code": "PSYC 202" },
+                    { "course_code": "PSYC 206" }
+                ]
+            },
+            {
+                "id": 120,
+                "name": "upper division-Biological Psychology Cluster",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "PSYC 300" },
+                    { "course_code": "PSYC 305" }
+                ]
+            },
+            {
+                "id": 121,
+                "name": "upper division-Learning and Cognition Cluster",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "PSYC 310" },
+                    { "course_code": "PSYC 315" }
+                ]
+            },
+            {
+                "id": 122,
+                "name": "upper division-Social and Personality Cluster",
+                "req_credits": 6,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "PSYC 318" },
+                    { "course_code": "PSYC 335" },
+                    { "course_code": "PSYC 340" }
+                ]
+            },
+            {
+                "id": 123,
+                "name": "upper division-Developmental Psychology Cluster",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "PSYC 345" },
+                    { "course_code": "PSYC 350" },
+                    { "course_code": "PSYC 352" },
+                    { "course_code": "PSYC 355" },
+                    { "course_code": "PSYC 357" }
+                ]
+            },
+            {
+                "id": 124,
+                "name": "upper division-Clinical Health Cluster",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "PSYC 364" },
+                    { "course_code": "PSYC 390" },
+                    { "course_code": "PSYC 395" },
+                    { "course_code": "PSYC 396" },
+                    { "course_code": "PSYC 399" }
+                ]
+            },
+            {
+                "id": 130,
+                "name": "upper division electives (one course must be 400-level)",
+                "req_credits": 6,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "PSYC 3XX" },
+                    { "course_code": "PSYC 4XX" },
+                    { "course_code": "- PSYC 498" }
+                    { "course_code": "- PSYC 499" }
+                ]
+            },
+            {
+                "id": 140,
+                "name": "One of the following two courses:",
+                "req_credits": 0,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "PSYC 498" },
+                    { "course_code": "PSYC 499" }
+                ]
+            }
+        ]
+    }
+}
