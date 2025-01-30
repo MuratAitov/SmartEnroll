@@ -1,0 +1,119 @@
+{
+    "degree_program": "B.S. Mathematics with Statistics Concentration",
+    "college": "College of Arts & Sciences",
+    "academic_year": "2023-2024",
+    "requirements": {
+        "language_requirement": "Demonstrate competence in a second language.",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "lower division",
+                "req_credits": 12,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 157"},
+                    {"course_code": "MATH 258"},
+                    {"course_code": "MATH 259"}
+                ]
+            },
+            {
+                "id": 120,
+                "name": "upper division",
+                "req_credits": 13,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 301"},
+                    {"course_code": "MATH 339"},
+                    {"course_code": "MATH 413"},
+                    {"course_code": "MATH 437"},
+                    {"course_code": "MATH 499"}
+                ]
+            }
+            {
+                "id": 121,
+                "name": "Select one of the following five (5) cources:",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes":[
+                    {"course_code": "MATH 414"},
+                    {"course_code": "MATH 417"},
+                    {"course_code": "MATH 438"},
+                    {"course_code": "MATH 457"},
+                    {"course_code": "MATH 459"}
+                ]
+            }
+            {
+                "id": 122,
+                "name": "Select one 300-400 level MATH elective (Cannot double-count with a course used above):",
+                "req_credits": 6,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 260"},
+                    {"course_code": "MATH 3XX"},
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 355"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 496"}
+              ]
+              },
+              {
+              "id": 123,
+              "name": "Select one 400-level MATH elective",
+              "req_credits": 6,
+              "selection_type": "MIN",
+              "classes": [
+                {"course_code": "MATH 4XX"},
+                {"course_code": "- MATH 355"},
+                {"course_code": "- MATH 432"},
+                {"course_code": "- MATH 496"}
+                ]
+            }
+            {
+                "id": 130,
+                "name": "statistics concentration",
+                "req_credits": 3,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 421"},
+            ]
+            },
+            {
+                "id": 131,
+                "name": "Select one of the following two courses:",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 321"},
+                    {"course_code": "MATH 422"}
+                ]
+            },
+            {
+                "id": 132,
+                "name": "Select one of the following two courses:",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 425"},
+                    {"course_code": "MATH 426"}
+                ]
+            },
+            {
+                "id": 133,
+                "name": "Two Statistics Electives:",
+                "req_credits": 6,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 423"},
+                    {"course_code": "MATH 425"},
+                    {"course_code": "MATH 426"},
+                    {"course_code": "ECON 355"},
+                    {"course_code": "ECON 451"},
+                    {"course_code": "ECON 452"},
+                    {"course_code": "CPSC 322"},
+                    {"course_code": "CPSC 323"},
+                    {"course_code": "CPSC 324"},
+                    {"course_code": "PSYC 450"},
+            }
+        ]
+    }
+}
