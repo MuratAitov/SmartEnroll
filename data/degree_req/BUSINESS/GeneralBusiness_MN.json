@@ -1,0 +1,76 @@
+{
+    "degree_program": "Business Minors for CAS Majors-General Business Minor",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Minor Lower Division",
+                "req_credits": 2,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "BUSN 111" }
+                ]
+            },
+            {
+                "id": 111,
+                "name": "Minor Lower Division",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ACCT 263" },
+                    { "course_code": "ACCT 260" },
+                    { "course_code": "ACCT 261" }
+                ],
+                "note": "Choose (ACCT 263) or both (ACCT 260 and ACCT 261)"
+            },
+            {
+                "id": 112,
+                "name": "Minor Lower Division",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ECON 200" },
+                    { "course_code": "ECON 201" },
+                    { "course_code": "ECON 202" }
+                ],
+                "note": "Choose (ECON 200) or both (ECON 201 and ECON 202)"
+            },
+            {
+                "id": 113,
+                "name": "Minor Lower Division",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "BUSN 230" },
+                    { "course_code": "MATH 321" }
+            },
+            {
+                "id": 120,
+                "name": "Minor Upper Division",
+                "req_credits": 12,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "MKTG 310" },
+                    { "course_code": "BFIN 320" },
+                    { "course_code": "MGMT 350" }
+            },
+            {
+                "id": 130,
+                "name": "Electives",
+                "req_credits": 6,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "BENT 492" },
+                    { "course_code": "BENT 493" },
+                    { "course_code": "ACCT 261" },
+                    { "course_code": "ECON 202" }
+                ],
+                "note": "Can double count with 111",
+                "note2": "Can double count with 112"
+            },
+        ]
+    }
+}
