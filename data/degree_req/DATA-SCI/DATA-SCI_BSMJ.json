@@ -1,0 +1,110 @@
+{
+    "degree_program": "B.S. in Data Science",
+    "college": "School of Engineering & Computer Science",
+    "academic_year": "2024-2025",
+    "requirements": {
+      "language_requirement": "N/A",
+      "req_groups": [
+        {
+          "id": 100,
+          "name": "Lower Division",
+          "req_credits": 26,
+          "selection_type": "ALL",
+          "classes": [
+            {"course_code": "CPSC 121"},
+            {"course_code": "CPSC 122"},
+            {"course_code": "CPSC 222"},
+            {"course_code": "CPSC 223"},
+            {"course_code": "CPSC 224"},
+            {"course_code": "MATH 157"},
+            {"course_code": "MATH 231"},
+            {"course_code": "MATH 258"}
+          ]
+        },
+        {
+          "id": 110,
+          "name": "Research Methods (choose 1)",
+          "req_credits": 3,
+          "selection_type": "MIN",
+          "classes": [
+            {"course_code": "COMM 285"},
+            {"course_code": "PSYC 206"},
+            {"course_code": "SOCI 204"}
+          ]
+        },
+        {
+          "id": 200,
+          "name": "Upper Division: Required",
+          "req_credits": 30,
+          "selection_type": "ALL",
+          "classes": [
+            {"course_code": "CPSC 321"},
+            {"course_code": "CPSC 322"},
+            {"course_code": "CPSC 323"},
+            {"course_code": "CPSC 450"},
+            {"course_code": "CPSC 475"},
+            {"course_code": "CPSC 481"},
+            {"course_code": "CPSC 482"},
+            {"course_code": "CPSC 432"},
+            {"course_code": "CPSC 483"},
+            {"course_code": "MATH 321"}
+          ]
+        },
+        {
+          "id": 210,
+          "name": "Upper Division: Web or DevOps (choose 1)",
+          "req_credits": 3,
+          "selection_type": "MIN",
+          "classes": [
+            {"course_code": "CPSC 332"},
+            {"course_code": "CPSC 334"}
+          ]
+        },
+        {
+          "id": 220,
+          "name": "Upper Division: Linear Algebra Option (choose 1)",
+          "req_credits": 3,
+          "selection_type": "MIN",
+          "classes": [
+            {"course_code": "MATH 335"},
+            {"course_code": "MATH 339"}
+          ]
+        },
+        {
+          "id": 230,
+          "name": "Upper Division: Additional Math Option (choose 1)",
+          "req_credits": 3,
+          "selection_type": "MIN",
+          "classes": [
+            {"course_code": "MATH 259"},
+            {"course_code": "MATH 328"},
+            {"course_code": "MATH 425"},
+            {"course_code": "MATH 426"},
+            {"course_code": "ECON 355"}
+          ]
+        },
+        {
+          "id": 240,
+          "name": "Upper Division: One of the following six course pairs (3 credits)",
+          "req_credits": 3,
+          "selection_type": "MIN",
+          "classes": [
+            {"course_code": "MKTG 310"},
+            {"course_code": "MKTG 410"},
+            {"course_code": "ECON 201"},
+            {"course_code": "ECON 202"},
+            {"course_code": "CRIM 101"},
+            {"course_code": "CRIM 312"},
+            {"course_code": "ENVS 101"},
+            {"course_code": "ENVS 320"},
+            {"course_code": "BFIN 320"},
+            {"course_code": "BFIN 322"},
+            {"course_code": "INMD 101"},
+            {"course_code": "PRLS 260"}
+        ],
+        "note": "Choose (MKTG 310 AND MKTG 410) OR (ECON 201 AND ECON 202) OR (CRIM 101 AND CRIM 312) OR (ENVS 101 AND ENVS 320) OR (BFIN 320 AND BFIN 322) OR (INMD 101 AND PRLS 260)"
+        }
+      ]
+    }
+  }
+  
