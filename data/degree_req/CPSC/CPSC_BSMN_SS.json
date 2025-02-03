@@ -1,0 +1,56 @@
+{
+    "degree_program": "Minor in CS: Software Security",
+    "college": "School of Engineering & Computer Science",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 100,
+                "name": "Core Requirements",
+                "req_credits": 9,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "CPSC 121"},
+                    {"course_code": "CPSC 122"},
+                    {"course_code": "CPSC 223"}
+                ]
+            },
+            {
+                "id": 110,
+                "name": "Architecture Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "CPSC 260"},
+                    {"course_code": "CPEN 231"},
+                    {"course_code": "CPEN 231L"}
+                ],
+                "note": "Choose  (CPSC 260) OR (CPEN 231 AND CPEN 231L)"
+            },
+            {
+                "id": 1120,
+                "name": "Security Core",
+                "req_credits": 6,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "CPSC 348"},
+                    {"course_code": "CPSC 353"}
+                ]
+            },
+            {
+                "id": 1130,
+                "name": "Security Electives",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "CPSC 341"},
+                    {"course_code": "CPSC 346"},
+                    {"course_code": "CPSC 349"},
+                    {"course_code": "CPSC 447"},
+                    {"course_code": "EENG 410"}
+                ]
+            }
+        ]
+    }
+}
