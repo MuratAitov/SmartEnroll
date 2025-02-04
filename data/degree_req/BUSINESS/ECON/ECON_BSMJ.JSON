@@ -1,7 +1,7 @@
 {
     "degree_program": "B.S. Economics",
     "college": "College of Arts & Sciences",
-    "academic_year": "2020-2021",
+    "academic_year": "2024-2025",
     "requirements": {
         "language_requirement": "Demonstrate competence in a second language.",
         "req_groups": [
@@ -21,74 +21,44 @@
         {
           "id": 120,
           "name": "upper division",
-          "req_credits": 21,
-          "selection_type": "ALL",
+          "req_credits": 18,
+          "selection_type": "MIN",
           "classes": [
             {"course_code": "ECON 301"},
             {"course_code": "ECON 302"},
             {"course_code": "ECON 355"},
             {"course_code": "ECON 451"},
             {"course_code": "MATH 321"},
+            {"course_code": "MATH 335"},
             {"course_code": "MATH 339"},
             {"course_code": "ECON 499"}
-          ]
-        },
-        {"id": 121,
-        "name": "upper division: ECON 320-340",
-        "req_credits": 6,
-        "selection_type": "MIN",
-        "classes":[
-            {"course_code": "ECON 32X"},
-            {"course_code": "ECON 33X"},
-            {"course_code": "ECON 34X"}
-            ]
+          ],
+          "note: Choose (MATH 335) or (MATH 339) but not both."
         },
         {
-        "id": 130,
-        "name": "electives",
+          "id": 121,
+          "name": "upper division: ECON 320-340",
+          "req_credits": 6,
+          "selection_type": "MIN",
+          "classes":[
+              {"course_code": "ECON 32X"},
+              {"course_code": "ECON 33X"},
+              {"course_code": "ECON 34X"}
+          ]
+        },
+        {
+        "id": 122,
+        "name": "Upper Division-Electives",
         "req_credits": 3,
         "selection_type": "MIN",
         "classes": [
             {"course_code": "MATH 328"},
             {"course_code": "MATH 421"},
-            {"course_code": "MATH 422"}
-        ]
-        },
-        {
-        "id": 131,
-        "name": "Any Upper Division ECON Elective",
-        "req_credits": 3,
-        "selection_type": "MIN",
-        "classes": [
-            {"course_code": "ECON 303"},
-            {"course_code": "ECON 311"},
-            {"course_code": "ECON 320"},
-            {"course_code": "ECON 321"},
-            {"course_code": "ECON 322"},
-            {"course_code": "ECON 324"},
-            {"course_code": "ECON 325"},
-            {"course_code": "ECON 330"},
-            {"course_code": "ECON 333"},
-            {"course_code": "ECON 334"},
-            {"course_code": "ECON 351"},
-            {"course_code": "ECON 352"},
-            {"course_code": "ECON 352L"},
-            {"course_code": "ECON 355"},
-            {"course_code": "ECON 389"},
-            {"course_code": "ECON 390"},
-            {"course_code": "ECON 401"},
-            {"course_code": "ECON 402"},
-            {"course_code": "ECON 404"},
-            {"course_code": "ECON 411"},
-            {"course_code": "ECON 432"},
-            {"course_code": "ECON 451"},
-            {"course_code": "ECON 452"},
-            {"course_code": "ECON 487"},
-            {"course_code": "ECON 489"},
-            {"course_code": "ECON 491"},
-            {"course_code": "ECON 497"}
-            ]
-        }
+            {"course_code": "MATH 422"},
+            {"course_code": "ECON 3XX"},
+            {"course_code": "ECON 4XX"}
         ]
         }
+      ]
+    }
 }

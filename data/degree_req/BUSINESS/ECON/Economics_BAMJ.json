@@ -1,0 +1,85 @@
+{
+    "degree_program": "B.S. Economics",
+    "college": "College of Arts & Sciences",
+    "academic_year": "2020-2021",
+    "requirements": {
+        "language_requirement": "Demonstrate competence in a second language.",
+        "req_groups": [
+        {
+          "id": 110,
+          "name": "lower division",
+          "req_credits": 6,
+          "selection_type": "ALL",
+          "classes": [
+            {"course_code": "ECON 201"},
+            {"course_code": "ECON 202"}
+          ]
+        },
+        {
+            "id": 111,
+            "name": "lower division",
+            "req_credits": 3,
+            "selection_type": "MIN",
+            "classes": [
+                {"course_code": "MATH 114"},
+                {"course_code": "MATH 148"},
+                {"course_code": "MATH 157"}
+            ]
+        },
+        {
+            "id": 112,
+            "name": "lower division",
+            "req_credits": 3,
+            "selection_type": "MIN",
+            "classes": [
+                {"course_code": "BUSN 230"},
+                {"course_code": "MATH 321"},
+                {"course_code": "MATH 121"}
+            ]
+        },
+        {
+          "id": 120,
+          "name": "upper division",
+          "req_credits": 18,
+          "selection_type": "MIN",
+          "classes": [
+            {"course_code": "ECON 301"},
+            {"course_code": "ECON 302"},
+            {"course_code": "ECON 355"},
+            {"course_code": "ECON 499"}
+          ],
+        },
+        {
+            "id": 121,
+            "name": "upper division: ECON 320-340",
+            "req_credits": 6,
+            "selection_type": "MIN",
+            "classes":[
+                {"course_code": "ECON 32X"},
+                {"course_code": "ECON 33X"},
+                {"course_code": "ECON 34X"}
+            ]
+        },
+        {
+            "id": 122,
+            "name": "upper division-Electives I",
+            "req_credits": 3,
+            "selection_type": "MIN",
+            "classes":[
+                {"course_code": "ECON 401"},
+                {"course_code": "ECON 402"}
+            ]
+        },
+        {
+            "id": 123,
+            "name": "upper division-Electives II",
+            "req_credits": 3,
+            "selection_type": "MIN",
+            "classes":[
+                {"course_code": "ECON 3XX"},
+                {"course_code": "ECON 4XX"}
+            ]
+        }
+      ]
+    }
+}

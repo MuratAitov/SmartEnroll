@@ -1,0 +1,46 @@
+{
+    "degree_program": "Accounting",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division",
+                "req_credits": 9,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "ACCT 260" },
+                    { "course_code": "ACCT 261" },
+                    { "course_code": "ACCT 263" },
+                    { "course_code": "ACCT 290" }
+                ]
+            },
+            {
+                "id": 120,
+                "name": "Upper Division",
+                "req_credits": 18,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "ACCT 311" },
+                    { "course_code": "ACCT 360" },
+                    { "course_code": "ACCT 361" },
+                    { "course_code": "ACCT 363" },
+                    { "course_code": "ACCT 365" },
+                    { "course_code": "ACCT 464" }
+                ]
+            },
+            {
+                "id": 121,
+                "name": "Upper Division-Electives",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ACCT 362" },
+                    { "course_code": "ACCT 366" },
+                    { "course_code": "ACCT 460" }
+                ]
+            }
+        ]
+    }
+}
