@@ -151,7 +151,7 @@
           "note": "Can double count with 600"
         },
         {
-            "id": 720,
+            "id": 700,
             "name": "Dev Core",
             "req_credits": 12,
             "selection_type": "ALL",
