@@ -1,0 +1,169 @@
+{
+    "degree_program": "B.S. Computer Science - Software Development Concentration",
+    "college": "School of Engineering & Computer Science",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+        {
+          "id": 100,
+          "name": "lower Division",
+          "req_credits": 15,
+          "selection_type": "ALL",
+          "classes": [
+            {"course_code": "CPSC 121"},
+            {"course_code": "CPSC 122"},
+            {"course_code": "CPSC 223"},
+            {"course_code": "CPSC 224"},
+            {"course_code": "CPSC 260"}
+          ]
+        },
+        {
+            "id": 200,
+            "name": "upper Division",
+            "req_credits": 19,
+            "selection_type": "ALL",
+            "classes": [
+            {"course_code": "CPSC 321"},
+            {"course_code": "CPSC 326"},
+            {"course_code": "CPSC 346"},
+            {"course_code": "CPSC 348"},
+            {"course_code": "CPSC 491"},
+            {"course_code": "CPSC 491L"},
+            {"course_code": "CPSC 492L"},
+            {"course_code": "CPSC 499"}
+            ]
+        },
+        {
+            "id": 210,
+            "name": "Theory Elective",
+            "req_credits": 3,
+            "selection_type": "MIN",
+            "classes": [
+                {"course_code": "CPSC 351"},
+                {"course_code": "CPSC 450"}
+            ]
+        },
+        {
+            "id": 300,
+            "name": "Technical Electives",
+            "req_credits": 21,
+            "selection_type": "MIN",
+            "classes": [
+                {"course_code": "CPSC 2xx"},
+                {"course_code": "CPSC 3xx"},
+                {"course_code": "CPSC 4xx"},
+                {"course_code": "- CPSC 497"}
+            ]
+        },
+        {
+            "id": 310,
+            "name": "Technical Electives no more than 2 2xx, 435, 436 classes",
+            "req_credits": 15,
+            "selection_type": "MIN",
+            "classes": [
+                {"course_code": "CPSC 3xx"},
+                {"course_code": "CPSC 4xx"},
+                {"course_code": "- CPSC 497"},
+                {"course_code": "- CPSC 435"},
+                {"course_code": "- CPSC 436"}
+            ],
+             "note": "Can double count with 300"
+        },
+        {
+            "id": 400,
+            "name": "Mathematics Core",
+            "req_credits": 11,
+            "selection_type": "ALL",
+            "classes": [
+                {"course_code": "MATH 157"},
+                {"course_code": "MATH 231"},
+                {"course_code": "MATH 258"}
+            ]
+        },
+        {
+            "id": 500,
+            "name": "Mathematics Electives",
+            "req_credits": 6,
+            "selection_type": "MIN",
+            "classes": [
+              {"course_code": "MATH 259"},
+              {"course_code": "MATH 260"},
+              {"course_code": "ENSC 371"},
+              {"course_code": "CPSC 455"},
+              {"course_code": "MATH 3xx"},
+              {"course_code": "MATH 4xx"}
+            ]
+        },
+        {
+          "id": 600,
+          "name": "Science and Mathematics Electives (Total 14 credits)",
+          "req_credits": 14,
+          "selection_type": "MIN",
+          "classes": [
+            {"course_code": "BIOL 105/L"},
+            {"course_code": "BIOL 106"},
+            {"course_code": "BIOL 205/L"},
+            {"course_code": "BIOL 206/L"},
+            {"course_code": "BIOL 207/L"},
+            {"course_code": "CHEM 101/L"},
+            {"course_code": "CHEM 205"},
+            {"course_code": "CHEM 230/L"},
+            {"course_code": "CHEM 231/L"},
+            {"course_code": "CHEM 245/L"},
+            {"course_code": "CHEM 310/L"},
+            {"course_code": "CPSC 455"},
+            {"course_code": "ENSC 371"},
+            {"course_code": "PHYS 121/L"},
+            {"course_code": "PHYS 122/L"},
+            {"course_code": "PHYS 224"},
+            {"course_code": "PHYS 325"},
+            {"course_code": "PHYS 222"},
+            {"course_code": "MATH 259"},
+            {"course_code": "MATH 260"},
+            {"course_code": "MATH 3xx"},
+            {"course_code": "MATH 4xx"}
+          ]
+        },
+        {
+          "id": 610,
+          "name": "Science/Math Electives Sub-Requirement: min 6 credits in BIOL/CHEM/PHYS",
+          "req_credits": 6,
+          "selection_type": "MIN",
+          "classes": [
+            {"course_code": "BIOL 105/L"},
+            {"course_code": "BIOL 106"},
+            {"course_code": "BIOL 205/L"},
+            {"course_code": "BIOL 206/L"},
+            {"course_code": "BIOL 207/L"},
+            {"course_code": "CHEM 101/L"},
+            {"course_code": "CHEM 205"},
+            {"course_code": "CHEM 230/L"},
+            {"course_code": "CHEM 231/L"},
+            {"course_code": "CHEM 245/L"},
+            {"course_code": "CHEM 310/L"},
+            {"course_code": "PHYS 121/L"},
+            {"course_code": "PHYS 122/L"},
+            {"course_code": "PHYS 224"},
+            {"course_code": "PHYS 325"},
+            {"course_code": "PHYS 222"}
+          ],
+          "note": "Can double count with 600"
+        },
+        {
+            "id": 720,
+            "name": "Dev Core",
+            "req_credits": 12,
+            "selection_type": "ALL",
+            "classes": [
+                {"course_code": "CPSC 331"},
+                {"course_code": "CPSC 332"},
+                {"course_code": "CPSC 333"},
+                {"course_code": "CPSC 334"}
+            ],
+            "note": "Can double count with 300"
+        }
+      ]
+    }
+  }
+  

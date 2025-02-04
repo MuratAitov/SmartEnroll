@@ -1,0 +1,26 @@
+
+{
+    "degree_program": "Minor in CS: Software Application Development",
+    "college": "School of Engineering & Computer Science",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 100,
+                "name": "Full Stack Development",
+                "req_credits": 21,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "CPSC 121"},
+                    {"course_code": "CPSC 122"},
+                    {"course_code": "CPSC 224"},
+                    {"course_code": "CPSC 331"},
+                    {"course_code": "CPSC 332"},
+                    {"course_code": "CPSC 333"},
+                    {"course_code": "CPSC 334"}
+                ]
+            }
+        ]
+    }
+}
