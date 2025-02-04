@@ -1,0 +1,34 @@
+{
+    "degree_program": "Business Minors for CAS Majors-Human Resource Management Minor",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Minor Lower Division",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "BUSN 230" },
+                    { "course_code": "SOCI 202" },
+                    { "course_code": "PSYC 202" },
+                    { "course_code": "MATH 121" },
+                    { "course_code": "MATH 321" }
+            },
+            {
+                "id": 120,
+                "name": "Minor Upper Division",
+                "req_credits": 15,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "MGMT 350" },
+                    { "course_code": "MGMT 400" },
+                    { "course_code": "MGMT 405" },
+                    { "course_code": "MGMT 410" },
+                    { "course_code": "MGMT 415" }
+            }
+        ]
+    }
+}

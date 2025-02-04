@@ -1,0 +1,50 @@
+{
+    "degree_program": "Business Minors for Non-Business Majors-Analytical Finance",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division",
+                "req_credits": 15,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "ACCT 260" },
+                    { "course_code": "ACCT 261" },
+                    { "course_code": "ECON 201" },
+                    { "course_code": "ECON 202" },
+                    { "course_code": "MATH 321" }
+            },
+            {
+                "id": 111,
+                "name": "Lower Division-One of the following two courses I",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "MATH 114" },
+                    { "course_code": "MATH 157" }
+            },
+            {
+                "id": 112,
+                "name": "Lower Division-One of the following two courses II",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "BUSN 230" },
+                    { "course_code": "MATH 321" }
+            },
+            {
+                "id": 120,
+                "name": "Upper Division",
+                "req_credits": 9,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "BFIN 320" },
+                    { "course_code": "BFIN 322" },
+                    { "course_code": "BFIN 422" }
+            }
+        ]
+    }
+}

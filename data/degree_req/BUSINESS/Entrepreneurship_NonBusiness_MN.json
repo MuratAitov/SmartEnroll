@@ -1,5 +1,5 @@
 {
-    "degree_program": "Business Minors for CAS Majors-Entrepreneurship & Innovation Minor",
+    "degree_program": "Business Minors for Non-Business Majors-Entrepreneurship & Innovation Minor",
     "college": "School of Business Administration",
     "academic_year": "2024-2025",
     "requirements": {
@@ -7,7 +7,7 @@
         "req_groups": [
             {
                 "id": 110,
-                "name": "Minor Lower Division",
+                "name": "Lower Division-One of the following two courses I",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
@@ -17,7 +17,7 @@
             },
             {
                 "id": 111,
-                "name": "Minor Lower Division",
+                "name": "Lower Division-One of the following two courses II",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
@@ -27,7 +27,7 @@
             },
             {
                 "id": 120,
-                "name": "Minor Upper Division",
+                "name": "Upper Division",
                 "req_credits": 6,
                 "selection_type": "ALL",
                 "classes": [
@@ -37,7 +37,7 @@
             },
             {
                 "id": 121,
-                "name": "Minor Lower Division",
+                "name": "Upper Division-One of the following two courses",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
@@ -47,7 +47,7 @@
             },
             {
                 "id": 122,
-                "name": "Minor Lower Division",
+                "name": "Upper Division-One of the following four courses",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [

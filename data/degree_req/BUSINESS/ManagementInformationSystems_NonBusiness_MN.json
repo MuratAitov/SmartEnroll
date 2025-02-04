@@ -1,0 +1,32 @@
+{
+    "degree_program": "Business Minors for Non-Business Majors-Management Information Systems Minor",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Minor Lower Division",
+                "req_credits": 5,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "BUSN 111" },
+                    { "course_code": "BMIS 235" }
+                ]
+            },
+            {
+                "id": 120,
+                "name": "Minor Upper Division",
+                "req_credits": 12,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "BMIS 331" },
+                    { "course_code": "BMIS 342" },
+                    { "course_code": "BMIS 441" },
+                    { "course_code": "BMIS 444" }
+                ]
+            }
+        ]
+    }
+}

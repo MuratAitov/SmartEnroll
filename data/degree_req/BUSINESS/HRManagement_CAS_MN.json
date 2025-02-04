@@ -20,7 +20,7 @@
             {
                 "id": 120,
                 "name": "Minor Upper Division",
-                "req_credits": 3,
+                "req_credits": 15,
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "MGMT 350" },

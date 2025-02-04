@@ -1,0 +1,62 @@
+{
+    "degree_program": "Business Minors for CAS Majors-Entrepreneurship & Innovation Minor",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division-One of the following two courses I",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ACCT 260" },
+                    { "course_code": "ACCT 263" }
+                ]
+            },
+            {
+                "id": 111,
+                "name": "Lower Division-One of the following two courses II",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ECON 200" },
+                    { "course_code": "ECON 201" }
+                ]
+            },
+            {
+                "id": 120,
+                "name": "Upper Division",
+                "req_credits": 6,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "BENT 490" },
+                    { "course_code": "BENT 491" }
+                ]
+            },
+            {
+                "id": 121,
+                "name": "Upper Division-One of the following two courses",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "BENT 492" },
+                    { "course_code": "BENT 493" }
+                ]
+            },
+            {
+                "id": 122,
+                "name": "Upper Division-One of the following four courses",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "BENT 494" },
+                    { "course_code": "BUSN 491" },
+                    { "course_code": "BUSN 470" },
+                    { "course_code": "BMIS 443" }
+                ]
+            }
+        ]
+    }
+}

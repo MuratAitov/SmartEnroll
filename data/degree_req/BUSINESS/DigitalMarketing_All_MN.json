@@ -1,0 +1,52 @@
+{
+    "degree_program": "Business Minors for Non-Business Majors-Analytical Finance",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division",
+                "req_credits": 15,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "BMIS 245" },
+                    { "course_code": "MKTG 310" },
+                    { "course_code": "BMIS 443" },
+                    { "course_code": "MKTG 402" },
+                    { "course_code": "MKTG 410" }
+            },
+            {
+                "id": 111,
+                "name": "Lower Division-One of the following three courses I",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "MKTG 330" },
+                    { "course_code": "MKTG 420" },
+                    { "course_code": "MKTG 421" }
+            },
+            {
+                "id": 112,
+                "name": "Lower Division-One of the following two courses II",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "INMD 360" },
+                    { "course_code": "BMIS 331" }
+            },
+            {
+                "id": 111,
+                "name": "Lower Division-One of the following three courses I",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "MKTG 318" },
+                    { "course_code": "MKTG 319" },
+                    { "course_code": "MKTG 411" }
+            }
+        ],
+        "note:" "All upper division MKTG courses require a prerequisite of MKTG 310."
+    }
+}
