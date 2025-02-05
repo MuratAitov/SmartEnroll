@@ -1,9 +1,8 @@
 {
-    "degree_program": "Business Minors for Non-Business Majors-Analytical Finance",
+    "degree_program": "Business Minors for All Majors-Digital Marketing",
     "college": "School of Business Administration",
     "academic_year": "2024-2025",
     "requirements": {
-        "language_requirement": "N/A",
         "req_groups": [
             {
                 "id": 110,
@@ -16,6 +15,7 @@
                     { "course_code": "BMIS 443" },
                     { "course_code": "MKTG 402" },
                     { "course_code": "MKTG 410" }
+                ]
             },
             {
                 "id": 111,
@@ -26,6 +26,7 @@
                     { "course_code": "MKTG 330" },
                     { "course_code": "MKTG 420" },
                     { "course_code": "MKTG 421" }
+                ]
             },
             {
                 "id": 112,
@@ -35,6 +36,7 @@
                 "classes": [
                     { "course_code": "INMD 360" },
                     { "course_code": "BMIS 331" }
+                ]
             },
             {
                 "id": 113,
@@ -45,6 +47,7 @@
                     { "course_code": "MKTG 318" },
                     { "course_code": "MKTG 319" },
                     { "course_code": "MKTG 411" }
+                ]
             }
         ]
     }

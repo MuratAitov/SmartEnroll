@@ -8,14 +8,14 @@
             {
                 "id": 110,
                 "name": "Lower Division",
-                "req_credits": 15,
+                "req_credits": 12,
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "ACCT 260" },
                     { "course_code": "ACCT 261" },
                     { "course_code": "ECON 201" },
-                    { "course_code": "ECON 202" },
-                    { "course_code": "MATH 321" }
+                    { "course_code": "ECON 202" }
+                ]
             },
             {
                 "id": 111,
@@ -25,6 +25,7 @@
                 "classes": [
                     { "course_code": "MATH 114" },
                     { "course_code": "MATH 157" }
+                ]
             },
             {
                 "id": 112,
@@ -34,6 +35,7 @@
                 "classes": [
                     { "course_code": "BUSN 230" },
                     { "course_code": "MATH 321" }
+                ]
             },
             {
                 "id": 120,
@@ -44,6 +46,7 @@
                     { "course_code": "BFIN 320" },
                     { "course_code": "BFIN 322" },
                     { "course_code": "BFIN 422" }
+                ]
             }
         ]
     }

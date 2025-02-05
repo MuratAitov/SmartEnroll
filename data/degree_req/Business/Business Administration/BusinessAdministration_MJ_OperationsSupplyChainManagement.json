@@ -1,0 +1,45 @@
+{
+    "degree_program": "Operations and Supply Chain Management Concentration",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Upper Division-Elective",
+                "req_credits": 6,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "OPER 345" },
+                    { "course_code": "OPER 346" },
+                    { "course_code": "OPER 347" },
+                    { "course_code": "OPER 348" }
+                ]
+            },
+            {
+                "id": 111,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "MKTG 415" },
+                    { "course_code": "BFIN 327" },
+                    { "course_code": "BMIS 441" },
+                    { "course_code": "OPER 345" },
+                    { "course_code": "OPER 346" },
+                    { "course_code": "OPER 347" },
+                    { "course_code": "OPER 348" }
+                ]
+            },
+            {
+                "id": 112,
+                "name": "Upper Division",
+                "req_credits": 3,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "OPER 440" }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "degree_program": "Finance Concentration",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Upper Division",
+                "req_credits": 12,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "BFIN 322" },
+                    { "course_code": "ACCT 367" },
+                    { "course_code": "BFIN 422" },
+                    { "course_code": "BFIN 423" }
+                ]
+            },
+            {
+                "id": 111,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "BFIN 324" },
+                    { "course_code": "BFIN 325" },
+                    { "course_code": "BFIN 327" },
+                    { "course_code": "BFIN 424" },
+                    { "course_code": "BFIN 426" },
+                    { "course_code": "BFIN 429A" },
+                    { "course_code": "BFIN 429B" },
+                    { "course_code": "BFIN 429C" }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "degree_program": "Business Minors for All Majors-Sustainable Business Minor",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division",
+                "req_credits": 3,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "ENVS 101" }
+                ]
+            },
+            {
+                "id": 111,
+                "name": "Lower Division-Electives",
+                "req_credits": 4,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ENVS 103" },
+                    { "course_code": "ENVS 103L" },
+                    { "course_code": "ENVS 104" },
+                    { "course_code": "ENVS 104L" }
+                ],
+                "note": "Choose both (ENVS 103 and ENVS 103L) or both (ENVS 104 and ENVS 104L)"
+            },
+            {
+                "id": 120,
+                "name": "Upper Division",
+                "req_credits": 9,
+                "selection_type": "AL",
+                "classes": [
+                    { "course_code": "BUSN 430" },
+                    { "course_code": "BENT 493" },
+                    { "course_code": "ECON 324" }
+                ]
+            },
+            {
+                "id": 121,
+                "name": "Upper Division-Electives",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ENVS 321" },
+                    { "course_code": "ENVS 326" },
+                    { "course_code": "ENVS 352" },
+                    { "course_code": "ENVS 353" },
+                    { "course_code": "ENVS 358" },
+                    { "course_code": "ENVS 381" }
+                ]
+            }
+        ]
+    }
+}

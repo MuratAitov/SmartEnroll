@@ -1,0 +1,24 @@
+{
+    "degree_program": "International Business Concentration",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Upper Division",
+                "req_credits": 12,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ECON 311" },
+                    { "course_code": "ECON 321" },
+                    { "course_code": "BFIN 327" },
+                    { "course_code": "MGMT 355" },
+                    { "course_code": "MKTG 417" },
+                    { "course_code": "OPER 440" }
+                ],
+                "note: Choose (ECON 311) or (ECON 321)."
+            }
+        ]
+    }
+}

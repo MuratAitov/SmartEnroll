@@ -1,44 +1,44 @@
 {
-    "degree_program": "Business Minors for ALL Majors-Economics Minor",
+    "degree_program": "Economics Concentration",
     "college": "School of Business Administration",
     "academic_year": "2024-2025",
     "requirements": {
-        "language_requirement": "N/A",
         "req_groups": [
             {
                 "id": 110,
-                "name": "Lower Division",
-                "req_credits": 6,
-                "selection_type": "ALL",
-                "classes": [
-                    { "course_code": "ECON 201" },
-                    { "course_code": "ECON 202" }
-                ]
-            },
-            {
-                "id": 120,
-                "name": " Upper Division",
+                "name": "Upper Division-Elective I",
                 "req_credits": 3,
-                "selection_type": "ALL",
+                "selection_type": "MIN",
                 "classes": [
-                    { "course_code": "ECON 302" }
+                    { "course_code": "ECON 302" },
+                    { "course_code": "ECON 352" }
                 ]
             },
             {
-                "id": 121,
-                "name": "Electives",
-                "req_credits": 6,
+                "id": 111,
+                "name": "Upper Division-Elective II",
+                "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
                     { "course_code": "ECON 301" },
+                    { "course_code": "ECON 351" }
+                ]
+            },
+            {
+                "id": 112,
+                "name": "Upper Division",
+                "req_credits": 6,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "ECON 355" },
                     { "course_code": "ECON 32X" },
                     { "course_code": "ECON 33X" },
                     { "course_code": "ECON 34X" }
                 ]
             },
             {
-                "id": 122,
-                "name": "Any Upper Division ECON Electives",
+                "id": 112,
+                "name": "Upper Division",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [

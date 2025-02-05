@@ -14,6 +14,7 @@
                     { "course_code": "MATH 114" },
                     { "course_code": "MATH 148" },
                     { "course_code": "MATH 157" }
+                ]
             },
             {
                 "id": 111,
@@ -22,6 +23,7 @@
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "BUSN 111" }
+                ]
             },
             {
                 "id": 112,
@@ -31,6 +33,7 @@
                 "classes": [
                     { "course_code": "ACCT 260" },
                     { "course_code": "ACCT 261" }
+                ]
             },
             {
                 "id": 113,
@@ -40,6 +43,7 @@
                 "classes": [
                     { "course_code": "ECON 201" },
                     { "course_code": "ECON 202" }
+                ]
             },
             {
                 "id": 114,
@@ -49,6 +53,7 @@
                 "classes": [
                     { "course_code": "BUSN 230" },
                     { "course_code": "MATH 321" }
+                ]
             },
             {
                 "id": 115,
@@ -57,6 +62,7 @@
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "BMIS 235" }
+                ]
             },
             {
                 "id": 116,
@@ -65,6 +71,7 @@
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "BUSN 283" }
+                ]
             },
             {
                 "id": 120,
@@ -73,6 +80,7 @@
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "BFIN 320" }
+                ]
             },
             {
                 "id": 121,
@@ -81,6 +89,7 @@
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "MGMT 350" }
+                ]
             },
             {
                 "id": 122,
@@ -89,6 +98,7 @@
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "MKTG 310" }
+                ]
             },
             {
                 "id": 123,
@@ -97,6 +107,7 @@
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "OPER 340" }
+                ]
             },
             {
                 "id": 124,
@@ -105,6 +116,7 @@
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "BUSN 480" }
+                ]
             },
             {
                 "id": 125,
@@ -113,6 +125,7 @@
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "BUSN 481" }
+                ]
             }
         ]
     }

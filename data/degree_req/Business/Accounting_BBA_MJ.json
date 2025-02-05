@@ -1,23 +1,11 @@
 {
-    "degree_program": "Accounting",
+    "degree_program": "B.B.A Accounting",
     "college": "School of Business Administration",
     "academic_year": "2024-2025",
     "requirements": {
         "req_groups": [
             {
                 "id": 110,
-                "name": "Lower Division",
-                "req_credits": 9,
-                "selection_type": "ALL",
-                "classes": [
-                    { "course_code": "ACCT 260" },
-                    { "course_code": "ACCT 261" },
-                    { "course_code": "ACCT 263" },
-                    { "course_code": "ACCT 290" }
-                ]
-            },
-            {
-                "id": 120,
                 "name": "Upper Division",
                 "req_credits": 18,
                 "selection_type": "ALL",
@@ -31,7 +19,7 @@
                 ]
             },
             {
-                "id": 121,
+                "id": 111,
                 "name": "Upper Division-Electives",
                 "req_credits": 3,
                 "selection_type": "MIN",

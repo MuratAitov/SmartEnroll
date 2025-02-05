@@ -1,0 +1,36 @@
+{
+    "degree_program": "Marketing Concentration",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Upper Division",
+                "req_credits": 9,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "MGMT 315" },
+                    { "course_code": "MGMT 330" },
+                    { "course_code": "MGMT 402" },
+                    { "course_code": "MGMT 419" }
+                ]
+            },
+            {
+                "id": 111,
+                "name": "Upper Division",
+                "req_credits": 3,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "MGMT 3XX" },
+                    { "course_code": "MGMT 4XX" },
+                    { "course_code": "ECON 355" },
+                    { "course_code": "EDPE 400" },
+                    { "course_code": "PRLS 310" },
+                    { "course_code": "PSYC 310" },
+                    { "course_code": "PSYC 335" }
+                ]
+            }
+        ]
+    }
+}

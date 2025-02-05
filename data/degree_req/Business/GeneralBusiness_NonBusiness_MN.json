@@ -1,5 +1,5 @@
 {
-    "degree_program": "Business Minors for CAS Majors-General Business Minor",
+    "degree_program": "Business Minors for Non-Business Majors-General Business Minor",
     "college": "School of Business Administration",
     "academic_year": "2024-2025",
     "requirements": {
@@ -16,7 +16,7 @@
             },
             {
                 "id": 111,
-                "name": "Minor Lower Division",
+                "name": "Lower Division",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
@@ -28,8 +28,8 @@
             },
             {
                 "id": 112,
-                "name": "Minor Lower Division",
-                "req_credits": 3,
+                "name": "Lower Division",
+                "req_credits": 6,
                 "selection_type": "MIN",
                 "classes": [
                     { "course_code": "ECON 200" },
@@ -40,12 +40,13 @@
             },
             {
                 "id": 113,
-                "name": "Minor Lower Division",
+                "name": "Lower Division",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
                     { "course_code": "BUSN 230" },
                     { "course_code": "MATH 321" }
+                ]
             },
             {
                 "id": 120,
@@ -56,6 +57,7 @@
                     { "course_code": "MKTG 310" },
                     { "course_code": "BFIN 320" },
                     { "course_code": "MGMT 350" }
+                ]
             },
             {
                 "id": 130,
@@ -63,13 +65,13 @@
                 "req_credits": 6,
                 "selection_type": "MIN",
                 "classes": [
-                    { "course_code": "BENT 492" },
-                    { "course_code": "BENT 493" },
+                    { "course_code": "BMIS 235" },
+                    { "course_code": "BUSN 283" },
+                    { "course_code": "OPER 340" },
                     { "course_code": "ACCT 261" },
                     { "course_code": "ECON 202" }
                 ],
-                "note": "Can double count with 111",
-                "note_II": "Can double count with 112"
+                "note": "Can double count with 111 and 112"
             }
         ]
     }
