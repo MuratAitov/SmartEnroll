@@ -16,7 +16,7 @@
             },
             {
                 "id": 111,
-                "name": "Upper Division-Electives I",
+                "name": "Upper Division-Elective",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [

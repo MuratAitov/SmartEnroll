@@ -1,8 +1,9 @@
 {
-    "degree_program": "B.B.A Accounting",
+    "degree_program": "Business Administration Major-Finance Concentration",
     "college": "School of Business Administration",
     "academic_year": "2024-2025",
     "requirements": {
+        "language_requirement": "N/A",
         "req_groups": [
             {
                 "id": 110,
@@ -129,15 +130,13 @@
             {
                 "id": 130,
                 "name": "Upper Division",
-                "req_credits": 18,
+                "req_credits": 12,
                 "selection_type": "ALL",
                 "classes": [
-                    { "course_code": "ACCT 311" },
-                    { "course_code": "ACCT 360" },
-                    { "course_code": "ACCT 361" },
-                    { "course_code": "ACCT 363" },
-                    { "course_code": "ACCT 365" },
-                    { "course_code": "ACCT 464" }
+                    { "course_code": "BFIN 322" },
+                    { "course_code": "ACCT 367" },
+                    { "course_code": "BFIN 422" },
+                    { "course_code": "BFIN 423" }
                 ]
             },
             {
@@ -146,9 +145,14 @@
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
-                    { "course_code": "ACCT 362" },
-                    { "course_code": "ACCT 366" },
-                    { "course_code": "ACCT 460" }
+                    { "course_code": "BFIN 324" },
+                    { "course_code": "BFIN 325" },
+                    { "course_code": "BFIN 327" },
+                    { "course_code": "BFIN 424" },
+                    { "course_code": "BFIN 426" },
+                    { "course_code": "BFIN 429A" },
+                    { "course_code": "BFIN 429B" },
+                    { "course_code": "BFIN 429C" }
                 ]
             }
         ]

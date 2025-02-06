@@ -7,7 +7,7 @@
         "req_groups": [
             {
                 "id": 110,
-                "name": "Minor Lower Division",
+                "name": "Lower Division-ELective",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
@@ -19,7 +19,7 @@
             },
             {
                 "id": 120,
-                "name": "Minor Upper Division",
+                "name": "Upper Division",
                 "req_credits": 15,
                 "selection_type": "ALL",
                 "classes": [

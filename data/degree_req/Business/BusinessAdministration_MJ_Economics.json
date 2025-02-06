@@ -1,8 +1,9 @@
 {
-    "degree_program": "B.B.A Accounting",
+    "degree_program": "Business Administration Major-Economics Concentration",
     "college": "School of Business Administration",
     "academic_year": "2024-2025",
     "requirements": {
+        "language_requirement": "N/A",
         "req_groups": [
             {
                 "id": 110,
@@ -128,16 +129,12 @@
             },
             {
                 "id": 130,
-                "name": "Upper Division",
-                "req_credits": 18,
-                "selection_type": "ALL",
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
                 "classes": [
-                    { "course_code": "ACCT 311" },
-                    { "course_code": "ACCT 360" },
-                    { "course_code": "ACCT 361" },
-                    { "course_code": "ACCT 363" },
-                    { "course_code": "ACCT 365" },
-                    { "course_code": "ACCT 464" }
+                    { "course_code": "ECON 302" },
+                    { "course_code": "ECON 352" }
                 ]
             },
             {
@@ -146,9 +143,30 @@
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
-                    { "course_code": "ACCT 362" },
-                    { "course_code": "ACCT 366" },
-                    { "course_code": "ACCT 460" }
+                    { "course_code": "ECON 301" },
+                    { "course_code": "ECON 351" }
+                ]
+            },
+            {
+                "id": 132,
+                "name": "Upper Division",
+                "req_credits": 6,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "ECON 355" },
+                    { "course_code": "ECON 32X" },
+                    { "course_code": "ECON 33X" },
+                    { "course_code": "ECON 34X" }
+                ]
+            },
+            {
+                "id": 133,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ECON 3XX" },
+                    { "course_code": "ECON 4XX" }
                 ]
             }
         ]

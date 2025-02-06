@@ -1,8 +1,9 @@
 {
-    "degree_program": "B.B.A Accounting",
+    "degree_program": "Business Administration Major-Management Information Systems Concentration",
     "college": "School of Business Administration",
     "academic_year": "2024-2025",
     "requirements": {
+        "language_requirement": "N/A",
         "req_groups": [
             {
                 "id": 110,
@@ -129,26 +130,13 @@
             {
                 "id": 130,
                 "name": "Upper Division",
-                "req_credits": 18,
+                "req_credits": 12,
                 "selection_type": "ALL",
                 "classes": [
-                    { "course_code": "ACCT 311" },
-                    { "course_code": "ACCT 360" },
-                    { "course_code": "ACCT 361" },
-                    { "course_code": "ACCT 363" },
-                    { "course_code": "ACCT 365" },
-                    { "course_code": "ACCT 464" }
-                ]
-            },
-            {
-                "id": 131,
-                "name": "Upper Division-Elective",
-                "req_credits": 3,
-                "selection_type": "MIN",
-                "classes": [
-                    { "course_code": "ACCT 362" },
-                    { "course_code": "ACCT 366" },
-                    { "course_code": "ACCT 460" }
+                    { "course_code": "BMIS 331" },
+                    { "course_code": "BMIS 342" },
+                    { "course_code": "BMIS 441" },
+                    { "course_code": "BMIS 444" }
                 ]
             }
         ]

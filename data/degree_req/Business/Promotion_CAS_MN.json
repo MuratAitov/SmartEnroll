@@ -17,7 +17,7 @@
             },
             {
                 "id": 120,
-                "name": "Electives",
+                "name": "Elective",
                 "req_credits": 9,
                 "selection_type": "MIN",
                 "classes": [

@@ -1,8 +1,9 @@
 {
-    "degree_program": "B.B.A Accounting",
+    "degree_program": "Business Administration Major-Law and Public Policy Concentration",
     "college": "School of Business Administration",
     "academic_year": "2024-2025",
     "requirements": {
+        "language_requirement": "N/A",
         "req_groups": [
             {
                 "id": 110,
@@ -129,26 +130,30 @@
             {
                 "id": 130,
                 "name": "Upper Division",
-                "req_credits": 18,
-                "selection_type": "ALL",
-                "classes": [
-                    { "course_code": "ACCT 311" },
-                    { "course_code": "ACCT 360" },
-                    { "course_code": "ACCT 361" },
-                    { "course_code": "ACCT 363" },
-                    { "course_code": "ACCT 365" },
-                    { "course_code": "ACCT 464" }
-                ]
-            },
-            {
-                "id": 131,
-                "name": "Upper Division-Elective",
-                "req_credits": 3,
+                "req_credits": 12,
                 "selection_type": "MIN",
                 "classes": [
-                    { "course_code": "ACCT 362" },
-                    { "course_code": "ACCT 366" },
-                    { "course_code": "ACCT 460" }
+                    { "course_code": "ACCT 365" },
+                    { "course_code": "ECON 320" },
+                    { "course_code": "ECON 322" },
+                    { "course_code": "ECON 324" },
+                    { "course_code": "ECON 325" },
+                    { "course_code": "ECON 330" },
+                    { "course_code": "ECON 333" },
+                    { "course_code": "ECON 352" },
+                    { "course_code": "ECON 401" },
+                    { "course_code": "ECON 402" },
+                    { "course_code": "ECON 404" },
+                    { "course_code": "BFIN 426" },
+                    { "course_code": "MGMT 415" },
+                    { "course_code": "POLS 303" },
+                    { "course_code": "POLS 321" },
+                    { "course_code": "POLS 323" },
+                    { "course_code": "POLS 325" },
+                    { "course_code": "POLS 331" },
+                    { "course_code": "POLS 357" },
+                    { "course_code": "POLS 359" },
+                    { "course_code": "POLS 372" }
                 ]
             }
         ]

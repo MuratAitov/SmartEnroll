@@ -16,7 +16,7 @@
             },
             {
                 "id": 111,
-                "name": "Lower Division-Electives",
+                "name": "Lower Division-Elective",
                 "req_credits": 4,
                 "selection_type": "MIN",
                 "classes": [
@@ -40,7 +40,7 @@
             },
             {
                 "id": 121,
-                "name": "Upper Division-Electives",
+                "name": "Upper Division-Elective",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [

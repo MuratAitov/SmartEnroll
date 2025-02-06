@@ -1,5 +1,5 @@
 {
-    "degree_program": "Business Minors for CAS Majors-Human Resource Management Minor",
+    "degree_program": "Business Administration Major-Human Resource Management Concentration",
     "college": "School of Business Administration",
     "academic_year": "2024-2025",
     "requirements": {
@@ -125,6 +125,18 @@
                 "selection_type": "ALL",
                 "classes": [
                     { "course_code": "BUSN 481" }
+                ]
+            },
+            {
+                "id": 130,
+                "name": "Upper Division",
+                "req_credits": 12,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "MGMT 400" },
+                    { "course_code": "MGMT 405" },
+                    { "course_code": "MGMT 410" },
+                    { "course_code": "MGMT 415" }
                 ]
             }
         ]
