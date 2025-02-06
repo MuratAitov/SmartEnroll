@@ -7,7 +7,7 @@ from credentials import SUPABASE_URL,SUPABASE_KEY
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Пример запроса: получить все строки из таблицы "courses"
-response = supabase.table("courses").select("*").execute()
+response = supabase.table("programs").select("*").execute()
 
 # Вывод результата
 print(response.data)

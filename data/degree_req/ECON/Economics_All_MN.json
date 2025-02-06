@@ -1,0 +1,51 @@
+{
+    "degree_program": "Business Minors for CAS Majors-Economics Minor",
+    "college": "School of Business Administration",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division",
+                "req_credits": 6,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "ECON 201" },
+                    { "course_code": "ECON 202" }
+                ]
+            },
+            {
+                "id": 120,
+                "name": " Upper Division",
+                "req_credits": 3,
+                "selection_type": "ALL",
+                "classes": [
+                    { "course_code": "ECON 302" }
+                ]
+            },
+            {
+                "id": 121,
+                "name": "Electives",
+                "req_credits": 6,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ECON 301" },
+                    { "course_code": "ECON 32X" },
+                    { "course_code": "ECON 33X" },
+                    { "course_code": "ECON 34X" }
+                ]
+            },
+            {
+                "id": 122,
+                "name": "Any Upper Division ECON Electives",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    { "course_code": "ECON 3XX" },
+                    { "course_code": "ECON 4XX" }
+                ]
+            }
+        ]
+    }
+}
