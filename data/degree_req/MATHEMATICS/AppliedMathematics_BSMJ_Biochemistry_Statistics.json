@@ -1,0 +1,156 @@
+{
+    "degree_program": "B.S. Applied Mathematics Major - Biochemistry and Statistics Concentration",
+    "college": "College of Arts & Sciences",
+    "academic_year": "2023-2024",
+    "requirements": {
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division",
+                "req_credits": 18,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 157"},
+                    {"course_code": "MATH 258"},
+                    {"course_code": "MATH 259"},
+                    {"course_code": "MATH 260"},
+                    {"course_code": "CPSC 121"}
+                ]
+            },
+            {
+                "id": 120,
+                "name": "Upper Division",
+                "req_credits": 10,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 301"},
+                    {"course_code": "MATH 350"},
+                    {"course_code": "MATH 413"},
+                    {"course_code": "MATH 496"}
+                ]
+            },
+            {
+                "id": 121,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes":[
+                    {"course_code": "MATH 335"},
+                    {"course_code": "MATH 339"}
+                ]
+            },
+            {
+                "id": 122,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 321"},
+                    {"course_code": "MATH 422"}
+              ]
+            },
+            {
+              "id": 130,
+              "name": "Biochemistry",
+              "req_credits": 20,
+              "selection_type": "MIN",
+              "classes": [
+                    {"course_code": "CHEM 101"},
+                    {"course_code": "CHEM 101L"},
+                    {"course_code": "CHEM 230"},
+                    {"course_code": "CHEM 230L"},
+                    {"course_code": "CHEM 231"},
+                    {"course_code": "CHEM 231L"},
+                    {"course_code": "CHEM 245"},
+                    {"course_code": "CHEM 245L"},
+                    {"course_code": "CHEM 399"},
+                    {"course_code": "CHEM 407"}
+                ]
+            },
+            {
+                "id": 131,
+                "name": "Biochemistry-Elective",
+                "req_credits": 8,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 440"},
+                    {"course_code": "MATH 454"},
+                    {"course_code": "MATH 462"}
+                ]
+            },
+            {
+                "id": 132,
+                "name": "Biochemistry-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 3XX"},
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ]
+            },
+            {
+                "id": 133,
+                "name": "Biochemistry-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ]
+            },
+            {
+                "id": 134,
+                "name": "Statistics",
+                "req_credits": 3,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 421"}
+                ]
+            },
+            {
+                "id": 135,
+                "name": "Statistics-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 425"},
+                    {"course_code": "MATH 426"}
+                ]
+            },
+            {
+                "id": 136,
+                "name": "Statistics Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 422"},
+                    {"course_code": "MATH 423"},
+                    {"course_code": "MATH 426"}
+                ]
+            },
+            {
+                "id": 137,
+                "name": "Statistics Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "ECON 355"},
+                    {"course_code": "ECON 451"},
+                    {"course_code": "ECON 452"},
+                    {"course_code": "CPSC 322"},
+                    {"course_code": "CPSC 323"},
+                    {"course_code": "CPSC 324"},
+                    {"course_code": "PHYS 323"},
+                    {"course_code": "PSYC 450"}
+                ]
+            }
+        ]
+    }
+}

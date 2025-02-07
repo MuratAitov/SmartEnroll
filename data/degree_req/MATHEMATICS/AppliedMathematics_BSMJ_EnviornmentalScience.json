@@ -1,0 +1,156 @@
+{
+    "degree_program": "B.S. Applied Mathematics Major - Enviornmental Science Concentration",
+    "college": "College of Arts & Sciences",
+    "academic_year": "2023-2024",
+    "requirements": {
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division",
+                "req_credits": 18,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 157"},
+                    {"course_code": "MATH 258"},
+                    {"course_code": "MATH 259"},
+                    {"course_code": "MATH 260"},
+                    {"course_code": "CPSC 121"}
+                ]
+            },
+            {
+                "id": 120,
+                "name": "Upper Division",
+                "req_credits": 10,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 301"},
+                    {"course_code": "MATH 350"},
+                    {"course_code": "MATH 413"},
+                    {"course_code": "MATH 496"}
+                ]
+            },
+            {
+                "id": 121,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes":[
+                    {"course_code": "MATH 335"},
+                    {"course_code": "MATH 339"}
+                ]
+            },
+            {
+                "id": 122,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 321"},
+                    {"course_code": "MATH 422"}
+              ]
+            },
+            {
+                "id": 130,
+                "name": "Enviornmental Science Lower Division",
+                "req_credits": 7,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "ENVS 101"},
+                    {"course_code": "ENVS 103"},
+                    {"course_code": "ENVS 103L"},
+                    {"course_code": "BIOL 206"},
+                    {"course_code": "BIOL 206L"}
+                ],
+                "note: Choose (ENVS 103 and ENVS 103L) or (BIOL 206 and BIOL 206L)"
+            },
+            {
+                "id": 131,
+                "name": "Enviornmental Science-Elective",
+                "req_credits": 4,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "CHEM 101"},
+                    {"course_code": "CHEM 101L"},
+                    {"course_code": "BIOL 105"},
+                    {"course_code": "BIOL 105L"}
+                ],
+                "note: Choose (CHEM 101 and CHEM 101L) or (BIOL 105 and BIOL 105L)"
+            },
+            {
+                "id": 132,
+                "name": "Enviornmental Science-Elective",
+                "req_credits": 4,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "ENVS 110"},
+                    {"course_code": "ENVS 110L"},
+                    {"course_code": "ENVS 202"},
+                    {"course_code": "ENVS 202L"}
+                ],
+                "note: Choose (ENVS 110 and ENVS 110L) or (ENVS 202 and ENVS 202L)"
+            },
+            {
+                "id": 133,
+                "name": "Enviornmental Science Upper Division",
+                "req_credits": 4,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "ENVS 384"},
+                    {"course_code": "ENVS 384L"},
+                    {"course_code": "ENVS 344"},
+                    {"course_code": "ENVS 344L"}
+                ],
+                "note: Choose (ENVS 384 and ENVS 384L) or (ENVS 344 and ENVS 344L)"
+            },
+            {
+                "id": 134,
+                "name": "Enviornmental Science Upper Division",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "ENVS 320"},
+                    {"course_code": "ECON 324"}
+                ]
+            },
+            {
+                "id": 135,
+                "name": "Enviornmental Science-Elective",
+                "req_credits": 6,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 425"},
+                    {"course_code": "MATH 426"},
+                    {"course_code": "MATH 440"},
+                    {"course_code": "MATH 454"},
+                    {"course_code": "MATH 462"}
+            },
+            {
+                "id": 136,
+                "name": "Economics-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 3XX"},
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ]
+            },
+            {
+                "id": 137,
+                "name": "Economics-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ]
+            }
+        ]
+    }
+}

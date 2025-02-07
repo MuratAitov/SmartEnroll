@@ -1,0 +1,69 @@
+{
+    "degree_program": "Mathematics Minor",
+    "college": "College of Arts & Sciences",
+    "academic_year": "2023-2024",
+    "requirements": {
+        "language_requirement": "Demonstrate competence in a second language.",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division",
+                "req_credits": 12,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 157"},
+                    {"course_code": "MATH 258"},
+                    {"course_code": "MATH 259"}
+                ]
+            },
+            {
+                "id": 120,
+                "name": "Upper Division",
+                "req_credits": 3,
+                "selection_type": "ALL",
+                "classes":[
+                    {"course_code": "MATH 301"}
+                ]
+            },
+            {
+                "id": 121,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes":[
+                    {"course_code": "MATH 335"},
+                    {"course_code": "MATH 339"}
+                ]
+            },
+            {
+                "id": 122,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 260"},
+                    {"course_code": "MATH 3XX"},
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 469"},
+                    {"course_code": "- MATH 499"}
+                ]
+            },
+            {
+                "id": 123,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ]
+            }
+        ]
+    }
+}
