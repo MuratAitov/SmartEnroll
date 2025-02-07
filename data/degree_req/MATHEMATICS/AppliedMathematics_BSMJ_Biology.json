@@ -68,45 +68,49 @@
                 "req_credits": 8,
                 "selection_type": "MIN",
                 "classes": [
-                      {"course_code": "BIOL 205"},
-                      {"course_code": "BIOL 205L"},
-                      {"course_code": "BIOL 206"},
-                      {"course_code": "BIOL 206L"},
-                      {"course_code": "BIOL 207"},
-                      {"course_code": "BIOL 207L"}
-                  ],
-                  "note: Choose (BIOL 205 and BIOL 205L) or (BIOL 206 and BIOL 206L) or (BIOL 207 and BIOL 207L)"
-              },
-              {
+                    {"course_code": "BIOL 205"},
+                    {"course_code": "BIOL 205L"},
+                    {"course_code": "BIOL 206"},
+                    {"course_code": "BIOL 206L"},
+                    {"course_code": "BIOL 207"},
+                    {"course_code": "BIOL 207L"}
+                ],
+                "note: Choose (BIOL 205 and BIOL 205L) or (BIOL 206 and BIOL 206L) or (BIOL 207 and BIOL 207L)"
+            },
+            {
                 "id": 132,
                 "name": "Biology-Elective",
                 "req_credits": 6,
                 "selection_type": "MIN",
                 "classes": [
-                      {"course_code": "BIOL 3XX"},
-                      {"course_code": "BIOL 4XX"}
-                  ]
-              },
-              {
+                    {"course_code": "BIOL 3XX"},
+                    {"course_code": "BIOL 4XX"}
+                ]
+            },
+            {
                 "id": 133,
                 "name": "Biology-Elective",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
-                      {"course_code": "MATH 440"},
-                      {"course_code": "MATH 454"},
-                      {"course_code": "MATH 462"}
-                  ]
-              },
-              {
+                    {"course_code": "MATH 440"},
+                    {"course_code": "MATH 454"},
+                    {"course_code": "MATH 462"}
+                ]
+            },
+            {
                 "id": 134,
                 "name": "Biology-Elective",
                 "req_credits": 6,
                 "selection_type": "MIN",
                 "classes": [
-                      {"course_code": "MATH 4XX"}
-                  ]
-              }
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ]
+            }
         ]
     }
 }
