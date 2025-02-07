@@ -1,0 +1,188 @@
+{
+    "degree_program": "B.S. Applied Mathematics Major - Computer Science Concentration",
+    "college": "College of Arts & Sciences",
+    "academic_year": "2023-2024",
+    "requirements": {
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division",
+                "req_credits": 18,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 157"},
+                    {"course_code": "MATH 258"},
+                    {"course_code": "MATH 259"},
+                    {"course_code": "MATH 260"},
+                    {"course_code": "CPSC 121"}
+                ]
+            },
+            {
+                "id": 120,
+                "name": "Upper Division",
+                "req_credits": 7,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 301"},
+                    {"course_code": "MATH 350"},
+                    {"course_code": "MATH 496"}
+                ]
+            },
+            {
+                "id": 121,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 413"},
+                    {"course_code": "MATH 437"},
+                    {"course_code": "MATH 457"},
+                    {"course_code": "CPSC 353"}
+                ]
+            },
+            {
+                "id": 121,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes":[
+                    {"course_code": "MATH 335"},
+                    {"course_code": "MATH 339"}
+                ]
+            },
+            {
+                "id": 122,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 321"},
+                    {"course_code": "MATH 422"}
+              ]
+            },
+            {
+                "id": 130,
+                "name": "Computer Science-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "CPSC 122"},
+                    {"course_code": "CPSC 222"}
+                ]
+            },
+            {
+                "id": 131,
+                "name": "Computer Science-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "CPSC 322"},
+                    {"course_code": "CPSC 351"},
+                    {"course_code": "CPSC 352"},
+                    {"course_code": "CPSC 450"}
+                  ]
+            },
+            {
+                "id": 132,
+                "name": "Computer Science-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "CPSC 223"},
+                    {"course_code": "CPSC 321"},
+                    {"course_code": "CPSC 322"},
+                    {"course_code": "CPSC 323"},
+                    {"course_code": "CPSC 324"},
+                    {"course_code": "CPSC 325"},
+                    {"course_code": "CPSC 326"},
+                    {"course_code": "CPSC 331"},
+                    {"course_code": "CPSC 332"},
+                    {"course_code": "CPSC 333"},
+                    {"course_code": "CPSC 334"},
+                    {"course_code": "CPSC 351"},
+                    {"course_code": "CPSC 353"},
+                    {"course_code": "CPSC 425"},
+                    {"course_code": "CPSC 447"},
+                    {"course_code": "CPSC 450"},
+                    {"course_code": "CPSC 475"}
+                  ]
+            },
+            {
+                "id": 133,
+                "name": "Computer Science-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "CPSC 321"},
+                    {"course_code": "CPSC 322"},
+                    {"course_code": "CPSC 323"},
+                    {"course_code": "CPSC 324"},
+                    {"course_code": "CPSC 325"},
+                    {"course_code": "CPSC 326"},
+                    {"course_code": "CPSC 331"},
+                    {"course_code": "CPSC 332"},
+                    {"course_code": "CPSC 333"},
+                    {"course_code": "CPSC 334"},
+                    {"course_code": "CPSC 351"},
+                    {"course_code": "CPSC 353"},
+                    {"course_code": "CPSC 425"},
+                    {"course_code": "CPSC 447"},
+                    {"course_code": "CPSC 450"},
+                    {"course_code": "CPSC 475"}
+                ]
+            },
+            {
+                "id": 134,
+                "name": "Computer Science",
+                "req_credits": 3,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 351"}
+                  ]
+            },
+            {
+                "id": 135,
+                "name": "Computer Science-Elective",
+                "req_credits": 9,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 328"},
+                    {"course_code": "MATH 421"},
+                    {"course_code": "MATH 423"},
+                    {"course_code": "MATH 425"},
+                    {"course_code": "MATH 426"},
+                    {"course_code": "MATH 455"}
+                  ]
+            },
+            {
+                "id": 136,
+                "name": "Computer Science-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 260"},
+                    {"course_code": "MATH 3XX"},
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ],
+                "note: Can double count with 110"
+            },
+            {
+                "id": 132,
+                "name": "Computer Science-Elective",
+                "req_credits": 6,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "CPSC 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ]
+            }
+        ]
+    }
+}

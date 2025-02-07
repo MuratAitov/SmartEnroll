@@ -1,5 +1,5 @@
 {
-    "degree_program": "B.S. Applied Mathematics Major - Actuarial Science Concentration",
+    "degree_program": "B.S. Applied Mathematics Major - Chemistry Concentration",
     "college": "College of Arts & Sciences",
     "academic_year": "2023-2024",
     "requirements": {
@@ -20,13 +20,12 @@
             {
                 "id": 120,
                 "name": "Upper Division",
-                "req_credits": 13,
+                "req_credits": 10,
                 "selection_type": "ALL",
                 "classes": [
                     {"course_code": "MATH 301"},
-                    {"course_code": "MATH 423"},
+                    {"course_code": "MATH 350"},
                     {"course_code": "MATH 413"},
-                    {"course_code": "MATH 422"},
                     {"course_code": "MATH 496"}
                 ]
             },
@@ -41,45 +40,54 @@
                 ]
             },
             {
+                "id": 122,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 321"},
+                    {"course_code": "MATH 422"}
+              ]
+            },
+            {
               "id": 130,
-              "name": "Actuarial Science",
-              "req_credits": 26,
-              "selection_type": "ALL",
+              "name": "Chemistry",
+              "req_credits": 20,
+              "selection_type": "MIN",
               "classes": [
-                    {"course_code": "ACCT 263"},
-                    {"course_code": "ECON 201"},
-                    {"course_code": "ECON 202"},
-                    {"course_code": "ECON 301"},
-                    {"course_code": "ECON 352"},
-                    {"course_code": "ECON 352L"},
-                    {"course_code": "ECON 355"},
-                    {"course_code": "ECON 451"},
-                    {"course_code": "MATH 421"},
-                    {"course_code": "MATH 494"}
+                    {"course_code": "PHYS 121"},
+                    {"course_code": "CHEM 101"},
+                    {"course_code": "CHEM 101L"},
+                    {"course_code": "CHEM 205"},
+                    {"course_code": "CHEM 230"},
+                    {"course_code": "CHEM 230L"},
+                    {"course_code": "CHEM 310"},
+                    {"course_code": "CHEM 310L"},
+                    {"course_code": "CHEM 355"}
                 ]
             },
             {
                 "id": 131,
-                "name": "Actuarial Science-Elective",
+                "name": "Chemistry-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 440"},
+                    {"course_code": "MATH 454"},
+                    {"course_code": "MATH 462"}
+                ]
+            },
+            {
+                "id": 132,
+                "name": "Chemistry-Elective",
                 "req_credits": 6,
                 "selection_type": "MIN",
                 "classes": [
-                    {"course_code": "MATH 3XX"},
                     {"course_code": "MATH 4XX"},
                     {"course_code": "- MATH 335"},
                     {"course_code": "- MATH 339"},
                     {"course_code": "- MATH 432"},
                     {"course_code": "- MATH 499"}
-                ]
-            },
-            {
-                "id": 132,
-                "name": "Actuarial Science-Elective",
-                "req_credits": 3,
-                "selection_type": "MIN",
-                "classes": [
-                    {"course_code": "MATH 4XX"},
-                    {"course_code": "ECON 452"}
                 ]
             }
         ]

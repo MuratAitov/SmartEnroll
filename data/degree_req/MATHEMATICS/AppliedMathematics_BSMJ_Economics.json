@@ -1,5 +1,5 @@
 {
-    "degree_program": "B.S. Applied Mathematics Major - Biology Concentration",
+    "degree_program": "B.S. Applied Mathematics Major - Economics Concentration",
     "college": "College of Arts & Sciences",
     "academic_year": "2023-2024",
     "requirements": {
@@ -50,78 +50,76 @@
               ]
             },
             {
-              "id": 130,
-              "name": "Biology",
-              "req_credits": 11,
-              "selection_type": "MIN",
-              "classes": [
-                    {"course_code": "CHEM 101"},
-                    {"course_code": "CHEM 101L"},
-                    {"course_code": "BIOL 105"},
-                    {"course_code": "BIOL 105L"},
-                    {"course_code": "BIOL 106"}
+                "id": 130,
+                "name": "Economics",
+                "req_credits": 12,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "ECON 201"},
+                    {"course_code": "ECON 202"},
+                    {"course_code": "ECON 303"},
+                    {"course_code": "MATH 421"}
                 ]
             },
             {
                 "id": 131,
-                "name": "Biology-Elective",
-                "req_credits": 8,
-                "selection_type": "MIN",
-                "classes": [
-                    {"course_code": "BIOL 205"},
-                    {"course_code": "BIOL 205L"},
-                    {"course_code": "BIOL 206"},
-                    {"course_code": "BIOL 206L"},
-                    {"course_code": "BIOL 207"},
-                    {"course_code": "BIOL 207L"}
-                ],
-                "note: Choose (BIOL 205 and BIOL 205L) or (BIOL 206 and BIOL 206L) or (BIOL 207 and BIOL 207L)"
-            },
-            {
-                "id": 132,
-                "name": "Biology-Elective",
-                "req_credits": 6,
-                "selection_type": "MIN",
-                "classes": [
-                    {"course_code": "BIOL 303"},
-                    {"course_code": "BIOL 313"},
-                    {"course_code": "BIOL 323"},
-                    {"course_code": "BIOL 331"},
-                    {"course_code": "BIOL 333"},
-                    {"course_code": "BIOL 334"},
-                    {"course_code": "BIOL 335"},
-                    {"course_code": "BIOL 337"},
-                    {"course_code": "BIOL 338"},
-                    {"course_code": "BIOL 340"},
-                    {"course_code": "BIOL 341"},
-                    {"course_code": "BIOL 343"},
-                    {"course_code": "BIOL 344"},
-                    {"course_code": "BIOL 357"},
-                    {"course_code": "BIOL 360"},
-                    {"course_code": "BIOL 367"},
-                    {"course_code": "BIOL 371"},
-                    {"course_code": "BIOL 399"},
-                    {"course_code": "BIOL 403"},
-                    {"course_code": "BIOL 420"},
-                    {"course_code": "BIOL 441"},
-                    {"course_code": "BIOL 451"}
-                ]
-            },
-            {
-                "id": 133,
-                "name": "Biology-Elective",
+                "name": "Economics-Elective",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
-                    {"course_code": "MATH 440"},
-                    {"course_code": "MATH 454"},
-                    {"course_code": "MATH 462"}
+                    {"course_code": "ECON 301"},
+                    {"course_code": "ECON 351"}
                 ]
             },
             {
-                "id": 134,
-                "name": "Biology-Elective",
+                "id": 132,
+                "name": "Economics-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "ECON 320"},
+                    {"course_code": "ECON 321"},
+                    {"course_code": "ECON 322"},
+                    {"course_code": "ECON 324"},
+                    {"course_code": "ECON 325"},
+                    {"course_code": "ECON 330"},
+                    {"course_code": "ECON 333"},
+                    {"course_code": "ECON 334"},
+                    {"course_code": "ECON 352"},
+                    {"course_code": "ECON 352L"},
+                    {"course_code": "ECON 355"},
+                    {"course_code": "ECON 451"}
+            },
+            {
+                "id": 133,
+                "name": "Economics-Elective",
                 "req_credits": 6,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 423"},
+                    {"course_code": "MATH 425"},
+                    {"course_code": "MATH 426"},
+                    {"course_code": "MATH 440"},
+                    {"course_code": "MATH 454"}
+            },
+            {
+                "id": 134,
+                "name": "Economics-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 3XX"},
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ]
+            },
+            {
+                "id": 135,
+                "name": "Economics-Elective",
+                "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
                     {"course_code": "MATH 4XX"},
