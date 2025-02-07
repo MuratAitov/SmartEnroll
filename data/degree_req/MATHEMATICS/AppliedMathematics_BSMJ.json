@@ -1,0 +1,121 @@
+{
+    "degree_program": "B.S. Mathematics Major - No Concentration",
+    "college": "College of Arts & Sciences",
+    "academic_year": "2023-2024",
+    "requirements": {
+        "language_requirement": "Demonstrate competence in a second language.",
+        "req_groups": [
+            {
+                "id": 110,
+                "name": "Lower Division",
+                "req_credits": 18,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 157"},
+                    {"course_code": "MATH 258"},
+                    {"course_code": "MATH 259"},
+                    {"course_code": "MATH 260"},
+                    {"course_code": "CPSC 121"}
+                ]
+            },
+            {
+                "id": 120,
+                "name": "Upper Division",
+                "req_credits": 10,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "MATH 301"},
+                    {"course_code": "MATH 350"},
+                    {"course_code": "MATH 413"},
+                    {"course_code": "MATH 496"}
+                ]
+            },
+            {
+                "id": 121,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes":[
+                    {"course_code": "MATH 335"},
+                    {"course_code": "MATH 339"}
+                ]
+            },
+            {
+                "id": 122,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 321"},
+                    {"course_code": "MATH 422"}
+              ]
+            },
+            {
+              "id": 130,
+              "name": "No Concentration-Elective",
+              "req_credits": 8,
+              "selection_type": "MIN",
+              "classes": [
+                    {"course_code": "BIOL 105"},
+                    {"course_code": "BIOL 105L"},
+                    {"course_code": "CHEM 101"},
+                    {"course_code": "CHEM 101L"},
+                    {"course_code": "PHYS 121"}
+                ],
+                "note: Choose (BIOL 105 and BIOL 105L) or (CHEM 101 and CHEM 101L) or (PHYS 121)"
+            },
+            {
+                "id": 131,
+                "name": "No Concentration-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "BIOL 106"},
+                    {"course_code": "CHEM 205"},
+                    {"course_code": "CHEM 230"},
+                    {"course_code": "CHEM 230L"},
+                    {"course_code": "PHYS 122"}
+                ],
+                "note: Choose (CHEM 230 and CHEM 230L)"
+            },
+            {
+                "id": 132,
+                "name": "No Concentration-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 440"},
+                    {"course_code": "MATH 454"},
+                    {"course_code": "MATH 462"}
+                ]
+            },
+            {
+                "id": 133,
+                "name": "No Concentration-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 3XX"},
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ]
+            },
+            {
+                "id": 134,
+                "name": "No Concentration-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 335"},
+                    {"course_code": "- MATH 339"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 499"}
+                ]
+            }
+        ]
+    }
+}

@@ -1,5 +1,5 @@
 {
-    "degree_program": "B.S. Mathematics with Statistics Concentration",
+    "degree_program": "B.S. Mathematics Major - Statistics Concentration",
     "college": "College of Arts & Sciences",
     "academic_year": "2023-2024",
     "requirements": {
@@ -7,7 +7,7 @@
         "req_groups": [
             {
                 "id": 110,
-                "name": "lower division",
+                "name": "Lower Division",
                 "req_credits": 12,
                 "selection_type": "ALL",
                 "classes": [
@@ -18,7 +18,7 @@
             },
             {
                 "id": 120,
-                "name": "upper division",
+                "name": "Upper Division",
                 "req_credits": 13,
                 "selection_type": "ALL",
                 "classes": [
@@ -31,7 +31,7 @@
             },
             {
                 "id": 121,
-                "name": "Select one of the following five (5) cources:",
+                "name": "Upper Division-Elective",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes":[
@@ -44,8 +44,8 @@
             },
             {
                 "id": 122,
-                "name": "Select one 300-400 level MATH elective (Cannot double-count with a course used above):",
-                "req_credits": 6,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
                     {"course_code": "MATH 260"},
@@ -55,22 +55,22 @@
                     {"course_code": "- MATH 432"},
                     {"course_code": "- MATH 496"}
               ]
-              },
-              {
-              "id": 123,
-              "name": "Select one 400-level MATH elective",
-              "req_credits": 6,
-              "selection_type": "MIN",
-              "classes": [
-                {"course_code": "MATH 4XX"},
-                {"course_code": "- MATH 355"},
-                {"course_code": "- MATH 432"},
-                {"course_code": "- MATH 496"}
+            },
+            {
+                "id": 123,
+                "name": "Upper Division-Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "MATH 4XX"},
+                    {"course_code": "- MATH 355"},
+                    {"course_code": "- MATH 432"},
+                    {"course_code": "- MATH 496"}
                 ]
             },
             {
                 "id": 130,
-                "name": "statistics concentration",
+                "name": "Statistics Concentration",
                 "req_credits": 3,
                 "selection_type": "ALL",
                 "classes": [
@@ -79,7 +79,7 @@
             },
             {
                 "id": 131,
-                "name": "Select one of the following two courses:",
+                "name": "Statistics Elective",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
@@ -89,7 +89,7 @@
             },
             {
                 "id": 132,
-                "name": "Select one of the following two courses:",
+                "name": "Statistics Elective",
                 "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
@@ -99,19 +99,28 @@
             },
             {
                 "id": 133,
-                "name": "Two Statistics Electives:",
-                "req_credits": 6,
+                "name": "Statistics Elective",
+                "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
+                    {"course_code": "MATH 422"},
                     {"course_code": "MATH 423"},
-                    {"course_code": "MATH 425"},
-                    {"course_code": "MATH 426"},
+                    {"course_code": "MATH 426"}
+                ]
+            },
+            {
+                "id": 133,
+                "name": "Statistics Elective",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
                     {"course_code": "ECON 355"},
                     {"course_code": "ECON 451"},
                     {"course_code": "ECON 452"},
                     {"course_code": "CPSC 322"},
                     {"course_code": "CPSC 323"},
                     {"course_code": "CPSC 324"},
+                    {"course_code": "PHYS 323"},
                     {"course_code": "PSYC 450"}
                 ]
             }

@@ -1,5 +1,5 @@
 {
-    "degree_program": "B.S. Mathematics Major",
+    "degree_program": "B.A. Mathematics Major - Statistics Concentration",
     "college": "College of Arts & Sciences",
     "academic_year": "2023-2024",
     "requirements": {
@@ -19,49 +19,43 @@
             {
                 "id": 120,
                 "name": "Upper Division",
-                "req_credits": 13,
+                "req_credits": 12,
                 "selection_type": "ALL",
                 "classes": [
                     {"course_code": "MATH 301"},
                     {"course_code": "MATH 339"},
-                    {"course_code": "MATH 413"},
-                    {"course_code": "MATH 437"},
+                    {"course_code": "MATH 421"},
                     {"course_code": "MATH 499"}
                 ]
             },
             {
                 "id": 121,
-                "name": "Upper Division-Elective",
+                "name": "Upper Division",
                 "req_credits": 3,
                 "selection_type": "MIN",
-                "classes":[
-                    {"course_code": "MATH 414"},
-                    {"course_code": "MATH 417"},
-                    {"course_code": "MATH 438"},
-                    {"course_code": "MATH 457"},
-                    {"course_code": "MATH 459"}
+                "classes": [
+                    {"course_code": "MATH 321"},
+                    {"course_code": "MATH 422"}
                 ]
             },
             {
                 "id": 122,
-                "name": "Upper Division-Elective",
-                "req_credits": 6,
+                "name": "Upper Division",
+                "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
-                    {"course_code": "MATH 260"},
-                    {"course_code": "MATH 3XX"},
-                    {"course_code": "MATH 4XX"},
-                    {"course_code": "- MATH 355"},
-                    {"course_code": "- MATH 432"},
-                    {"course_code": "- MATH 496"}
-              ]
+                    {"course_code": "MATH 425"},
+                    {"course_code": "MATH 426"}
+                ]
             },
             {
                 "id": 123,
                 "name": "Upper Division-Elective",
-                "req_credits": 6,
+                "req_credits": 3,
                 "selection_type": "MIN",
                 "classes": [
+                    {"course_code": "MATH 260"},
+                    {"course_code": "MATH 3XX"},
                     {"course_code": "MATH 4XX"},
                     {"course_code": "- MATH 355"},
                     {"course_code": "- MATH 432"},
