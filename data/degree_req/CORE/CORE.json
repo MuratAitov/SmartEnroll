@@ -1,0 +1,144 @@
+{
+    "degree_program": "University Core Requirements",
+    "college": "University College",
+    "academic_year": "2024-2025",
+    "requirements": {
+        "language_requirement": "N/A",
+        "req_groups": [
+            {
+                "id": 100,
+                "name": "Fundamental Core",
+                "req_credits": 12,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "COMM 100", "note": "Min 3 credits"},
+                    {"course_code": "PHIL 101", "note": "Min 3 credits"},
+                    {"course_code": "ENGL 101", "note": "Min 3 credits"}
+                ]
+            },
+            {
+                "id": 200,
+                "name": "Math Requirement",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                        {"course_code": "MATH 1xx"},
+                        {"course_code": "MATH 2xx"},
+                        {"course_code": "MATH 3xx"},
+                        {"course_code": "MATH 4xx"}
+                    
+                ]
+            },
+            {
+                "id": 300,
+                "name": "Science Requirement",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "BIOL xxx"},
+                    {"course_code": "BIOL xxxL"},
+                    {"course_code": "CHEM xxx"},
+                    {"course_code": "CHEM xxxL"},
+                    {"course_code": "PHYS 104"},
+                    {"course_code": "PHYS 104L"},
+                    {"course_code": "PHYS 121"},
+                    {"course_code": "PHYS 121L"}
+                ]
+            },
+            {
+                "id": 400,
+                "name": "Philosophy Core",
+                "req_credits": 6,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "PHIL 201"},
+                    {"course_code": "Core: World or Comparative Rel"}
+                ]
+            },
+            {
+                "id": 500,
+                "name": "Ethics Requirement",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "PHIL 301"},
+                    {"course_code": "RELI 330"}
+                ]
+            },
+            {
+                "id": 600,
+                "name": "Core Writing",
+                "req_credits": 9,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "Core: Writing Enriched"}
+                ]
+            },
+            {
+                "id": 601,
+                "name": "Core Social Justice",
+                "req_credits": 3,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "Core: Social Justice"}
+                ]
+            },
+            {
+                "id": 602,
+                "name": "Core Global Studies",
+                "req_credits": 6,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "Core: Global Studies"}
+                ]
+            },
+            {
+                "id": 701,
+                "name": "Social & Behavioral Science",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "Core: Social & Behavioral Sci"}
+                ]
+            },
+            {
+                "id": 702,
+                "name": "Literature",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "Core: Literature"}
+                ]
+            },
+            {
+                "id": 703,
+                "name": "History",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "Core: History"}
+                ]
+            },
+            {
+                "id": 704,
+                "name": "Fine Arts & Design",
+                "req_credits": 3,
+                "selection_type": "MIN",
+                "classes": [
+                    {"course_code": "Core: Fine Arts & Design"}
+                ],
+                "note": "Minimum 3 credits"
+            },
+            {
+                "id": 800,
+                "name": "Capstone",
+                "req_credits": 3,
+                "selection_type": "ALL",
+                "classes": [
+                    {"course_code": "Core: Core Integration Seminar"}
+                ]
+            }
+        ]
+    }
+  }
+  
