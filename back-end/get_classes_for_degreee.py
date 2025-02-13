@@ -80,7 +80,7 @@ def get_remaining_courses(program_name, taken_courses, full_view=False):
 
     return remaining_requirements
 
-# Пример использования
+
 taken_courses = [ 
     "MATH 157", "MATH 258", "MATH 231", "MATH 321", "MATH 339", "MATH 259",
     "PHYS 121L", "BIOL 106", "PHYS 122L", "MATH 328", "MATH 351", "CPSC 121",
@@ -90,5 +90,5 @@ taken_courses = [
 ]
 program_name = 'B.S. Computer Science - Data Science Concentration'
 
-# Для дебага с полным отображением
+
 get_remaining_courses(program_name, taken_courses, full_view=True)
