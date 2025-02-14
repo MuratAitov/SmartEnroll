@@ -1,8 +1,3 @@
-@font-face {
-    font-family: 'Goudy Trajan Pro';
-    src: url('/path/to/GoudyTrajanPro.otf') format('opentype');
-}
-
 /* Dark mode styles - placed at the top for higher specificity */
 body.dark-mode {
     background-color: #142A50 !important;
@@ -94,11 +89,6 @@ body.dark-mode select option {
 body, nav, .nav-links a, .nav-button, .dropdown-content,
 .theme-toggle, .sidebar, input, select {
     transition: all 0.3s ease;
-}
-
-@font-face {
-    font-family: 'Goudy Trajan Pro';
-    src: url('/path/to/GoudyTrajanPro.otf') format('opentype');
 }
 
 body {
@@ -244,28 +234,27 @@ main {
     gap: 10px;
     margin: 10px 0;
 }
-.level-btn {
+.division-btn {
+    flex: 1;
     padding: 8px 16px;
-    border: 1px solid #142A50;
+    border: 1px solid #C4C8CE;
     background-color: transparent;
-    color: #142A50;
+    color: #6c757d;
     cursor: pointer;
     border-radius: 4px;
-    transition: all 0.2s ease;
+    font-size: 14px;
 }
-.level-btn.active {
-    background-color: #142A50;
-    color: white;
+
+.division-btn:hover {
+    background-color: rgba(108, 117, 125, 0.1);
 }
-/* Dark mode styles */
-body.dark-mode .level-btn {
-    border-color: #ffffff;
+
+.division-btn.selected {
+    background-color: #002467;
     color: #ffffff;
+    border: 1px solid #002467;
 }
-body.dark-mode .level-btn.active {
-    background-color: #ffffff;
-    color: #142A50;
-}
+
 .empty-space {
     width: 50px;
 }
@@ -757,10 +746,9 @@ body.dark-mode .sidebar-tabs a:hover {
 }
 
 /* Level button hover styles */
-body.dark-mode .level-btn:hover {
+body.dark-mode .division-btn:hover {
     background-color: #B41231 !important;
     color: #ffffff !important;
-    border-color: #B41231 !important;
 }
 
 /* Export button hover styles */
@@ -856,76 +844,6 @@ body.dark-mode .nav-links a.active:hover {
 /* Add transition for smooth color change */
 .nav-links a {
     position: relative !important;
-}
-
-/* Division button styles */
-.division-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.division-btn {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #C4C8CE;
-    background: none;
-    color: #C4C8CE;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 14px;
-}
-
-.division-btn.active {
-    background-color: #142A50 !important;
-    color: #ffffff !important;
-    border-color: #142A50 !important;
-}
-
-/* Hover styles */
-.division-btn:hover {
-    background-color: #142A50;
-    color: #ffffff;
-    border-color: #142A50;
-}
-
-.semester-content {
-    display: none;
-    position: absolute;
-    background-color: #333333;
-    min-width: 160px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    z-index: 1000;
-    border-radius: 4px;
-    margin-top: 5px;
-}
-
-.semester-content.show {
-    display: block;
-}
-
-.semester-content a {
-    color: #ffffff;
-    padding: 8px 16px;
-    text-decoration: none;
-    display: block;
-    transition: all 0.2s ease;
-}
-
-.semester-content a:hover {
-    background-color: #B41231;
-}
-
-/* Dark mode styles */
-body.dark-mode .semester-content {
-    background-color: #142A50;
-}
-
-body.dark-mode .semester-content a {
-    color: #ffffff;
-}
-
-body.dark-mode .semester-content a:hover {
-    background-color: #1e3a6d;
 }
 
 /* Add these styles for the credits box */

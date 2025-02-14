@@ -1,20 +1,21 @@
-// Add click handler for level buttons
-const levelBtns = document.querySelectorAll('.level-btn');
-levelBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        // If this button is already active, deselect it
-        if (btn.classList.contains('active')) {
-            btn.classList.remove('active');
-            return;
-        }
-        
-        // Remove active class from all buttons
-        levelBtns.forEach(b => b.classList.remove('active'));
-        // Add active class to clicked button
-        btn.classList.add('active');
+// First, move the handleDivisionClick function to the top
+function handleDivisionClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Get all division buttons
+    const allBtns = document.querySelectorAll('.division-btn');
+    
+    // Remove selected class from all buttons
+    allBtns.forEach(btn => {
+        btn.classList.remove('selected');
     });
-});
+    
+    // Add selected class to clicked button
+    this.classList.add('selected');
+}
 
+// Then have only one DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelectorAll('nav a');
     navLinks.forEach(link => {
@@ -28,14 +29,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const semesterButton = document.querySelector('.semester-button');
     const semesterContent = document.querySelector('.semester-content');
     
-    semesterButton.addEventListener('click', function(e) {
-        e.stopPropagation();
-        semesterContent.classList.toggle('show');
-        const arrow = this.querySelector('.arrow');
-        arrow.style.transform = semesterContent.classList.contains('show') 
-            ? 'rotate(180deg)' 
-            : 'rotate(0deg)';
-    });
+    if (semesterButton && semesterContent) {
+        semesterButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            semesterContent.classList.toggle('show');
+            const arrow = this.querySelector('.arrow');
+            if (arrow) {
+                arrow.style.transform = semesterContent.classList.contains('show') 
+                    ? 'rotate(180deg)' 
+                    : 'rotate(0deg)';
+            }
+        });
+    }
 
     const sidebarTabs = document.querySelectorAll('.sidebar-tabs a');
     sidebarTabs.forEach(tab => {
@@ -51,14 +56,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const profileButton = document.querySelector('.profile-button');
     const profileContent = document.querySelector('.profile-content');
     
-    profileButton.addEventListener('click', function(e) {
-        e.stopPropagation();
-        profileContent.classList.toggle('show');
-        const arrow = this.querySelector('span');
-        arrow.style.transform = profileContent.classList.contains('show') 
-            ? 'rotate(180deg)' 
-            : 'rotate(0deg)';
-    });
+    if (profileButton && profileContent) {
+        profileButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            profileContent.classList.toggle('show');
+            const arrow = this.querySelector('span');
+            if (arrow) {
+                arrow.style.transform = profileContent.classList.contains('show') 
+                    ? 'rotate(180deg)' 
+                    : 'rotate(0deg)';
+            }
+        });
+    }
 
     // Get all theme toggle buttons
     const themeToggles = document.querySelectorAll('.theme-toggle');
@@ -98,6 +107,59 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Set initial auth state (example)
     updateAuthState(true); // or false depending on user's auth state
+
+    // Division button selection
+    const divisionBtns = document.querySelectorAll('.division-btn');
+    console.log('Found division buttons:', divisionBtns.length);
+    
+    divisionBtns.forEach(btn => {
+        console.log('Setting up click handler for:', btn.textContent);
+        
+        btn.addEventListener('click', function() {
+            // Reset all buttons to default style
+            divisionBtns.forEach(otherBtn => {
+                otherBtn.style.cssText = `
+                    border: 1px solid #C4C8CE;
+                    color: #6c757d;
+                    background-color: transparent;
+                `;
+            });
+            
+            // Style the clicked button with blue background and white text
+            this.style.cssText = `
+                border: 1px solid #002467;
+                color: #ffffff;
+                background-color: #002467;
+            `;
+        });
+    });
+
+    // Other event listeners - add null checks
+    if (semesterButton && semesterContent) {
+        semesterButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            semesterContent.classList.toggle('show');
+            const arrow = this.querySelector('.arrow');
+            if (arrow) {
+                arrow.style.transform = semesterContent.classList.contains('show') 
+                    ? 'rotate(180deg)' 
+                    : 'rotate(0deg)';
+            }
+        });
+    }
+
+    if (profileButton && profileContent) {
+        profileButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            profileContent.classList.toggle('show');
+            const arrow = this.querySelector('span');
+            if (arrow) {
+                arrow.style.transform = profileContent.classList.contains('show') 
+                    ? 'rotate(180deg)' 
+                    : 'rotate(0deg)';
+            }
+        });
+    }
 });
 
 function changeSemester(semester, element) {
@@ -207,40 +269,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (userButton) {
             userButton.textContent = lastSelection;
         }
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const divisionBtns = document.querySelectorAll('.division-btn');
-
-    divisionBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // If this button is already active, just deselect it
-            if (btn.classList.contains('active')) {
-                btn.classList.remove('active');
-                return;
-            }
-            
-            // If another button is active, deselect it
-            divisionBtns.forEach(otherBtn => {
-                if (otherBtn !== btn) {
-                    otherBtn.classList.remove('active');
-                }
-            });
-            
-            // Select this button
-            btn.classList.add('active');
-        });
-    });
-
-    // Restore selected division on page load
-    const savedDivision = localStorage.getItem('selectedDivision');
-    if (savedDivision) {
-        divisionBtns.forEach(btn => {
-            if (btn.textContent === savedDivision) {
-                btn.classList.add('active');
-            }
-        });
     }
 });
 
@@ -410,4 +438,39 @@ document.addEventListener('DOMContentLoaded', function() {
         scheduleLink.classList.add('active');
         sidebar.innerHTML = scheduleSidebar;
     }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const divisionBtns = document.querySelectorAll('.division-btn');
+
+    divisionBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // If the clicked button is already selected, deselect it
+            if (this.classList.contains('selected')) {
+                this.classList.remove('selected');
+                this.style.cssText = `
+                    border: 1px solid #C4C8CE;
+                    color: #6c757d;
+                    background-color: transparent;
+                `;
+            } else {
+                // Deselect all buttons first
+                divisionBtns.forEach(otherBtn => {
+                    otherBtn.classList.remove('selected');
+                    otherBtn.style.cssText = `
+                        border: 1px solid #C4C8CE;
+                        color: #6c757d;
+                        background-color: transparent;
+                    `;
+                });
+
+                // Apply selected styles to the clicked button
+                this.classList.add('selected');
+                this.style.cssText = `
+                    border: 1px solid #002467;
+                    color: #ffffff;
+                    background-color: #002467;
+                `;
+            }
+        });
+    });
 });
