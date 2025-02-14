@@ -195,14 +195,9 @@ main {
     text-decoration: none;
     padding: 5px 0;
     position: relative;
-    transition: all 0.2s;
-    font-weight: 500;
-}
-.sidebar-tabs a:hover {
-    color: #B41231;
 }
 .sidebar-tabs a.active {
-    color: #002467;
+    color: #142A50;
 }
 .sidebar-tabs a.active::after {
     content: '';
@@ -243,16 +238,18 @@ main {
     cursor: pointer;
     border-radius: 4px;
     font-size: 14px;
+    transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
 
 .division-btn:hover {
     background-color: rgba(108, 117, 125, 0.1);
 }
 
+/* Active state */
 .division-btn.selected {
-    background-color: #002467;
-    color: #ffffff;
-    border: 1px solid #002467;
+    background-color: #002467 !important;
+    color: #ffffff !important;
+    border: 1px solid #002467 !important;
 }
 
 .empty-space {
@@ -861,4 +858,113 @@ body.dark-mode .credits-box {
 /* Add transition for smooth color change */
 .credits-box {
     transition: color 0.3s ease;
+}
+
+.floor-tree {
+    padding: 20px;
+}
+
+.tree-item {
+    margin-bottom: 15px;
+}
+
+.tree-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 8px 16px;
+    transition: background-color 0.2s ease;
+}
+
+.building-name {
+    font-size: 16px;
+    color: #142A50;
+}
+
+.arrow {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+.tree-content {
+    display: none;
+    margin-top: 4px;
+}
+
+.tree-content.show {
+    display: block;
+}
+
+.tree-subitem {
+    padding: 8px 32px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.tree-subitem:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Map Sidebar Styles */
+.day-panel {
+    margin-bottom: 10px;
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+/* Day header colors */
+.day-panel:nth-child(1) .day-header {
+    background-color: #c3415a;
+}
+
+.day-panel:nth-child(2) .day-header {
+    background-color: #bc2a46;
+}
+
+.day-panel:nth-child(3) .day-header {
+    background-color: #b41231;
+}
+
+.day-panel:nth-child(4) .day-header {
+    background-color: #a2102c;
+}
+
+.day-panel:nth-child(5) .day-header {
+    background-color: #900e27;
+}
+
+.day-content {
+    display: none;
+    padding: 10px;
+    color: #666;
+    border: 1px solid #e0e4e8;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    margin-top: -4px;
+}
+
+.day-content.show {
+    display: block;
+}
+
+.arrow {
+    transition: transform 0.2s ease;
+    color: #ffffff;
+}
+
+/* Map container styles */
+.map-container {
+    width: 100%;
+    height: calc(100vh - 100px);
+    border-radius: 8px;
+    overflow: hidden;
 }
