@@ -130,25 +130,41 @@ def process_json_file(json_file: str):
                 is_exclusion = True
                 original_course_code = original_course_code.replace("-", "").strip()
 
-            # Получаем список реальных кодов курсов, соответствующих шаблону (если применимо)
-            resolved_codes = resolve_course_codes(original_course_code)
-            if not resolved_codes:
-                print(f"    Ошибка: курс '{original_course_code}' не найден в таблице courses.")
+            # Если код содержит "/", разбиваем на два варианта:
+            codes_to_process = []
+            if "/" in original_course_code:
+                parts = original_course_code.split("/")
+                base = parts[0].strip()
+                suffix = parts[1].strip()
+                # Если суффикс равен "L" (без учета регистра), добавляем два варианта
+                if suffix.lower() == "l":
+                    codes_to_process.append(base)
+                    codes_to_process.append(base + "L")
+                else:
+                    codes_to_process.append(original_course_code)
             else:
-                for actual_code in resolved_codes:
-                    course_data = {
-                        "group_id": group_id,
-                        "course_code": actual_code,
-                        "is_exclusion": is_exclusion
-                    }
-                    course_response = supabase.table("requirement_courses").insert(course_data).execute()
-                    course_response_dict = get_response_dict(course_response)
-                    if course_response_dict.get("error"):
-                        print("    Ошибка вставки курса:")
-                        print("      Данные курса:", course_data)
-                        print("      Ответ:", course_response_dict.get("error"))
-                    else:
-                        print(f"    Вставлен курс '{actual_code}' (исключение: {is_exclusion})")
+                codes_to_process.append(original_course_code)
+
+            # Обработка каждого кода из списка
+            for code in codes_to_process:
+                resolved_codes = resolve_course_codes(code)
+                if not resolved_codes:
+                    print(f"    Ошибка: курс '{code}' не найден в таблице courses.")
+                else:
+                    for actual_code in resolved_codes:
+                        course_data = {
+                            "group_id": group_id,
+                            "course_code": actual_code,
+                            "is_exclusion": is_exclusion
+                        }
+                        course_response = supabase.table("requirement_courses").insert(course_data).execute()
+                        course_response_dict = get_response_dict(course_response)
+                        if course_response_dict.get("error"):
+                            print("    Ошибка вставки курса:")
+                            print("      Данные курса:", course_data)
+                            print("      Ответ:", course_response_dict.get("error"))
+                        else:
+                            print(f"    Вставлен курс '{actual_code}' (исключение: {is_exclusion})")
 
 def process_all_json_files():
     base_dir = os.path.join(os.path.dirname(__file__), "..", "data", "degree_req")
@@ -168,6 +184,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
