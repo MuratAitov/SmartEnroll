@@ -16,6 +16,7 @@
                     { "course_code": "PSYC 202" },
                     { "course_code": "MATH 121" },
                     { "course_code": "MATH 321" }
+                ]
             },
             {
                 "id": 120,
@@ -28,6 +29,7 @@
                     { "course_code": "MGMT 405" },
                     { "course_code": "MGMT 410" },
                     { "course_code": "MGMT 415" }
+                ]
             }
         ]
     }

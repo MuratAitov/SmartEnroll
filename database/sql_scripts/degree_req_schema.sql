@@ -37,6 +37,7 @@ SELECT
     g.req_credits,
     g.note,
     c.course_code,
+    c.is_exclusion as excl
     co.title AS course_title
 FROM programs p
 JOIN requirement_groups g ON p.program_id = g.program_id

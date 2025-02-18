@@ -14,6 +14,7 @@
                     { "course_code": "MKTG 310" },
                     { "course_code": "MKTG 315" },
                     { "course_code": "MKTG 402" }
+                ]
             },
             {
                 "id": 120,
@@ -30,6 +31,7 @@
                     { "course_code": "PRLS 310" },
                     { "course_code": "PRLS 460" },
                     { "course_code": "MGMT 490" }
+                ]
             }
         ]
     }

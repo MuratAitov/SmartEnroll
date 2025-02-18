@@ -140,7 +140,7 @@
                     { "course_code": "MKTG 417" },
                     { "course_code": "OPER 440" }
                 ],
-                "note: Choose (ECON 311) or (ECON 321)."
+                "note": "Choose (ECON 311) or (ECON 321)."
             }
         ]
     }
