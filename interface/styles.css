@@ -171,17 +171,18 @@ header {
 }
 main {
     display: grid;
-    grid-template-columns: 300px 1fr 50px;
+    grid-template-columns: 300px 1fr;
     gap: 20px;
     padding: 20px;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 100px);
 }
 .sidebar {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    width: 300px;
+    height: 100%;
+    overflow-y: auto;
 }
 .sidebar-tabs {
     display: flex;
@@ -226,19 +227,22 @@ main {
 }
 .level-buttons {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     margin: 10px 0;
+    justify-content: space-between;
 }
 .division-btn {
     flex: 1;
-    padding: 8px 16px;
+    padding: 8px 12px;
     border: 1px solid #C4C8CE;
     background-color: transparent;
     color: #6c757d;
     cursor: pointer;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: clamp(12px, 0.9vw, 14px);
     transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+    white-space: nowrap;
+    min-width: fit-content;
 }
 
 .division-btn:hover {
@@ -253,17 +257,15 @@ main {
 }
 
 .empty-space {
-    width: 50px;
+    display: none;
 }
 .schedule-grid {
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: calc(100vh - 100px);
-    padding: 20px;
-    width: 100%;
     background-color: white;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    overflow-y: auto;
 }
 
 .schedule-grid table {
@@ -516,7 +518,6 @@ nav {
     z-index: 1000;
 }
 
-.user-dropdown:hover .dropdown-content,
 .dropdown-content.show {
     display: block;
 }
@@ -777,32 +778,47 @@ body.dark-mode .user-dropdown .nav-button:hover {
 }
 
 .semester-content {
-    display: none;
+    display: none;  /* Hide by default */
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: #333333;
+    background-color: white;
     min-width: 160px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    z-index: 1000;
     border-radius: 4px;
     margin-top: 5px;
+    z-index: 1000;
 }
 
 .semester-content.show {
-    display: block;
+    display: block;  /* Show only when .show class is present */
 }
 
 .semester-content a {
-    color: #ffffff;
+    color: #142A50;
     padding: 8px 16px;
     text-decoration: none;
     display: block;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s;
 }
 
 .semester-content a:hover {
     background-color: #B41231;
+    color: #ffffff;
+}
+
+/* Dark mode styles for semester dropdown */
+body.dark-mode .semester-content {
+    background-color: #142A50;
+}
+
+body.dark-mode .semester-content a {
+    color: #ffffff;
+}
+
+body.dark-mode .semester-content a:hover {
+    background-color: #B41231;
+    color: #ffffff;
 }
 
 /* Dark mode styles */
@@ -967,4 +983,515 @@ body.dark-mode .credits-box {
     height: calc(100vh - 100px);
     border-radius: 8px;
     overflow: hidden;
+}
+
+/* Export button and dropdown styles */
+.export-container {
+    position: relative;
+    display: inline-block;
+}
+
+.export-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    min-width: 180px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 8px 0;
+    z-index: 1000;
+    display: none;
+    margin-top: 5px;
+}
+
+.export-dropdown.show {
+    display: block;
+}
+
+.export-dropdown a {
+    display: block;
+    padding: 8px 16px;
+    color: #142A50;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.export-dropdown a:hover {
+    background-color: #B41231;
+    color: #ffffff;
+}
+
+/* Dark mode styles for export dropdown */
+body.dark-mode .export-dropdown {
+    background-color: #142A50;
+}
+
+body.dark-mode .export-dropdown a {
+    color: #ffffff;
+}
+
+body.dark-mode .export-dropdown a:hover {
+    background-color: #B41231;
+    color: #ffffff;
+}
+
+/* Position the export button container relatively */
+.nav-button:not(.user-dropdown .nav-button) {
+    position: relative;
+}
+
+/* Update hover styles for user dropdown */
+.dropdown-content a:hover,
+.theme-toggle:hover {
+    background-color: #B41231;
+    color: #ffffff !important;
+}
+
+/* Dark mode hover styles for user dropdown */
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover {
+    background-color: #B41231;
+    color: #ffffff !important;
+}
+
+/* Ensure student info doesn't change color on hover */
+.user-info:hover {
+    background-color: transparent;
+    color: inherit;
+}
+
+/* Campus dropdown styles */
+.campus-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-button {
+    width: 100%;
+    text-align: left;
+    padding: 8px 0;
+    background: none;
+    border: none;
+    color: #495057;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1em;  /* Match the font size of other inputs */
+}
+
+.dropdown-button .arrow {
+    font-size: 0.8em;
+    transition: transform 0.2s ease;
+    margin-left: 8px;  /* Add some space between text and arrow */
+    color: #495057;  /* Match the text color */
+}
+
+/* Dark mode styles for the arrow */
+body.dark-mode .dropdown-button .arrow {
+    color: #ffffff;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    margin-top: 4px;
+}
+
+.dropdown-list.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    color: #495057;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #B41231;
+    color: #ffffff;
+}
+
+/* Dark mode styles */
+body.dark-mode .dropdown-button {
+    color: #ffffff;
+}
+
+body.dark-mode .dropdown-list {
+    background-color: #1e3a6d;
+}
+
+body.dark-mode .dropdown-item {
+    color: #ffffff;
+}
+
+body.dark-mode .dropdown-item:hover {
+    background-color: #B41231;
+}
+
+/* Mobile responsive styles */
+@media screen and (max-width: 768px) {
+    /* Main layout */
+    main {
+        grid-template-columns: 1fr;  /* Stack sidebar and schedule vertically */
+        padding: 10px;
+        height: auto;
+        gap: 10px;
+    }
+
+    /* Header and navigation */
+    .nav-sections {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    .semester-group {
+        width: 100%;
+        justify-content: space-between;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 10px;
+    }
+
+    .nav-links {
+        overflow-x: auto;
+        padding: 5px 0;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .user-controls {
+        width: 100%;
+        justify-content: space-between;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 10px;
+        padding-left: 0;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        height: auto;
+        max-height: 500px;
+    }
+
+    /* Schedule grid */
+    .schedule-grid {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .schedule-grid table {
+        min-width: 600px;  /* Ensure table is scrollable on mobile */
+    }
+
+    /* Form elements */
+    .form-group {
+        padding: 8px;
+    }
+
+    .level-buttons {
+        flex-direction: row;  /* Keep buttons side by side */
+        gap: 5px;
+    }
+
+    .division-btn {
+        padding: 6px 8px;
+        font-size: 12px;  /* Smaller font size for mobile */
+    }
+
+    /* Dropdowns */
+    .dropdown-content,
+    .export-dropdown,
+    .semester-content {
+        position: fixed;  /* Fixed position for dropdowns */
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 12px 12px 0 0;  /* Rounded top corners */
+        max-height: 80vh;  /* Maximum height */
+        overflow-y: auto;
+        margin: 0;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Logo and text */
+    .logo {
+        gap: 5px;
+    }
+
+    .university-name {
+        font-size: 20px;
+    }
+
+    .university-subtitle {
+        font-size: 8px;
+        letter-spacing: 6px;
+    }
+
+    /* Header adjustments */
+    header {
+        padding: 10px;
+    }
+
+    nav {
+        height: auto;
+        padding: 0 10px;
+    }
+}
+
+/* Additional styles for very small screens */
+@media screen and (max-width: 480px) {
+    .division-btn {
+        font-size: 11px;
+        padding: 6px 6px;
+    }
+
+    .sidebar-tabs {
+        gap: 15px;
+    }
+
+    .nav-links {
+        gap: 15px;
+    }
+
+    .logo img {
+        height: 30px;
+    }
+
+    .university-name {
+        font-size: 18px;
+    }
+}
+
+/* Add smooth scrolling for iOS */
+@supports (-webkit-overflow-scrolling: touch) {
+    .nav-links,
+    .schedule-grid,
+    .sidebar {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Reset recurring events view styles */
+.recurring-events-view {
+    padding: 0;  /* Remove padding to match courses view */
+}
+
+/* Make all form groups in both views identical */
+.courses-view .form-group,
+.recurring-events-view .form-group {
+    margin-bottom: 15px;
+    border: 1px solid #e0e4e8;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+    height: 56px;  /* Fixed height for all form groups */
+    box-sizing: border-box;
+    display: flex;  /* Make all form groups flex containers */
+    align-items: center;  /* Center content vertically */
+}
+
+/* Style for all inputs */
+.courses-view .form-group input,
+.recurring-events-view .form-group input {
+    width: 100%;
+    border: none;
+    padding: 0;
+    font-size: 1em;
+    color: #495057;
+    background: transparent;
+    height: 36px;  /* Fixed height for inputs */
+    line-height: 36px;
+}
+
+/* Weekday buttons container */
+.recurring-events-view .form-group .weekday-buttons {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    margin: 0;  /* Remove margin */
+}
+
+/* Time input container styles */
+.recurring-events-view .form-group:has(.time-input) {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    height: 56px;
+    box-sizing: border-box;
+}
+
+/* Time input field styles */
+.recurring-events-view .time-input {
+    width: 100%;
+    border: none;
+    padding: 0;
+    font-size: 1em;
+    color: #495057;
+    background: transparent;
+    height: 36px;
+    line-height: 36px;
+}
+
+/* Remove flex display from inputs */
+.courses-view .form-group input,
+.recurring-events-view .form-group input {
+    width: 100%;
+    border: none;
+    padding: 0;
+    font-size: 1em;
+    color: #495057;
+    background: transparent;
+    height: 36px;
+    line-height: 36px;
+}
+
+/* Dark mode styles for recurring events */
+body.dark-mode .recurring-events-view .form-group {
+    border-color: #495057;
+    background-color: #142A50;  /* Dark background */
+}
+
+body.dark-mode .recurring-events-view input {
+    color: #ffffff;  /* White text */
+    background: transparent;
+}
+
+body.dark-mode .recurring-events-view input::placeholder {
+    color: #C4C8CE;  /* Lighter color for placeholder text */
+}
+
+body.dark-mode .weekday-btn {
+    color: #ffffff;
+    border-color: #495057;
+    background-color: transparent;
+}
+
+body.dark-mode .weekday-btn:hover {
+    background-color: #B41231;
+    color: #ffffff;
+    border-color: #B41231;
+}
+
+body.dark-mode .weekday-btn.selected {
+    background-color: #002467 !important;
+    color: #ffffff !important;
+    border-color: #002467 !important;
+}
+
+body.dark-mode .add-event-btn {
+    background-color: #4A90E2;
+    color: #ffffff;
+}
+
+body.dark-mode .add-event-btn:hover {
+    background-color: #357ABD;
+}
+
+/* Weekday buttons styles */
+.weekday-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 10px 0;
+    justify-content: space-between;
+}
+
+.weekday-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #C4C8CE;
+    background-color: transparent;
+    color: #6c757d;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: clamp(12px, 0.9vw, 14px);
+    transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+    white-space: nowrap;
+    min-width: fit-content;
+}
+
+.weekday-btn:hover {
+    background-color: rgba(108, 117, 125, 0.1);
+}
+
+.weekday-btn.selected {
+    background-color: #002467 !important;
+    color: #ffffff !important;
+    border: 1px solid #002467 !important;
+}
+
+/* Dark mode styles */
+body.dark-mode .weekday-btn {
+    color: #6c757d;
+    border-color: #C4C8CE;
+}
+
+body.dark-mode .weekday-btn.selected {
+    background-color: #002467 !important;
+    color: #ffffff !important;
+    border-color: #002467 !important;
+}
+
+/* Update hover styles for both weekday and division buttons */
+.weekday-btn:hover,
+.division-btn:hover {
+    background-color: #B41231;
+    color: #ffffff;
+    border-color: #B41231;
+}
+
+/* Keep the selected state styles */
+.weekday-btn.selected,
+.division-btn.selected {
+    background-color: #002467 !important;
+    color: #ffffff !important;
+    border: 1px solid #002467 !important;
+}
+
+/* Dark mode hover styles */
+body.dark-mode .weekday-btn:hover,
+body.dark-mode .division-btn:hover {
+    background-color: #B41231;
+    color: #ffffff;
+    border-color: #B41231;
+}
+
+/* Time input container styles */
+.recurring-events-view .form-group:has(.time-input) {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    height: 56px;
+}
+
+/* Time input field styles */
+.recurring-events-view .time-input {
+    width: 100%;
+    border: none;
+    padding: 0;
+    font-size: 1em;
+    color: #495057;
+    background: transparent;
+    height: 36px;
+    line-height: 36px;
+}
+
+/* Dark mode styles */
+body.dark-mode .recurring-events-view .form-group:has(.time-input) label {
+    color: #ffffff;
 }
