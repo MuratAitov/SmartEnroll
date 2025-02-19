@@ -14,6 +14,7 @@
                     { "course_code": "ENVS 101" },
                     { "course_code": "ENVS 200" },
                     { "course_code": "ECON 201" }
+                ]
             },
             {
                 "id": 111,
@@ -37,6 +38,7 @@
                     { "course_code": "BUSN 430" },
                     { "course_code": "BENT 493" },
                     { "course_code": "ECON 324" }
+                ]
             },
             {
                 "id": 121,
@@ -46,6 +48,7 @@
                 "classes": [
                     { "course_code": "ENVS 358" },
                     { "course_code": "ENVS 381" }
+                ]
             }
         ]
     }

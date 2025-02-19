@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Download CPSC 121 Calendar</title>
+</head>
+<body>
+  <h1>CPSC 121 Calendar</h1>
+  <p>Click the button below to download the calendar file for your recurring class schedule.</p>
+  <button id="downloadBtn">Download CPSC 121 Calendar</button>
+
+  <script>
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+      // Event details
+      const eventTitle = 'CPSC 121';
+      const eventDescription = 'MWF CPSC 121 Class';
+      const eventLocation = 'University Campus, Room 101';
+      
+      // The first class session date and time (UTC format)
+      const dtStart = '20250203T090000Z'; // Feb 3, 2025, 9:00 AM UTC
+      const dtEnd = '20250203T100000Z';   // Feb 3, 2025, 10:00 AM UTC
+
+      // Recurrence rule for Monday, Wednesday, Friday until December 31, 2025
+      const rrule = 'RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR;UNTIL=20251231T235959Z';
+
+      // Current timestamp in the proper format for DTSTAMP
+      const now = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+      // Create the content of the .ics file
+      const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Your University//CPSC 121 Calendar//EN',
+        'BEGIN:VEVENT',
+        'UID:' + Date.now() + '@yourdomain.com',
+        'DTSTAMP:' + now,
+        'SUMMARY:' + eventTitle,
+        'DESCRIPTION:' + eventDescription,
+        'LOCATION:' + eventLocation,
+        'DTSTART:' + dtStart,
+        'DTEND:' + dtEnd,
+        rrule,
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      // Create a Blob from the iCalendar content
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+
+      // Create a temporary link element and trigger the download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'CPSC_121.ics';
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up the temporary link and revoke the blob URL
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>

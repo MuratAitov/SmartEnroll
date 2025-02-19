@@ -1,6 +1,6 @@
 /* Dark mode styles - placed at the top for higher specificity */
 body.dark-mode {
-    background-color: #142A50 !important;
+    background-color: #001A49 !important;
     color: #ffffff !important;
 }
 
@@ -45,8 +45,9 @@ body.dark-mode .dropdown-divider {
 }
 
 body.dark-mode .sidebar {
-    background-color: #1e3a6d !important;
+    background-color: #023373 !important;
     color: #ffffff !important;
+    border-color: #023373 !important;
 }
 
 body.dark-mode .sidebar-tabs a {
@@ -115,11 +116,10 @@ header {
 }
 
 .logo img {
+    background-color: transparent !important;
     height: 40px;
     width: auto;
-    padding: 5px;
-    border-radius: 4px;
-    background-color: #142A50;
+    margin-right: 10px;
 }
 .logo-text {
     display: flex;
@@ -170,32 +170,38 @@ header {
     color: #142A50;
 }
 main {
-    display: grid;
-    grid-template-columns: 300px 1fr;
+    display: flex;
     gap: 20px;
     padding: 20px;
-    height: calc(100vh - 100px);
+    max-width: 1400px;  /* Set a max-width for large screens */
+    margin: 0 auto;     /* Center the content */
 }
 .sidebar {
+    flex: 0 0 320px;  /* Fixed width of 320px, won't grow or shrink */
+    min-width: 320px; /* Ensure minimum width */
     background-color: white;
-    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    height: 100%;
-    overflow-y: auto;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: fit-content;
 }
 .sidebar-tabs {
     display: flex;
-    gap: 25px;
+    gap: 15px;
     margin-bottom: 20px;
     border-bottom: 1px solid #e0e4e8;
     padding-bottom: 10px;
+    flex-wrap: nowrap;
 }
 .sidebar-tabs a {
     color: #C4C8CE;
     text-decoration: none;
     padding: 5px 0;
     position: relative;
+    font-size: 0.9em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.2s;
 }
 .sidebar-tabs a.active {
     color: #142A50;
@@ -214,6 +220,7 @@ main {
     border: 1px solid #e0e4e8;
     border-radius: 4px;
     padding: 10px;
+    position: relative;
 }
 .form-group input {
     width: 100%;
@@ -259,13 +266,14 @@ main {
 .empty-space {
     display: none;
 }
-.schedule-grid {
+.schedule-container {
+    flex: 1;          /* Take up remaining space */
     background-color: white;
-    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    height: 100%;
-    overflow-y: auto;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-width: 600px; /* Ensure minimum width for schedule */
+    border-color: #e0e4e8;
 }
 
 .schedule-grid table {
@@ -290,17 +298,22 @@ main {
 .schedule-grid td:first-child {
     left: 0;
     width: 80px;
+    text-align: center;
+    vertical-align: middle;  /* Center vertically */
+    font-size: 0.9em;
+    padding: 0;
+    height: 60px;
+    line-height: 60px;  /* Match the height for vertical centering */
+    background-color: white;
 }
 
 .schedule-grid td {
+    position: relative;
+    height: 60px; /* Fixed height for each hour */
+    padding: 0;
     border: 1px solid #e0e4e8;
-    padding: 15px 4px;
-    text-align: center;
-    height: 40px;
-    font-size: 0.9em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    vertical-align: top;
+    background-color: white;
 }
 
 .schedule-grid tr:nth-child(even) {
@@ -617,7 +630,7 @@ body.dark-mode .dropdown-divider {
 
 /* Main content area */
 body.dark-mode .sidebar {
-    background-color: #1e3a6d;
+    background-color: #023373;
     color: #ffffff;
 }
 
@@ -695,22 +708,32 @@ body.dark-mode .university-subtitle {
 
 /* Schedule grid styles in dark mode */
 body.dark-mode .schedule-grid {
-    background-color: #142A50 !important;
+    background-color: #023373 !important;
 }
 
 body.dark-mode .schedule-grid th, 
 body.dark-mode .schedule-grid td:first-child {
-    background-color: #142A50 !important;
+    background-color: #023373 !important;
     color: #ffffff !important;
 }
 
 body.dark-mode .schedule-grid td {
-    border-color: #2a4573 !important;
+    border-color: #022859 !important;
     color: #ffffff !important;
 }
 
 body.dark-mode .schedule-grid tr:nth-child(even) {
-    background-color: #1e3a6d !important;
+    background-color: #023373 !important;
+}
+
+/* Top border of header row */
+body.dark-mode .schedule-grid thead tr {
+    border-color: #022859 !important;
+}
+
+/* Horizontal divider line below header */
+body.dark-mode .schedule-grid thead {
+    border-bottom-color: #022859 !important;
 }
 
 /* Navigation styles in dark mode */
@@ -734,7 +757,7 @@ body.dark-mode .nav-links a:hover {
 /* Dropdown hover styles */
 body.dark-mode .dropdown-content a:hover,
 body.dark-mode .theme-toggle:hover {
-    background-color: #B41231 !important;
+    background-color: #B41231;
     color: #ffffff !important;
 }
 
@@ -1144,10 +1167,14 @@ body.dark-mode .dropdown-item:hover {
 @media screen and (max-width: 768px) {
     /* Main layout */
     main {
-        grid-template-columns: 1fr;  /* Stack sidebar and schedule vertically */
         padding: 10px;
-        height: auto;
-        gap: 10px;
+        flex-direction: column;
+    }
+
+    .sidebar,
+    .schedule-container {
+        width: 100%;
+        min-width: unset;
     }
 
     /* Header and navigation */
@@ -1178,12 +1205,6 @@ body.dark-mode .dropdown-item:hover {
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         padding-top: 10px;
         padding-left: 0;
-    }
-
-    /* Sidebar */
-    .sidebar {
-        height: auto;
-        max-height: 500px;
     }
 
     /* Schedule grid */
@@ -1458,17 +1479,18 @@ body.dark-mode .weekday-btn.selected {
 /* Keep the selected state styles */
 .weekday-btn.selected,
 .division-btn.selected {
-    background-color: #002467 !important;
-    color: #ffffff !important;
-    border: 1px solid #002467 !important;
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;
 }
 
 /* Dark mode hover styles */
 body.dark-mode .weekday-btn:hover,
 body.dark-mode .division-btn:hover {
-    background-color: #B41231;
-    color: #ffffff;
-    border-color: #B41231;
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+    cursor: pointer;
 }
 
 /* Time input container styles */
@@ -1494,4 +1516,518 @@ body.dark-mode .division-btn:hover {
 /* Dark mode styles */
 body.dark-mode .recurring-events-view .form-group:has(.time-input) label {
     color: #ffffff;
+}
+
+/* Autocomplete styles */
+.autocomplete-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #e0e4e8;
+    border-radius: 4px;
+    margin-top: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.autocomplete-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #495057;
+}
+
+.autocomplete-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Dark mode styles */
+body.dark-mode .autocomplete-list {
+    background-color: #1e3a6d;
+    border-color: #495057;
+}
+
+body.dark-mode .autocomplete-item {
+    color: #ffffff;
+}
+
+body.dark-mode .autocomplete-item:hover {
+    background-color: #142A50;
+}
+
+/* Event block styles */
+.event-block {
+    background-color: #808080;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    position: absolute;
+    width: 96%;  /* Default width when single block */
+    left: 2%;    /* Default position when single block */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 1;
+    transition: width 0.3s, left 0.3s;  /* Smooth transition for width/position changes */
+}
+
+.event-name {
+    font-weight: 500;
+    font-size: 0.9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-time {
+    font-size: 0.8em;
+    opacity: 0.9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Dark mode styles */
+body.dark-mode .event-block {
+    background-color: #808080;  /* Keep gray background in dark mode */
+}
+
+/* Context menu styles */
+.context-menu {
+    position: fixed;
+    background: white;
+    border: 1px solid #e0e4e8;
+    border-radius: 4px;
+    padding: 4px 0;
+    min-width: 150px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.menu-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #f5f7fa;
+}
+
+/* Dark mode styles */
+body.dark-mode .context-menu {
+    background-color: #1e3a6d;
+    border-color: #495057;
+}
+
+body.dark-mode .menu-item {
+    color: white;
+}
+
+body.dark-mode .menu-item:hover {
+    background-color: #142A50;
+}
+
+/* Event block hover effect */
+.event-block {
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.event-block:hover {
+    opacity: 0.9;
+}
+
+.edit-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.edit-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    min-width: 300px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.save-btn, .cancel-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-btn {
+    background: #4A90E2;
+    color: white;
+}
+
+.cancel-btn {
+    background: #e0e4e8;
+    color: #495057;
+}
+
+/* Dark mode styles */
+body.dark-mode .edit-form {
+    background: #1e3a6d;
+    color: white;
+}
+
+body.dark-mode .edit-form input {
+    color: white;
+    background: #142A50;
+}
+
+.edit-form input[type="time"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #e0e4e8;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.edit-form .weekday-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.edit-form .weekday-btn {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #e0e4e8;
+    background: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.edit-form .weekday-btn.selected {
+    background-color: #4A90E2;
+    color: white;
+    border-color: #4A90E2;
+}
+
+/* Dark mode styles */
+body.dark-mode .edit-form input[type="time"] {
+    background: #142A50;
+    border-color: #495057;
+    color: white;
+}
+
+/* Pre-req tree styles */
+.prereq-tree-view {
+    padding: 15px 0;
+}
+
+.prereq-tree-container {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.coming-soon {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Dark mode styles */
+body.dark-mode .coming-soon {
+    color: #C4C8CE;
+}
+
+.export-calendar-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.export-calendar-btn:hover {
+    background-color: #357ABD;
+}
+
+/* Dark mode styles */
+body.dark-mode .export-calendar-btn {
+    background-color: #357ABD;
+}
+
+body.dark-mode .export-calendar-btn:hover {
+    background-color: #2868A6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    main {
+        padding: 10px;
+        flex-direction: column;
+    }
+
+    .sidebar,
+    .schedule-container {
+        width: 100%;
+        min-width: unset;
+    }
+}
+
+/* Update time column styles */
+.schedule-grid td:first-child {
+    left: 0;
+    width: 80px;
+    text-align: center;
+    vertical-align: middle;  /* Center vertically */
+    font-size: 0.9em;
+    color: #495057;
+    padding: 0;
+    height: 60px;
+    line-height: 60px;  /* Match the height for vertical centering */
+}
+
+/* Ensure consistent styling in dark mode */
+body.dark-mode .schedule-grid td:first-child {
+    color: #C4C8CE;
+    background-color: #1e3a6d;
+}
+
+/* Update sidebar tab styles */
+.sidebar-tabs a {
+    color: #C4C8CE;
+    text-decoration: none;
+    padding: 5px 0;
+    position: relative;
+    font-size: 0.9em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.sidebar-tabs a.active {
+    color: #142A50;  /* Blue color when active */
+}
+
+.sidebar-tabs a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #B41231;  /* Red underline */
+}
+
+/* Dark mode styles */
+body.dark-mode .sidebar-tabs a.active {
+    color: #4A90E2;  /* Lighter blue for dark mode */
+}
+
+/* Dark mode schedule styles - only applied when dark mode is active */
+body.dark-mode .schedule-container {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+}
+
+body.dark-mode .schedule-grid td {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+}
+
+body.dark-mode .schedule-grid tr:nth-child(even) td {
+    background-color: #023373 !important;
+}
+
+body.dark-mode .schedule-grid td:first-child {
+    background-color: #023373 !important;
+}
+
+/* Schedule grid lines in dark mode */
+body.dark-mode .schedule-grid td,
+body.dark-mode .schedule-grid th {
+    border-color: #022859 !important;
+}
+
+/* Top border of header row */
+body.dark-mode .schedule-grid thead tr {
+    border-color: #022859 !important;
+}
+
+/* Horizontal divider line below header */
+body.dark-mode .schedule-grid thead {
+    border-bottom-color: #022859 !important;
+}
+
+/* Background color remains #023373 */
+body.dark-mode .schedule-grid {
+    background-color: #023373 !important;
+}
+
+body.dark-mode .schedule-grid td {
+    background-color: #023373 !important;
+}
+
+body.dark-mode .schedule-grid tr:nth-child(even) td {
+    background-color: #023373 !important;
+}
+
+/* Form inputs in dark mode */
+body.dark-mode .form-group,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode .dropdown-btn {
+    background-color: #023373 !important;
+    border-color: #D0D4D9 !important;
+    color: #D0D4D9 !important;
+}
+
+/* Remove any hover effects that might show lighter backgrounds */
+body.dark-mode .form-group:hover,
+body.dark-mode input:hover,
+body.dark-mode select:hover {
+    background-color: #023373 !important;
+}
+
+/* Placeholder text color */
+body.dark-mode input::placeholder,
+body.dark-mode select::placeholder {
+    color: #D0D4D9 !important;
+}
+
+/* Keep dropdown arrow visible */
+body.dark-mode select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23023373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
+    background-size: 16px !important;
+    padding-right: 30px !important;
+}
+
+/* Button selected state in dark mode */
+body.dark-mode .division-btn.selected,
+body.dark-mode .weekday-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;  /* Changed from white to blue */
+}
+
+/* Button hover state */
+body.dark-mode .division-btn:hover,
+body.dark-mode .weekday-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+    cursor: pointer;
+}
+
+/* Button normal state */
+body.dark-mode .division-btn,
+body.dark-mode .weekday-btn {
+    background-color: #023373 !important;
+    border-color: #D0D4D9 !important;
+    color: #D0D4D9 !important;
+}
+
+/* Form group arrow in dark mode */
+body.dark-mode .form-group .arrow {
+    color: #023373 !important;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* Keep background color consistent */
+body.dark-mode .form-group {
+    position: relative;
+    background-color: #023373 !important;
+}
+
+/* Dropdown styling in dark mode */
+body.dark-mode .form-group {
+    position: relative;
+}
+
+/* Add visible arrow using pseudo-element */
+body.dark-mode .form-group::after {
+    content: '▼';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #D0D4D9;  /* Changed to light gray for visibility */
+    pointer-events: none;
+    font-size: 12px;
+}
+
+/* Style for select elements */
+body.dark-mode select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 30px !important;
+    background-color: #023373 !important;
+    border-color: #D0D4D9 !important;
+    color: #D0D4D9 !important;
+    cursor: pointer;
+}
+
+/* Change arrow color on hover */
+body.dark-mode .form-group:hover::after {
+    color: #ffffff;  /* Change to white on hover */
+}
+
+/* Navigation dropdown arrows in dark mode */
+body.dark-mode .nav-link .arrow,
+body.dark-mode .semester-button .arrow,
+body.dark-mode .export-button .arrow {
+    color: #023373 !important;
+    display: inline-block !important;
+    margin-left: 5px !important;
+}
+
+/* Hover state for nav dropdown arrows */
+body.dark-mode .nav-link:hover .arrow,
+body.dark-mode .semester-button:hover .arrow,
+body.dark-mode .export-button:hover .arrow {
+    color: #023373 !important;
+}
+
+/* Ensure arrow is visible when dropdown is open */
+body.dark-mode .show .arrow {
+    color: #023373 !important;
+}
+
+/* Rotate arrow when dropdown is open */
+body.dark-mode .show .arrow {
+    transform: rotate(180deg) !important;
+    transition: transform 0.2s ease;
 }

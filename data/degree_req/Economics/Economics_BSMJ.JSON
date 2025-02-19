@@ -33,7 +33,7 @@
             {"course_code": "MATH 339"},
             {"course_code": "ECON 499"}
           ],
-          "note: Choose (MATH 335) or (MATH 339) but not both."
+          "note": "Choose (MATH 335) or (MATH 339) but not both."
         },
         {
           "id": 121,
