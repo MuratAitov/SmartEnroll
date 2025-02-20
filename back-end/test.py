@@ -1,84 +1,142 @@
 from supabase import create_client, Client
 from credentials import SUPABASE_URL, SUPABASE_KEY
+from collections import defaultdict
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def build_double_count_dict(program_name):
+def get_remaining_courses(program_name, taken_courses, full_view=False):
+    """
+    Функция возвращает список курсов, которые нужно взять для завершения программы.
+    В режиме full_view показывает все данные о группах и курсах.
+
+    :param program_name: Название программы
+    :param taken_courses: Список уже взятых курсов
+    :param full_view: Если True, показывает подробную информацию
+    :return: Словарь с требованиями и оставшимися курсами
+    """
+
+    # Получение program_id
     response = supabase.table("programs").select("program_id").eq("degree_program", program_name).execute()
     if not response.data:
         return {"error": "Program not found"}
-
     program_id = response.data[0]["program_id"]
-    response = supabase.table("requirement_groups").select("json_group_id", "note").eq("program_id", program_id).execute()
-    requirement_groups = sorted(response.data, key=lambda x: x['json_group_id'])
 
-    double_count_dict = {}
-    for group in requirement_groups:
+    # Получение всех групп требований и разделение на элективные и неэлективные
+    response = supabase.table("requirement_groups").select("*").eq("program_id", program_id).execute()
+    all_groups = response.data
+    non_electives = []
+    electives = []
+    for group in all_groups:
+        if "Elective" in group["name"]:
+            electives.append(group)
+        else:
+            non_electives.append(group)
+
+    remaining_requirements = {}
+    course_usage = defaultdict(set)  # Трекинг курсов, использованных в неэлективах
+
+    # Обработка неэлективных групп первыми
+    for group in non_electives:
+        group_id = group["id"]
+        group_name = group["name"]
+        required_credits = group["req_credits"]
         note = group.get("note", "") or ""
-        current_id = group["json_group_id"]
+
+        # Получение курсов в группе
+        response = supabase.table("requirement_courses").select("course_code").eq("group_id", group_id).execute()
+        all_courses = [course["course_code"] for course in response.data]
+
+        # Получение кредитов для курсов
+        response = supabase.table("courses").select("code, credits").in_("code", all_courses).execute()
+        course_credits = {course["code"]: course["credits"] for course in response.data}
+
+        # Определение взятых курсов в группе
+        taken_in_group = [course for course in taken_courses if course in all_courses]
+        taken_credits = sum(course_credits.get(course, 0) for course in taken_in_group)
+        remaining_credits = max(0, required_credits - taken_credits)
+
+        # Отслеживание использования курса в неэлективных группах
+        for course in taken_in_group:
+            course_usage[course].add(group_id)
+
+        remaining_requirements[group_name] = {
+            "required_credits": required_credits,
+            "taken_credits": taken_credits,
+            "remaining_credits": remaining_credits,
+            "available_courses": [c for c in all_courses if c not in taken_courses],
+            "taken_courses_in_group": taken_in_group,
+            "double_count_groups": []
+        }
+
+    # Обработка элективных групп
+    for group in electives:
+        group_id = group["id"]
+        group_name = group["name"]
+        required_credits = group["req_credits"]
+        note = group.get("note", "") or ""
+
+        # Парсинг групп для двойного учета
         double_count_groups = []
         if isinstance(note, str) and "Can double count with" in note:
             try:
-                double_count_groups = [int(x) for x in note.split("with")[-1].replace("(", "").replace(")", "").split(",")]
+                parts = note.split("with")[-1].replace("(", "").replace(")", "").split(",")
+                double_count_groups = [int(x.strip()) for x in parts]
             except ValueError:
                 double_count_groups = []
-        if double_count_groups:
-            double_count_dict[current_id] = set(double_count_groups)
 
-    reversed_dict = {}
-    for key, values in double_count_dict.items():
-        for value in values:
-            if value not in reversed_dict:
-                reversed_dict[value] = set()
-            reversed_dict[value].add(key)
-
-    return reversed_dict
-
-def get_remaining_courses(program_name, taken_courses, full_view=False):
-    double_count_dict = build_double_count_dict(program_name)
-
-    response = supabase.table("programs").select("program_id").eq("degree_program", program_name).execute()
-    program_id = response.data[0]["program_id"]
-    response = supabase.table("requirement_groups").select("*").eq("program_id", program_id).execute()
-    requirement_groups = sorted(response.data, key=lambda x: x['json_group_id'])
-
-    all_taken_courses = set(taken_courses)
-    remaining_requirements = {}
-
-    for group in requirement_groups:
-        group_id = group["json_group_id"]
-        response = supabase.table("requirement_courses").select("course_code").eq("group_id", group["id"]).execute()
+        # Получение курсов в группе
+        response = supabase.table("requirement_courses").select("course_code").eq("group_id", group_id).execute()
         all_courses = [course["course_code"] for course in response.data]
 
-        taken_in_group = set(all_taken_courses.intersection(all_courses))
-        taken_credits = len(taken_in_group)
+        # Получение кредитов для курсов
+        response = supabase.table("courses").select("code, credits").in_("code", all_courses).execute()
+        course_credits = {course["code"]: course["credits"] for course in response.data}
 
-        if group_id in double_count_dict:
-            for linked_id in double_count_dict[group_id]:
-                if linked_id in remaining_requirements:
-                    taken_in_group -= remaining_requirements[linked_id]["taken_courses_in_group"]
+        # Определение подходящих курсов с учетом двойного учета
+        eligible_courses = []
+        for course in all_courses:
+            if course in taken_courses:
+                if course not in course_usage:
+                    eligible_courses.append(course)
+                else:
+                    # Проверка, разрешен ли двойной учет с группами, где курс уже использован
+                    used_groups = course_usage[course]
+                    if any(gid in double_count_groups for gid in used_groups):
+                        eligible_courses.append(course)
 
-        remaining_credits = max(0, group["req_credits"] - taken_credits)
-        remaining_courses = [course for course in all_courses if course not in all_taken_courses]
+        # Расчет кредитов
+        taken_credits = sum(course_credits.get(course, 0) for course in eligible_courses)
+        remaining_credits = max(0, required_credits - taken_credits)
 
-        if taken_credits > 0 or remaining_credits > 0:
-            remaining_requirements[group_id] = {
-                "required_credits": group["req_credits"],
-                "taken_credits": taken_credits,
-                "remaining_credits": remaining_credits,
-                "available_courses": remaining_courses,
-                "taken_courses_in_group": taken_in_group,
-            }
+        remaining_requirements[group_name] = {
+            "required_credits": required_credits,
+            "taken_credits": taken_credits,
+            "remaining_credits": remaining_credits,
+            "available_courses": [c for c in all_courses if c not in taken_courses],
+            "taken_courses_in_group": eligible_courses,
+            "double_count_groups": double_count_groups
+        }
 
+    # Вывод результатов
     if full_view:
-        for group_id, info in remaining_requirements.items():
-            print(f"Requirement Group {group_id}")
+        for req, info in remaining_requirements.items():
+            print(f"Requirement: {req}")
             print(f"Required Credits: {info['required_credits']}")
             print(f"Taken Credits: {info['taken_credits']}")
             print(f"Remaining Credits: {info['remaining_credits']}")
-            print(f"Courses Taken: {', '.join(info['taken_courses_in_group'])}")
+            print(f"Courses Taken in Group: {', '.join(info['taken_courses_in_group'])}")
             print(f"Available Courses: {', '.join(info['available_courses'])}")
+            if info['double_count_groups']:
+                print(f"Can double count with groups: {info['double_count_groups']}")
             print("="*60)
+    else:
+        for req, info in remaining_requirements.items():
+            if info['remaining_credits'] > 0:
+                print(f"{req}: {info['remaining_credits']} credits needed")
+                print(f"Available courses: {', '.join(info['available_courses'])}")
+                if info['double_count_groups']:
+                    print(f"Can double count with: {info['double_count_groups']}")
+                print()
 
     return remaining_requirements
 
