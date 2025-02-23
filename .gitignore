@@ -1,4 +1,5 @@
 database/credentials.py
 back-end/credentials.py
+my_app/back-end/credentials.py
 
 back-end/__pycache__
