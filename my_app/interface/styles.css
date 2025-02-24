@@ -83,7 +83,8 @@ body.dark-mode select option {
 }
 
 .theme-toggle:hover {
-    background-color: #f5f7fa;
+    background-color: #B41231;
+    color: #ffffff;
 }
 
 /* Add transitions for smooth color changes */
@@ -106,7 +107,7 @@ header {
     padding: 15px 30px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 20px;
 }
 .logo {
     display: flex;
@@ -471,9 +472,9 @@ input:focus, select:focus {
     font-size: 1.1em;
 }
 nav {
+    flex: 1;
     height: 50px;
-    padding: 0 clamp(10px, 2vw, 20px);
-    background-color: #142A50;
+    padding: 0;
     font-size: clamp(12px, 1vw, 16px);
     position: static;
     transition: all 0.3s ease;
@@ -485,44 +486,59 @@ nav {
     align-items: center;
     justify-content: space-between;
     gap: clamp(10px, 2vw, 20px);
-    max-width: 100%;
 }
 
+/* Left controls containing semester group */
+.left-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-right: auto; /* Push other elements to the right */
+}
+
+/* Update semester group styles */
 .semester-group {
     display: flex;
     align-items: center;
     gap: clamp(8px, 1vw, 12px);
-    padding-right: clamp(10px, 2vw, 20px);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding-right: 0;
+    border-right: none;
     flex-shrink: 0;
     position: relative;
 }
 
+/* Center nav links */
 .nav-links {
     display: flex;
     align-items: center;
-    gap: clamp(10px, 2vw, 25px);
-    flex: 1;
-    white-space: nowrap;
-    position: static;
-    transform: none;
+    gap: 40px;
+    margin: 0 auto;
+    justify-content: center; /* Center the links */
 }
 
 .nav-links a {
-    padding: 5px clamp(5px, 0.5vw, 10px);
+    padding: 5px 0; /* Remove horizontal padding */
     color: #C4C8CE;
     text-decoration: none;
     transition: color 0.2s;
+    white-space: nowrap;
 }
 
+/* Remove any margin/padding from individual links */
+.nav-links a:not(:last-child) {
+    margin-right: 0;
+}
+
+/* Ensure consistent spacing in both light and dark modes */
+body.dark-mode .nav-links {
+    gap: 40px; /* Keep the same gap in dark mode */
+}
+
+/* Keep user controls on the right */
 .user-controls {
-    display: flex;
-    align-items: center;
-    gap: clamp(10px, 1vw, 15px);
     margin-left: auto;
     padding-left: clamp(10px, 2vw, 20px);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
 }
 
 .credits-box {
@@ -616,7 +632,8 @@ nav {
 }
 
 .dropdown-content a:hover {
-    background-color: #f5f7fa;
+    background-color: #B41231;
+    color: #ffffff;
 }
 
 /* Show/hide content based on auth state */
@@ -640,6 +657,15 @@ body:not(.is-authenticated) .logged-out-content {
 
 body:not(.is-authenticated) .logged-in-content {
     display: none;
+}
+
+/* For nav links specifically */
+.nav-links a.logged-in-content {
+    display: none;
+}
+
+body.is-authenticated .nav-links a.logged-in-content {
+    display: inline-block;
 }
 
 /* Navigation bar */
@@ -855,7 +881,7 @@ body.dark-mode .user-dropdown .nav-button:hover {
 }
 
 .semester-content {
-    display: none;  /* Hide by default */
+    display: none;
     position: absolute;
     top: 100%;
     left: 0;
@@ -863,20 +889,19 @@ body.dark-mode .user-dropdown .nav-button:hover {
     min-width: 160px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     border-radius: 4px;
-    margin-top: 5px;
+    padding: 8px 0;
     z-index: 1000;
 }
 
 .semester-content.show {
-    display: block;  /* Show only when .show class is present */
+    display: block;
 }
 
 .semester-content a {
-    color: #142A50;
-    padding: 8px 16px;
-    text-decoration: none;
     display: block;
-    transition: background-color 0.2s;
+    padding: 8px 16px;
+    color: #142A50;
+    text-decoration: none;
 }
 
 .semester-content a:hover {
@@ -1119,17 +1144,16 @@ body.dark-mode .export-dropdown a:hover {
 }
 
 /* Update hover styles for user dropdown */
-.dropdown-content a:hover,
-.theme-toggle:hover {
+.dropdown-content a:hover {
     background-color: #B41231;
-    color: #ffffff !important;
+    color: #ffffff;
 }
 
 /* Dark mode hover styles for user dropdown */
 body.dark-mode .dropdown-content a:hover,
 body.dark-mode .theme-toggle:hover {
     background-color: #B41231;
-    color: #ffffff !important;
+    color: #ffffff;
 }
 
 /* Ensure student info doesn't change color on hover */
@@ -1743,13 +1767,13 @@ body.dark-mode .menu-item:hover {
 
 /* Dark mode styles */
 body.dark-mode .edit-form {
-    background: #1e3a6d;
+    background-color: #1e3a6d;
     color: white;
 }
 
 body.dark-mode .edit-form input {
     color: white;
-    background: #142A50;
+    background-color: #142A50;
 }
 
 .edit-form input[type="time"] {
@@ -1784,7 +1808,7 @@ body.dark-mode .edit-form input {
 
 /* Dark mode styles */
 body.dark-mode .edit-form input[type="time"] {
-    background: #142A50;
+    background-color: #142A50;
     border-color: #495057;
     color: white;
 }
@@ -2327,4 +2351,105 @@ embed[type="application/pdf"] {
 /* Dark mode styles for PDF container */
 body.dark-mode embed[type="application/pdf"] {
     background-color: #023373;
+}
+
+/* Auth Modal Styles */
+.auth-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-modal.show {
+    display: flex;
+}
+
+.auth-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.auth-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e4e8;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+}
+
+.auth-tab.active {
+    color: #142A50;
+    border-bottom: 2px solid #B41231;
+}
+
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+.auth-form h2 {
+    margin-bottom: 20px;
+    color: #142A50;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #142A50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.auth-button:hover {
+    background-color: #0557c5;
+}
+
+/* Dark mode styles */
+body.dark-mode .auth-container {
+    background-color: #023373;
+    color: white;
+}
+
+body.dark-mode .auth-tab {
+    color: #C4C8CE;
+}
+
+body.dark-mode .auth-tab.active {
+    color: white;
+}
+
+body.dark-mode .auth-form h2 {
+    color: white;
+}
+
+body.dark-mode .auth-form input {
+    background-color: #142A50;
+    color: white;
+    border-color: #495057;
 }

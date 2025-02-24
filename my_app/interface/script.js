@@ -14,9 +14,9 @@ function toggleTheme() {
     
     // Update logo based on theme with new path
     if (isDarkMode) {
-        logoImg.src = 'GU Logo/IMG_4570.jpg'; // Updated dark mode logo path
+        logoImg.src = '../GU Logo/IMG_4570.jpg'; // Dark mode logo
     } else {
-        logoImg.src = 'GU Logo/IMG_4571.jpg'; // Light mode logo should also be in GU Logo folder
+        logoImg.src = '../GU Logo/IMG_4571.jpg'; // Light mode logo
     }
 }
 
@@ -1536,3 +1536,91 @@ function openJepsonBasementPDF() {
         scheduleContainer.style.overflow = 'hidden';
     }
 }
+
+// Show auth modal when clicking Sign In
+document.querySelector('a[href="#signin"]').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('authModal').classList.add('show');
+    document.getElementById('userDropdown').classList.remove('show');
+});
+
+// Auth tabs functionality
+document.querySelectorAll('.auth-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        // Remove active class from all tabs and forms
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding form
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab + 'Form').classList.add('active');
+    });
+});
+
+// Close modal when clicking outside
+document.getElementById('authModal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) {
+        e.target.classList.remove('show');
+    }
+});
+
+// Register form handler
+document.getElementById('registerForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const user_name = document.getElementById('regUserName').value;
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    const name = document.getElementById('regName').value;
+
+    const payload = { user_name, email, password, name };
+
+    try {
+        const response = await fetch('/user/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        console.log('Register response:', data);
+        alert(JSON.stringify(data));
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+// Login form handler
+document.getElementById('loginForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const user_name = document.getElementById('loginUserName').value;
+    const password = document.getElementById('loginPassword').value;
+
+    const payload = { user_name, password };
+
+    try {
+        const response = await fetch('/user/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        console.log('Login response:', data);
+        
+        if (data.success) { // Assuming your backend returns a success flag
+            document.body.classList.add('is-authenticated');
+            document.getElementById('authModal').classList.remove('show');
+        }
+        
+        alert(JSON.stringify(data));
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+// Add a logout handler
+document.querySelector('a[href="#signout"]').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.body.classList.remove('is-authenticated');
+    // Add any additional logout logic here
+});

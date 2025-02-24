@@ -10,7 +10,7 @@
 <body>
     <header>
         <div class="logo">
-            <img src="./IMG_4571.jpg" alt="Gonzaga University Logo">
+            <img src="../GU Logo/IMG_4571.jpg" alt="Gonzaga University Logo">
             <span class="logo-text">
                 <span class="university-name">GONZAGA</span>
                 <span class="university-subtitle">UNIVERSITY</span>
@@ -18,26 +18,28 @@
         </div>
         <nav>
             <div class="nav-sections">
-                <div class="semester-group">
-                    <button class="semester-button">Fall 2024 <span class="arrow">▼</span></button>
-                    <div class="semester-content">
-                        <a href="#" onclick="changeSemester('Fall 2024', this)">Fall 2024</a>
-                        <a href="#" onclick="changeSemester('Summer 2025', this)">Summer 2025</a>
-                        <a href="#" onclick="changeSemester('Spring 2025', this)">Spring 2025</a>
-                        <a href="#" onclick="changeSemester('Fall 2024', this)">Fall 2024</a>
-                        <a href="#" onclick="changeSemester('Summer 2024', this)">Summer 2024</a>
-                        <a href="#" onclick="changeSemester('Spring 2024', this)">Spring 2024</a>
-                        <a href="#" onclick="changeSemester('Fall 2023', this)">Fall 2023</a>
+                <div class="left-controls">
+                    <div class="semester-group">
+                        <button class="semester-button">Fall 2024 <span class="arrow">▼</span></button>
+                        <div class="semester-content">
+                            <a href="#" onclick="changeSemester('Fall 2024', this)">Fall 2024</a>
+                            <a href="#" onclick="changeSemester('Summer 2025', this)">Summer 2025</a>
+                            <a href="#" onclick="changeSemester('Spring 2025', this)">Spring 2025</a>
+                            <a href="#" onclick="changeSemester('Fall 2024', this)">Fall 2024</a>
+                            <a href="#" onclick="changeSemester('Summer 2024', this)">Summer 2024</a>
+                            <a href="#" onclick="changeSemester('Spring 2024', this)">Spring 2024</a>
+                            <a href="#" onclick="changeSemester('Fall 2023', this)">Fall 2023</a>
+                        </div>
+                        <div class="credits-box">0 Credits</div>
                     </div>
-                    <div class="credits-box">0 Credits</div>
                 </div>
 
                 <div class="nav-links">
-                    <a href="#registration" class="active">Registration</a>
+                    <a href="#registration">Registration</a>
                     <a href="#map">Map</a>
                     <a href="#finals">Finals</a>
-                    <a href="#rmp">Rate My Professor</a>
-                    <a href="#reflection">Reflection</a>
+                    <a href="#rmp" class="logged-in-content">Rate My Professor</a>
+                    <a href="#reflection" class="logged-in-content">Reflection</a>
                 </div>
 
                 <div class="user-controls">
@@ -53,16 +55,12 @@
                                 <span class="arrow">▼</span>
                             </button>
                             <div class="dropdown-content" id="userDropdown">
-                                <div class="user-info">
-                                    <div class="student-name">John Doe</div>
-                                    <div class="student-id">ID: 123456789</div>
-                                </div>
-                                <div class="dropdown-divider"></div>
                                 <button id="themeToggle" class="theme-toggle">Dark Mode</button>
                                 <div class="dropdown-divider"></div>
                                 <a href="#help">Help</a>
                                 <div class="dropdown-divider"></div>
-                                <a href="#signout">Sign Out</a>
+                                <a href="#signin" class="logged-out-content">Sign In</a>
+                                <a href="#signout" class="logged-in-content">Sign Out</a>
                             </div>
                         </div>
                     </div>
@@ -149,6 +147,43 @@
 
         <div class="empty-space"></div>
     </main>
+
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="register">Register</button>
+            </div>
+            
+            <form id="loginForm" class="auth-form active">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <input type="text" id="loginUserName" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="auth-button">Sign In</button>
+            </form>
+
+            <form id="registerForm" class="auth-form">
+                <h2>Register</h2>
+                <div class="form-group">
+                    <input type="text" id="regUserName" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="regEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="regPassword" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="regName" placeholder="Full Name" required>
+                </div>
+                <button type="submit" class="auth-button">Register</button>
+            </form>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
