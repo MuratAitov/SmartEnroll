@@ -1582,10 +1582,23 @@ document.getElementById('registerForm').addEventListener('submit', async (event)
             body: JSON.stringify(payload)
         });
         const data = await response.json();
-        console.log('Register response:', data);
-        alert(JSON.stringify(data));
+        
+        if (response.ok) {
+            // Registration successful
+            alert('Registration successful! Please login.');
+            
+            // Switch to login tab
+            document.querySelector('[data-tab="login"]').click();
+            
+            // Clear registration form
+            document.getElementById('registerForm').reset();
+        } else {
+            // Registration failed
+            alert(data.error || 'Registration failed');
+        }
     } catch (error) {
         console.error('Error:', error);
+        alert('An error occurred during registration');
     }
 });
 
@@ -1605,22 +1618,35 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
             body: JSON.stringify(payload)
         });
         const data = await response.json();
-        console.log('Login response:', data);
         
-        if (data.success) { // Assuming your backend returns a success flag
+        if (response.ok) {
+            // Login successful
             document.body.classList.add('is-authenticated');
             document.getElementById('authModal').classList.remove('show');
+            
+            // Update UI for logged-in state
+            document.querySelector('a[href="#signin"]').style.display = 'none';
+            document.querySelector('a[href="#signout"]').style.display = 'block';
+        } else {
+            // Login failed
+            alert(data.error || 'Login failed');
         }
-        
-        alert(JSON.stringify(data));
     } catch (error) {
         console.error('Error:', error);
+        alert('An error occurred during login');
     }
 });
 
-// Add a logout handler
+// Add logout handler
 document.querySelector('a[href="#signout"]').addEventListener('click', (e) => {
     e.preventDefault();
+    // Remove authenticated class
     document.body.classList.remove('is-authenticated');
-    // Add any additional logout logic here
+    
+    // Update UI for logged-out state
+    document.querySelector('a[href="#signin"]').style.display = 'block';
+    document.querySelector('a[href="#signout"]').style.display = 'none';
+    
+    // Close any open dropdowns
+    document.getElementById('userDropdown').classList.remove('show');
 });
