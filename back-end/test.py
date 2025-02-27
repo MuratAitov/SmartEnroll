@@ -222,7 +222,6 @@ def get_remaining_core_courses(program_name, taken_classes, full_view=False, deb
 
 # Допустим, студент прошёл следующие классы:
 taken_classes = [
-    {"course_id": "POLS 103", "term": "Spring 2024", "section": "01"},
     {"course_id": "PHYS 104", "term": "Spring 2024", "section": "01"},
     {"course_id": "RELI 253", "term": "Spring 2025", "section": "04"},
     {"course_id": "RELI 377", "term": "Spring 2024", "section": "01"},
@@ -241,4 +240,4 @@ get_remaining_core_courses(
     debug=True
 )
 
-
+#брут форс пруннинг
