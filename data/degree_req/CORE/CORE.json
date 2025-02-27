@@ -13,7 +13,8 @@
                 "classes": [
                     {"course_code": "COMM 100", "note": "Min 3 credits"},
                     {"course_code": "PHIL 101", "note": "Min 3 credits"},
-                    {"course_code": "ENGL 101", "note": "Min 3 credits"}
+                    {"course_code": "ENGL 101", "note": "Min 3 credits"},
+                    {"course_code": "*** 193", "note": "Min 3 credits"}
                 ]
             },
             {
@@ -26,7 +27,7 @@
                         {"course_code": "MATH 2xx"},
                         {"course_code": "MATH 3xx"},
                         {"course_code": "MATH 4xx"}
-                    
+
                 ]
             },
             {
@@ -141,4 +142,3 @@
         ]
     }
   }
-  
