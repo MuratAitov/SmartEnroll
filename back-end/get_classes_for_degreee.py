@@ -87,7 +87,7 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Fa
 
         # Вычисляем распределённые (allocated) курсы для текущей группы – только те, что студент прошёл
         allocated_current = set(course for course in taken_courses if course in available_courses)
-        
+
         if debug:
             print(f"DEBUG for group '{group_name}' (json_id: {group_json_id}):")
             print(f"  Potential courses: {sorted(potential_courses)}")
@@ -100,7 +100,7 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Fa
             print(f"  Final available courses: {sorted(available_courses)}")
             print(f"  Allocated (taken) courses for this group: {sorted(allocated_current)}")
             print("-" * 60)
-        
+
         # Обновляем processed_groups для текущей группы
         processed_groups.append((group_json_id, allocated_current))
 
@@ -120,7 +120,7 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Fa
             "available_courses": sorted(display_available),
             "double_count_groups": sorted(allowed_for_double)
         }
-    
+
     if full_view:
         print("\nFINAL OUTPUT:")
         for group_name, info in remaining_requirements.items():
@@ -134,11 +134,10 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Fa
             if info['double_count_groups']:
                 print(f"  Can double count with groups: {info['double_count_groups']}")
             print("=" * 60)
-    
+
     return remaining_requirements
 
 # Пример использования
-'''
 taken_courses = [
     "MATH 157", "MATH 258", "MATH 231", "MATH 321", "MATH 339", "MATH 259",
     "PHYS 121L", "BIOL 106", "PHYS 122L", "MATH 328", "MATH 351", "CPSC 121",
@@ -148,4 +147,3 @@ taken_courses = [
 ]
 program_name = 'B.S. Computer Science - Data Science Concentration'
 get_remaining_courses(program_name, taken_courses, full_view=True, debug=False)
-'''
