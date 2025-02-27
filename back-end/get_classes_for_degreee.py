@@ -8,7 +8,7 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Tr
     """
     Функция возвращает список курсов, необходимых для завершения программы.
     При full_view выводит подробную информацию по группам, включая дополнительное поле json_group_id как json_id.
-    
+
     Логика распределения курсов:
       - Группы сортируются по возрастанию json_group_id.
       - Для каждой группы:
@@ -18,9 +18,9 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Tr
              exclusion_set = курсы из остальных групп.
           final available_courses = (potential_courses - exclusion_set) ∪ (allowed_set ∩ potential_courses)
           allocated_current = available_courses ∩ taken_courses.
-    
+
     Отладочные выводы печатаются, если debug=True.
-    
+
     :param program_name: Название программы
     :param taken_courses: Список пройденных курсов
     :param full_view: Если True, выводится итоговая информация по группам
@@ -138,13 +138,12 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Tr
     return remaining_requirements
 
 # Пример использования
-taken_courses = [ 
+taken_courses = [
     "MATH 157", "MATH 258", "MATH 231", "MATH 321", "MATH 339", "MATH 259",
     "PHYS 121L", "BIOL 106", "PHYS 122L", "MATH 328", "MATH 351", "CPSC 121",
     "CPSC 122", "CPSC 223", "CPSC 224", "CPSC 260", "CPSC 321", "CPSC 326",
     "CPSC 346", "CPSC 348", "CPSC 450", "CPSC 222", "CPSC 322", "CPSC 323",
     "CPSC 475", "CPSC 325"
 ]
-program_name = 'B.S. Computer Science - Data Science Concentration'
-
-get_remaining_courses(program_name, taken_courses, full_view=True, debug=True)
+program_name = 'University Core Requirements'
+get_remaining_courses(program_name, taken_courses, full_view=True, debug=False)
