@@ -1434,6 +1434,41 @@ document.addEventListener('DOMContentLoaded', function() {
         // Always recreate the registration sidebar
         sidebar.innerHTML = createRegistrationSidebar();
         initializeRegistrationSidebar();
+        
+        // Reset the schedule container
+        const scheduleContainer = document.querySelector('.schedule-grid');
+        if (scheduleContainer) {
+            scheduleContainer.innerHTML = `
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>M</th>
+                        <th>T</th>
+                        <th>W</th>
+                        <th>R</th>
+                        <th>F</th>
+                    </tr>
+                    <tr><td>8:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>9:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>10:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>11:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>12:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>1:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>2:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>3:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>4:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>5:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>6:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>7:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>8:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>9:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>10:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                </table>
+            `;
+            // Reset any styles that might have been added
+            scheduleContainer.style.padding = '';
+            scheduleContainer.style.overflow = '';
+        }
     });
 
     // Update Map navigation handler
@@ -1564,7 +1599,55 @@ document.getElementById('authModal').addEventListener('click', (e) => {
     }
 });
 
-// Register form handler
+// Update the updateAuthState function
+function updateAuthState(isAuthenticated, userData = null) {
+    if (isAuthenticated && userData) {
+        document.body.classList.add('is-authenticated');
+        document.querySelector('a[href="#signin"]').style.display = 'none';
+        document.querySelector('a[href="#signout"]').style.display = 'block';
+        // Set the username in the dropdown
+        document.querySelector('.username').textContent = userData.user_name;
+    } else {
+        document.body.classList.remove('is-authenticated');
+        document.querySelector('a[href="#signin"]').style.display = 'block';
+        document.querySelector('a[href="#signout"]').style.display = 'none';
+        // Clear the username
+        document.querySelector('.username').textContent = '';
+    }
+}
+
+// Update the login form handler to pass user data
+document.getElementById('loginForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const user_name = document.getElementById('loginUserName').value;
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+        const response = await fetch('http://localhost:5001/user/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_name, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Login successful - pass the user data
+            updateAuthState(true, data.data);
+            document.getElementById('authModal').classList.remove('show');
+            document.getElementById('loginForm').reset();
+        } else {
+            // Login failed
+            alert(data.error || 'Login failed');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred during login');
+    }
+});
+
+// Update the register form handler
 document.getElementById('registerForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -1573,24 +1656,19 @@ document.getElementById('registerForm').addEventListener('submit', async (event)
     const password = document.getElementById('regPassword').value;
     const name = document.getElementById('regName').value;
 
-    const payload = { user_name, email, password, name };
-
     try {
-        const response = await fetch('/user/register', {
+        const response = await fetch('http://localhost:5001/user/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({ user_name, email, password, name })
         });
+        
         const data = await response.json();
         
         if (response.ok) {
             // Registration successful
             alert('Registration successful! Please login.');
-            
-            // Switch to login tab
             document.querySelector('[data-tab="login"]').click();
-            
-            // Clear registration form
             document.getElementById('registerForm').reset();
         } else {
             // Registration failed
@@ -1602,51 +1680,12 @@ document.getElementById('registerForm').addEventListener('submit', async (event)
     }
 });
 
-// Login form handler
-document.getElementById('loginForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const user_name = document.getElementById('loginUserName').value;
-    const password = document.getElementById('loginPassword').value;
-
-    const payload = { user_name, password };
-
-    try {
-        const response = await fetch('/user/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        const data = await response.json();
-        
-        if (response.ok) {
-            // Login successful
-            document.body.classList.add('is-authenticated');
-            document.getElementById('authModal').classList.remove('show');
-            
-            // Update UI for logged-in state
-            document.querySelector('a[href="#signin"]').style.display = 'none';
-            document.querySelector('a[href="#signout"]').style.display = 'block';
-        } else {
-            // Login failed
-            alert(data.error || 'Login failed');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred during login');
-    }
-});
-
-// Add logout handler
+// Update the logout handler to clear user data
 document.querySelector('a[href="#signout"]').addEventListener('click', (e) => {
     e.preventDefault();
-    // Remove authenticated class
-    document.body.classList.remove('is-authenticated');
-    
-    // Update UI for logged-out state
-    document.querySelector('a[href="#signin"]').style.display = 'block';
-    document.querySelector('a[href="#signout"]').style.display = 'none';
-    
-    // Close any open dropdowns
+    updateAuthState(false);
     document.getElementById('userDropdown').classList.remove('show');
 });
+
+// Initialize auth state on page load with no user data
+updateAuthState(false);

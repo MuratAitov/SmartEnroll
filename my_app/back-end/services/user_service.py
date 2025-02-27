@@ -42,19 +42,29 @@ def check_login(user_name: str, password: str) -> dict:
     with the hashed password in the 'users' table (matched by user_name).
     Returns user data if successful, or an error otherwise.
     """
-    # Find user by user_name
-    response = supabase.from_('users').select('*').eq('user_name', user_name).single().execute()
-    if response.error or not response.data:
-        return {"error": "User not found"}
+    try:
+        # Find user by user_name
+        response = supabase.from_('users').select('*').eq('user_name', user_name).single().execute()
+        
+        # Check if we got any data back
+        if not response.data:
+            return {"error": "User not found"}
 
-    user_record = response.data
-    stored_hashed_password = user_record['password']
+        user_record = response.data
+        stored_hashed_password = user_record['password']
 
-    # Compare the provided password with the stored hash
-    if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
-        return {"data": user_record}  # Successful login
-    else:
-        return {"error": "Invalid credentials"}
+        # Compare the provided password with the stored hash
+        if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
+            # Remove password from user data before sending
+            user_data = dict(user_record)
+            user_data.pop('password', None)
+            return {"data": user_data}  # Successful login
+        else:
+            return {"error": "Invalid credentials"}
+            
+    except Exception as e:
+        print(f"Login error: {str(e)}")  # For debugging
+        return {"error": "An error occurred during login"}
     
 #result = create_user("Aa", "aa@gmail.com", "Aa", "Aa")
 #print (result)

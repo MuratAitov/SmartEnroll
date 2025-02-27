@@ -605,6 +605,8 @@ body.dark-mode .nav-links {
 
 .user-info {
     padding: 8px 16px;
+    color: #142A50;
+    font-weight: 500;
 }
 
 .student-name {
@@ -1159,6 +1161,10 @@ body.dark-mode .theme-toggle:hover {
 /* Ensure student info doesn't change color on hover */
 .user-info:hover {
     background-color: transparent;
+    cursor: default;
+}
+
+.user-info:hover .username {
     color: inherit;
 }
 
@@ -2452,4 +2458,10 @@ body.dark-mode .auth-form input {
     background-color: #142A50;
     color: white;
     border-color: #495057;
+}
+
+/* Add these styles for the username display */
+.username {
+    display: block;
+    font-size: 14px;
 }
