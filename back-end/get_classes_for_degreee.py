@@ -4,7 +4,7 @@ from credentials import SUPABASE_URL, SUPABASE_KEY
 # Инициализация клиента Supabase
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def get_remaining_courses(program_name, taken_courses, full_view=False, debug=True):
+def get_remaining_courses(program_name, taken_courses, full_view=False, debug=False):
     """
     Функция возвращает список курсов, необходимых для завершения программы.
     При full_view выводит подробную информацию по группам, включая дополнительное поле json_group_id как json_id.
@@ -87,7 +87,7 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Tr
 
         # Вычисляем распределённые (allocated) курсы для текущей группы – только те, что студент прошёл
         allocated_current = set(course for course in taken_courses if course in available_courses)
-        '''
+        
         if debug:
             print(f"DEBUG for group '{group_name}' (json_id: {group_json_id}):")
             print(f"  Potential courses: {sorted(potential_courses)}")
@@ -100,7 +100,7 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Tr
             print(f"  Final available courses: {sorted(available_courses)}")
             print(f"  Allocated (taken) courses for this group: {sorted(allocated_current)}")
             print("-" * 60)
-        '''
+        
         # Обновляем processed_groups для текущей группы
         processed_groups.append((group_json_id, allocated_current))
 
@@ -120,7 +120,7 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Tr
             "available_courses": sorted(display_available),
             "double_count_groups": sorted(allowed_for_double)
         }
-    '''
+    
     if full_view:
         print("\nFINAL OUTPUT:")
         for group_name, info in remaining_requirements.items():
@@ -134,7 +134,7 @@ def get_remaining_courses(program_name, taken_courses, full_view=False, debug=Tr
             if info['double_count_groups']:
                 print(f"  Can double count with groups: {info['double_count_groups']}")
             print("=" * 60)
-    '''
+    
     return remaining_requirements
 
 # Пример использования

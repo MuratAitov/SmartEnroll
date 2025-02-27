@@ -46,8 +46,14 @@ def compare_degrees(degree1, degree2, taken_courses):
 # Example Usage
 if __name__ == "__main__":
     degree1 = "B.S. Computer Science - Data Science Concentration"
-    degree2 = "Statistics Minor"
-    taken_courses = []
+    degree2 = "Applied Mathematics Minor"
+    taken_courses = [
+    "MATH 157", "MATH 258", "MATH 231", "MATH 321", "MATH 339", "MATH 259",
+    "PHYS 121L", "BIOL 106", "PHYS 122L", "MATH 328", "MATH 351", "CPSC 121",
+    "CPSC 122", "CPSC 223", "CPSC 224", "CPSC 260", "CPSC 321", "CPSC 326",
+    "CPSC 346", "CPSC 348", "CPSC 450", "CPSC 222", "CPSC 322", "CPSC 323",
+    "CPSC 475", "CPSC 325"
+    ]
     comparison_result = compare_degrees(degree1, degree2, taken_courses)
 
     # Print the result
