@@ -2465,3 +2465,17 @@ body.dark-mode .auth-form input {
     display: block;
     font-size: 14px;
 }
+
+/* Username styles for dark mode */
+body.dark-mode .user-info {
+    color: #ffffff;
+}
+
+body.dark-mode .username {
+    color: #ffffff;
+}
+
+/* Keep the color consistent on hover in dark mode */
+body.dark-mode .user-info:hover .username {
+    color: #ffffff;
+}

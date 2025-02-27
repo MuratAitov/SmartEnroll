@@ -733,6 +733,59 @@ function createPreReqTreeContent() {
     `;
 }
 
+// Add this function to handle the Enter key press
+function handleEnterKeyPress(event) {
+    // Check if the pressed key is Enter
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission
+        
+        // Get the form values
+        const eventName = document.getElementById('eventNameInput').value;
+        const startTime = document.getElementById('start-time').value;
+        const endTime = document.getElementById('end-time').value;
+        const selectedDays = Array.from(document.querySelectorAll('.weekday-btn.selected'))
+            .map(btn => btn.dataset.day);
+        
+        if (eventName && startTime && endTime && selectedDays.length > 0) {
+            // Create event blocks for each selected day
+            selectedDays.forEach(day => {
+                const cell = document.querySelector(`td[data-day="${day}"][data-time="${startTime}"]`);
+                if (cell) {
+                    const eventBlock = document.createElement('div');
+                    eventBlock.className = 'event-block';
+                    eventBlock.innerHTML = `
+                        <span class="event-name">${eventName}</span>
+                        <span class="event-time">${startTime} - ${endTime}</span>
+                    `;
+                    cell.appendChild(eventBlock);
+                }
+            });
+            
+            // Clear the form
+            document.getElementById('eventNameInput').value = '';
+            document.getElementById('start-time').value = '';
+            document.getElementById('end-time').value = '';
+            document.querySelectorAll('.weekday-btn.selected').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+        }
+    }
+}
+
+// Add event listeners to all input fields in the Recurring Events form
+function initializeRecurringEventsForm() {
+    const recurringEventsForm = document.querySelector('.recurring-events-view form');
+    if (recurringEventsForm) {
+        // Add the event listener to all input fields
+        recurringEventsForm.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', handleEnterKeyPress);
+        });
+        
+        // Also add the event listener to the form itself
+        recurringEventsForm.addEventListener('keypress', handleEnterKeyPress);
+    }
+}
+
 // Modify the registration click handler to include tab switching functionality
 function initializeRegistrationSidebar() {
     const coursesTab = document.querySelector('.courses-tab');
@@ -1163,6 +1216,9 @@ function initializeRegistrationSidebar() {
             }
         });
     }
+
+    // Initialize the Recurring Events form
+    initializeRecurringEventsForm();
 }
 
 // Update the createExportDropdown function
