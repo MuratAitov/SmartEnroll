@@ -37,7 +37,7 @@ body.dark-mode .student-id {
 
 body.dark-mode .dropdown-content a:hover,
 body.dark-mode .theme-toggle:hover {
-    background-color: #1e3a6d !important;
+    background-color: #B41231 !important;
 }
 
 body.dark-mode .dropdown-divider {
@@ -580,6 +580,9 @@ body.dark-mode .nav-links {
 
 .arrow {
     font-size: 0.8em;
+    transition: transform 0.2s ease;
+    margin-left: 8px;
+    color: #ffffff;
 }
 
 .user-dropdown {
@@ -701,7 +704,8 @@ body.dark-mode .student-id {
 
 body.dark-mode .dropdown-content a:hover,
 body.dark-mode .theme-toggle:hover {
-    background-color: #1e3a6d;
+    background-color: #B41231;
+    color: #ffffff;
 }
 
 body.dark-mode .dropdown-divider {
@@ -804,7 +808,7 @@ body.dark-mode .schedule-grid td {
     color: #ffffff !important;
 }
 
-body.dark-mode .schedule-grid tr:nth-child(even) {
+body.dark-mode .schedule-grid tr:nth-child(even) td {
     background-color: #023373 !important;
 }
 
@@ -856,7 +860,8 @@ body.dark-mode .division-btn:hover {
 
 /* Export button hover styles */
 body.dark-mode .nav-button:hover {
-    color: #B41231 !important;
+    background-color: rgba(20, 42, 80, 0.2);  /* Darker grey with transparency */
+    color: #142A50 !important;
 }
 
 /* User dropdown button hover styles */
@@ -1002,11 +1007,6 @@ body.dark-mode .credits-box {
     color: #142A50;
 }
 
-.arrow {
-    font-size: 12px;
-    transition: transform 0.2s ease;
-}
-
 .tree-content {
     display: none;
     margin-top: 4px;
@@ -1095,17 +1095,24 @@ body.dark-mode .credits-box {
     display: inline-block;
 }
 
+.export-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #ffffff;
+}
+
 .export-dropdown {
+    display: none;
     position: absolute;
     top: 100%;
     right: 0;
     background-color: white;
-    min-width: 180px;
+    min-width: 200px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     border-radius: 4px;
     padding: 8px 0;
     z-index: 1000;
-    display: none;
     margin-top: 5px;
 }
 
@@ -1119,6 +1126,9 @@ body.dark-mode .credits-box {
     color: #142A50;
     text-decoration: none;
     transition: background-color 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .export-dropdown a:hover {
@@ -1164,7 +1174,10 @@ body.dark-mode .theme-toggle:hover {
     cursor: default;
 }
 
-.user-info:hover .username {
+.user-info:hover .username,
+body.dark-mode .user-info,
+body.dark-mode .username,
+body.dark-mode .user-info:hover .username {
     color: inherit;
 }
 
@@ -2478,4 +2491,60 @@ body.dark-mode .username {
 /* Keep the color consistent on hover in dark mode */
 body.dark-mode .user-info:hover .username {
     color: #ffffff;
+}
+
+/* Update dark mode hover styles for all dropdowns */
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover,
+body.dark-mode .export-dropdown a:hover,
+body.dark-mode .dropdown-item:hover {
+    background-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Remove any conflicting hover styles */
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover {
+    background-color: #B41231 !important;
+}
+
+/* Ensure the hover effect is consistent */
+body.dark-mode .export-dropdown a:hover {
+    background-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Add hover effect for dropdown titles in dark mode */
+body.dark-mode .nav-button:hover {
+    background-color: rgba(20, 42, 80, 0.2);  /* Darker grey with transparency */
+    color: #142A50 !important;
+}
+
+body.dark-mode .export-button:hover {
+    background-color: rgba(20, 42, 80, 0.2);  /* Darker grey with transparency */
+    border-radius: 4px;
+    color: #142A50 !important;
+}
+
+/* Keep arrow color consistent on hover */
+body.dark-mode .nav-button:hover .arrow {
+    color: #142A50 !important;
+}
+
+/* Add hover effect for semester dropdown title in dark mode */
+body.dark-mode .semester-button:hover {
+    background-color: rgba(20, 42, 80, 0.2);  /* Darker grey with transparency */
+    border-radius: 4px;
+    color: #142A50 !important;
+}
+
+/* Keep arrow color consistent on hover for semester dropdown */
+body.dark-mode .semester-button:hover .arrow {
+    color: #142A50 !important;
+}
+
+/* Keep the red hover effect for semester dropdown items */
+body.dark-mode .semester-content a:hover {
+    background-color: #B41231 !important;
+    color: #ffffff !important;
 }

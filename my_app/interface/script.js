@@ -1196,7 +1196,7 @@ function initializeRegistrationSidebar() {
 
         exportCalendar.addEventListener('click', function(e) {
             e.preventDefault();
-            exportToCalendar(); // Call the export function
+            exportToAppleCalendar(); // Call the export function
             exportDropdown.classList.remove('show');
             exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
         });
@@ -1247,79 +1247,85 @@ function createSemesterDropdown() {
     `;
 }
 
-// Add the exportToCalendar function if it doesn't exist
-function exportToCalendar() {
-    // Current timestamp for DTSTAMP
-    const now = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-
-    // Start the calendar content
+// Update the export calendar functionality
+function exportToAppleCalendar() {
+    // Get schedule data from your grid
+    const scheduleGrid = document.querySelector('.schedule-grid');
+    const events = [];
+    
+    // Find all event blocks in the schedule
+    const eventBlocks = scheduleGrid.querySelectorAll('.event-block');
+    
+    eventBlocks.forEach(block => {
+        const eventName = block.querySelector('.event-name').textContent;
+        const eventTime = block.querySelector('.event-time').textContent;
+        const cell = block.closest('td');
+        const day = cell.dataset.day;
+        
+        // Create calendar event
+        const event = {
+            title: eventName,
+            time: eventTime,
+            day: day
+        };
+        events.push(event);
+    });
+    
+    // Create ICS file content
     let icsContent = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//Gonzaga University//Class Schedule//EN'
-    ].join('\r\n');
-
-    // Add each event
-    document.querySelectorAll('.event-block').forEach(eventBlock => {
-        const eventName = eventBlock.querySelector('.event-name').textContent;
-        const [startTime, endTime] = eventBlock.querySelector('.event-time').textContent.split(' - ');
-        
-        // Convert times to UTC format
-        const [startHour, startMinute] = startTime.split(':');
-        const [endHour, endMinute] = endTime.split(':');
-        
-        // Use next Monday as the start date
-        const nextMonday = getNextMonday();
-        const dtStart = formatDateForICS(nextMonday, startHour, startMinute);
-        const dtEnd = formatDateForICS(nextMonday, endHour, endMinute);
-
-        // Create RRULE based on selected days
-        const selectedDays = ['MO', 'TU', 'WE', 'TH', 'FR'];
-        const rrule = `RRULE:FREQ=WEEKLY;BYDAY=${selectedDays.join(',')};UNTIL=20251231T235959Z`;
-
-        // Add event to calendar
-        icsContent += '\r\n' + [
+        'PRODID:-//SmartEnroll//Course Schedule//EN'
+    ];
+    
+    events.forEach(event => {
+        icsContent = icsContent.concat([
             'BEGIN:VEVENT',
-            'UID:' + Date.now() + '@gonzaga.edu',
-            'DTSTAMP:' + now,
-            'SUMMARY:' + eventName,
-            'DTSTART:' + dtStart,
-            'DTEND:' + dtEnd,
-            rrule,
+            `SUMMARY:${event.title}`,
+            `DTSTART:${formatDateForICS(event.day, event.time.split(' - ')[0])}`,
+            `DTEND:${formatDateForICS(event.day, event.time.split(' - ')[1])}`,
+            'RRULE:FREQ=WEEKLY',
             'END:VEVENT'
-        ].join('\r\n');
+        ]);
     });
-
-    // Close the calendar
-    icsContent += '\r\nEND:VCALENDAR';
-
-    // Create and trigger download
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
+    
+    icsContent.push('END:VCALENDAR');
+    
+    // Create and download the ICS file
+    const blob = new Blob([icsContent.join('\n')], { type: 'text/calendar' });
+    const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'class_schedule.ics';
+    a.download = 'course_schedule.ics';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    window.URL.revokeObjectURL(url);
 }
 
-// Helper functions
-function getNextMonday() {
+// Helper function to format dates for ICS file
+function formatDateForICS(day, time) {
+    // Get next occurrence of the day
+    const days = {'M': 1, 'T': 2, 'W': 3, 'R': 4, 'F': 5};
     const today = new Date();
-    const day = today.getDay();
-    const diff = day === 0 ? 1 : 8 - day;
-    return new Date(today.setDate(today.getDate() + diff));
+    const targetDay = days[day];
+    const daysUntilTarget = (targetDay + 7 - today.getDay()) % 7;
+    const targetDate = new Date(today);
+    targetDate.setDate(today.getDate() + daysUntilTarget);
+    
+    // Format the date and time
+    const [hours, minutes] = time.match(/(\d+):(\d+)/).slice(1);
+    targetDate.setHours(parseInt(hours), parseInt(minutes), 0);
+    
+    return targetDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 }
 
-function formatDateForICS(date, hours, minutes) {
-    return date.getFullYear() +
-           String(date.getMonth() + 1).padStart(2, '0') +
-           String(date.getDate()).padStart(2, '0') + 'T' +
-           String(hours).padStart(2, '0') +
-           String(minutes).padStart(2, '0') + '00';
-}
+// Update the export calendar click handler
+document.querySelector('.export-ioscalendar').addEventListener('click', function(e) {
+    e.preventDefault();
+    exportToAppleCalendar();
+    document.querySelector('.export-dropdown').classList.remove('show');
+});
 
 // Main Event Listener
 document.addEventListener('DOMContentLoaded', function() {
@@ -1561,6 +1567,69 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update the semester button to show Spring 2025 by default
     document.querySelector('.semester-button').innerHTML = 'Spring 2025 <span class="arrow">▼</span>';
+
+    // Add this line to your initialization code (where you initialize other components)
+    initializeExportDropdown();
+
+    // Export dropdown functionality
+    const exportButton = document.querySelector('.export-button');
+    const exportDropdown = document.querySelector('.export-dropdown');
+
+    if (exportButton && exportDropdown) {
+        // Toggle dropdown on button click
+        exportButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Close other dropdowns
+            const userDropdown = document.getElementById('userDropdown');
+            if (userDropdown) {
+                userDropdown.classList.remove('show');
+            }
+            
+            // Toggle export dropdown
+            exportDropdown.classList.toggle('show');
+            
+            // Rotate arrow
+            const arrow = this.querySelector('.arrow');
+            if (arrow) {
+                arrow.style.transform = exportDropdown.classList.contains('show') 
+                    ? 'rotate(180deg)' 
+                    : 'rotate(0deg)';
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!exportButton.contains(e.target)) {
+                exportDropdown.classList.remove('show');
+                const arrow = exportButton.querySelector('.arrow');
+                if (arrow) {
+                    arrow.style.transform = 'rotate(0deg)';
+                }
+            }
+        });
+
+        // Add functionality to export options
+        const exportCalendar = exportDropdown.querySelector('.export-calendar');
+        const exportPDF = exportDropdown.querySelector('.export-pdf');
+
+        if (exportCalendar) {
+            exportCalendar.addEventListener('click', function(e) {
+                e.preventDefault();
+                exportToAppleCalendar();
+                exportDropdown.classList.remove('show');
+            });
+        }
+
+        if (exportPDF) {
+            exportPDF.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Exporting as PDF...');
+                exportDropdown.classList.remove('show');
+            });
+        }
+    }
 });
 
 // Update the openHerakPDF function with the correct directory path
@@ -1745,3 +1814,53 @@ document.querySelector('a[href="#signout"]').addEventListener('click', (e) => {
 
 // Initialize auth state on page load with no user data
 updateAuthState(false);
+
+// Add this function to initialize the export dropdown
+function initializeExportDropdown() {
+    const exportContainer = document.querySelector('.export-container');
+    const exportButton = exportContainer.querySelector('.export-button');
+    
+    // Create and append the dropdown if it doesn't exist
+    if (!exportContainer.querySelector('.export-dropdown')) {
+        const exportDropdown = document.createElement('div');
+        exportDropdown.className = 'export-dropdown';
+        exportDropdown.innerHTML = `
+            <a href="#" class="export-calendar">Export to Calendar</a>
+            <a href="#" class="export-pdf">Export as PDF</a>
+        `;
+        exportContainer.appendChild(exportDropdown);
+    }
+
+    const exportDropdown = exportContainer.querySelector('.export-dropdown');
+
+    // Toggle dropdown on button click
+    exportButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Close user dropdown if open
+        const userDropdown = document.getElementById('userDropdown');
+        if (userDropdown) {
+            userDropdown.classList.remove('show');
+        }
+        
+        exportDropdown.classList.toggle('show');
+        const arrow = this.querySelector('.arrow');
+        if (arrow) {
+            arrow.style.transform = exportDropdown.classList.contains('show') 
+                ? 'rotate(180deg)' 
+                : 'rotate(0deg)';
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!exportContainer.contains(e.target)) {
+            exportDropdown.classList.remove('show');
+            const arrow = exportButton.querySelector('.arrow');
+            if (arrow) {
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+    });
+}
