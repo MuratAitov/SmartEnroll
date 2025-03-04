@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Prerequisite Graph</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    .node circle {
+      stroke: #333;
+      stroke-width: 1.5px;
+      fill: #ccc;
+    }
+    .node text {
+      font-size: 12px;
+      pointer-events: none;
+    }
+    .link {
+      stroke: #999;
+      stroke-opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+<svg id="graph" width="800" height="600">
+  <!-- Определяем стрелочку (маркер) для концов рёбер -->
+  <defs>
+    <marker
+      id="arrow"
+      viewBox="0 -5 10 10"
+      refX="15"  <!-- сдвигаем точку привязки, чтобы стрелка была на конце линии -->
+      refY="0"
+      markerWidth="6"
+      markerHeight="6"
+      orient="auto">
+      <path d="M0,-5L10,0L0,5" fill="#999"/>
+    </marker>
+  </defs>
+</svg>
+
+<script>
+  // Пример данных
+  const data = {
+    "nodes": [
+      { "id": "CPSC 321" },
+      { "id": "CPSC 122" },
+      { "id": "CPSC 222" }
+    ],
+    "edges": [
+      { "source": "CPSC 122", "target": "CPSC 321", "relation": "or" },
+      { "source": "CPSC 222", "target": "CPSC 321", "relation": "or" }
+    ]
+  };
+
+  const width = 800, height = 600;
+
+  // Создаём "симуляцию" (force layout)
+  const svg = d3.select("#graph");
+  const simulation = d3.forceSimulation(data.nodes)
+    .force("link", d3.forceLink(data.edges).id(d => d.id).distance(100))
+    .force("charge", d3.forceManyBody().strength(-200))
+    .force("center", d3.forceCenter(width / 2, height / 2));
+
+  // Создаём линии (links)
+  const link = svg.selectAll(".link")
+    .data(data.edges)
+    .enter().append("line")
+    .attr("class", "link")
+    .attr("stroke-width", 2)
+    // Применяем стрелку к концу линии
+    .attr("marker-end", "url(#arrow)");
+
+  // Создаём узлы (nodes)
+  const node = svg.selectAll(".node")
+    .data(data.nodes)
+    .enter().append("g")
+    .attr("class", "node")
+    .call(d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended));
+
+  node.append("circle")
+    .attr("r", 20);
+
+  node.append("text")
+    .attr("dy", -30)
+    .attr("text-anchor", "middle")
+    .text(d => d.id);
+
+  // Обновляем позиции при "tick"
+  simulation.on("tick", () => {
+    link
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
+
+    node
+      .attr("transform", d => `translate(${d.x},${d.y})`);
+  });
+
+  // Функции перетаскивания
+  function dragstarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x; d.fy = d.y;
+  }
+  function dragged(event, d) {
+    d.fx = event.x; d.fy = event.y;
+  }
+  function dragended(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null; d.fy = null;
+  }
+</script>
+</body>
+</html>

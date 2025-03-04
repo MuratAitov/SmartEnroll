@@ -4,4 +4,6 @@ my_app/back-end/credentials.py
 my_app/back-end/services/credentials.py
 back-end/__pycache__
 my_app/back-end/services/credentials.py
+
+back-end/graph/credentials.py
 /my_app/back-end/services/__pycache__
