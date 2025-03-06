@@ -14,10 +14,11 @@ CORS(app)  # Enable CORS for all routes
 
 # Register Blueprints with Correct URL Prefixes
 app.register_blueprint(user_bp, url_prefix='/user')
-app.register_blueprint(course_bp, url_prefix='/courses')  # Fixing course_bp path
-app.register_blueprint(export_bp, url_prefix='/export')  # Fixing export_bp path
+app.register_blueprint(course_bp, url_prefix='/course_bp')  # Fixing course_bp path
+app.register_blueprint(export_bp, url_prefix='/export_bp')  # Fixing export_bp path
 app.register_blueprint(prereq_bp, url_prefix='/api')  # Fixing prereq_bp path
-app.register_blueprint(section_bp, url_prefix='/sections')  # Fixing section_bp path
+app.register_blueprint(section_bp, url_prefix='/section_bp')
+
 
 # Serve Frontend Files
 INTERFACE_FOLDER = os.path.join(os.path.dirname(__file__), '..', 'interface')
