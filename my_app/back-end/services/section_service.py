@@ -46,5 +46,5 @@ def search_sections(subject: Optional[str] = None,
 
     return {"data": response.data}
 
-result = search_sections(subject="CPSC", course_code='260')
-print(result)
+# result = search_sections(subject="CPSC", course_code='260')
+# print(result)

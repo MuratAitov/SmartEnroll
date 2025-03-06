@@ -160,9 +160,9 @@ mock_graph = {
     ]
 }
 
-#
-if __name__ == "__main__":
-    result_one_level = build_prerequisite_graph("CPSC 325", include_all_levels=False)
-    print("One-level prereq graph:", result_one_level)
+# #
+# if __name__ == "__main__":
+#     result_one_level = build_prerequisite_graph("CPSC 325", include_all_levels=False)
+#     print("One-level prereq graph:", result_one_level)
 
  
