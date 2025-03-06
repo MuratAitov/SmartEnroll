@@ -2285,13 +2285,13 @@ function initializePrereqTreeTab() {
     if (prereqTreeTab && coursesTab && recurringEventsTab && 
         coursesView && recurringEventsView && prereqTreeView) {
         
-        prereqTreeTab.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Update active tab
+    prereqTreeTab.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Update active tab
             coursesTab.classList.remove('active');
             recurringEventsTab.classList.remove('active');
-            prereqTreeTab.classList.add('active');
+        prereqTreeTab.classList.add('active');
             
             // Show/hide views
             coursesView.style.display = 'none';
@@ -2300,13 +2300,13 @@ function initializePrereqTreeTab() {
         });
         
         // Add click handlers for other tabs to ensure they hide the prereq tree view
-        coursesTab.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Update active tab
-            coursesTab.classList.add('active');
+    coursesTab.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Update active tab
+        coursesTab.classList.add('active');
             recurringEventsTab.classList.remove('active');
-            prereqTreeTab.classList.remove('active');
+        prereqTreeTab.classList.remove('active');
             
             // Show/hide views
             coursesView.style.display = 'block';
@@ -2315,13 +2315,13 @@ function initializePrereqTreeTab() {
         });
         
         recurringEventsTab.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Update active tab
-            coursesTab.classList.remove('active');
+        e.preventDefault();
+        
+        // Update active tab
+        coursesTab.classList.remove('active');
             recurringEventsTab.classList.add('active');
-            prereqTreeTab.classList.remove('active');
-            
+        prereqTreeTab.classList.remove('active');
+        
             // Show/hide views
             coursesView.style.display = 'none';
             recurringEventsView.style.display = 'block';
@@ -2597,9 +2597,9 @@ function addCourse() {
     // Check if at least subject or course code is provided
     if (!subject && !courseCode) {
         alert('Please enter at least a subject or course code');
-        return;
-    }
-    
+            return;
+        }
+        
     // Show loading state
     showLoadingState();
     
