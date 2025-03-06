@@ -17,6 +17,7 @@
     .link {
       stroke: #999;
       stroke-opacity: 0.6;
+      stroke-width: 2;
     }
   </style>
 </head>
@@ -27,10 +28,10 @@
     <marker
       id="arrow"
       viewBox="0 -5 10 10"
-      refX="15"  <!-- сдвигаем точку привязки, чтобы стрелка была на конце линии -->
+      refX="15"
       refY="0"
-      markerWidth="6"
-      markerHeight="6"
+      markerWidth="7"
+      markerHeight="7"
       orient="auto">
       <path d="M0,-5L10,0L0,5" fill="#999"/>
     </marker>
@@ -38,20 +39,23 @@
 </svg>
 
 <script>
-  // Пример данных
+  // Данные с промежуточным узлом "or"
   const data = {
     "nodes": [
       { "id": "CPSC 321" },
+      { "id": "or" },
       { "id": "CPSC 122" },
       { "id": "CPSC 222" }
     ],
     "edges": [
-      { "source": "CPSC 122", "target": "CPSC 321", "relation": "or" },
-      { "source": "CPSC 222", "target": "CPSC 321", "relation": "or" }
+      { "source": "CPSC 321", "target": "or", "relation": "or" },
+      { "source": "or", "target": "CPSC 122", "relation": "or" },
+      { "source": "or", "target": "CPSC 222", "relation": "or" }
     ]
   };
 
   const width = 800, height = 600;
+  const nodeRadius = 20; // Радиус узлов
 
   // Создаём "симуляцию" (force layout)
   const svg = d3.select("#graph");
@@ -65,8 +69,6 @@
     .data(data.edges)
     .enter().append("line")
     .attr("class", "link")
-    .attr("stroke-width", 2)
-    // Применяем стрелку к концу линии
     .attr("marker-end", "url(#arrow)");
 
   // Создаём узлы (nodes)
@@ -80,20 +82,37 @@
       .on("end", dragended));
 
   node.append("circle")
-    .attr("r", 20);
+    .attr("r", nodeRadius);
 
   node.append("text")
     .attr("dy", -30)
     .attr("text-anchor", "middle")
     .text(d => d.id);
 
+  // Функция, которая «срезает» линию на заданном расстоянии (r) от точки p1 в сторону p2
+  function offsetPoint(p1, p2, r) {
+    // p1, p2 - объекты с x, y
+    // r - радиус, на который нужно сместить
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    // Если узлы в одной точке, возвращаем координаты без изменений
+    if (dist === 0) return { x: p1.x, y: p1.y };
+    // Рассчитываем отношение, чтобы «срезать» линию на r от p1
+    const ratio = r / dist;
+    return {
+      x: p1.x + dx * ratio,
+      y: p1.y + dy * ratio
+    };
+  }
+
   // Обновляем позиции при "tick"
   simulation.on("tick", () => {
     link
-      .attr("x1", d => d.source.x)
-      .attr("y1", d => d.source.y)
-      .attr("x2", d => d.target.x)
-      .attr("y2", d => d.target.y);
+      .attr("x1", d => offsetPoint(d.source, d.target, nodeRadius).x)
+      .attr("y1", d => offsetPoint(d.source, d.target, nodeRadius).y)
+      .attr("x2", d => offsetPoint(d.target, d.source, nodeRadius).x)
+      .attr("y2", d => offsetPoint(d.target, d.source, nodeRadius).y);
 
     node
       .attr("transform", d => `translate(${d.x},${d.y})`);
