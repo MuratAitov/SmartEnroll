@@ -738,9 +738,6 @@ function createPreReqTreeContent() {
                     </label>
                 </div>
             </div>
-            <div class="initial-message">
-                Enter a course code above to view its prerequisites
-            </div>
         </div>
     `;
 }
@@ -1703,6 +1700,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (addCourseBtn) {
         addCourseBtn.addEventListener('click', addCourse);
     }
+
+    checkApiAvailability();
+    setupExportButtons();
 });
 
 // Function to initialize authentication forms
@@ -3021,9 +3021,9 @@ function addSectionToSchedule(section) {
         const dayIndex = getDayIndex(day);
         if (dayIndex === -1) {
             console.warn(`Invalid day format: ${day}`);
-            return;
-        }
-        
+        return;
+    }
+    
         // Create the course block element
         const courseBlock = document.createElement('div');
         courseBlock.className = 'course-block';
@@ -3504,16 +3504,16 @@ function showSectionsSidebarWithRealData(subject, courseCode, sectionsData) {
                 <span>Section ${section.section_number || 'Unknown'}</span>
                 <span>${section.credits || 3} cr</span>
             </div>
-            <div class="section-details">
+                    <div class="section-details">
                 <div>${section.instructor || 'TBA'}</div>
                 <div>${formattedDays} ${startTime}-${endTime}</div>
                 <div>${section.location || 'TBA'}</div>
-            </div>
-            <div class="section-day-blocks">
+                    </div>
+                    <div class="section-day-blocks">
                 ${meetingDays.map(day => `<span class="section-day-block">${day}</span>`).join('')}
-            </div>
-        `;
-        
+        </div>
+    `;
+    
         // Store the section data for later use
         sectionItem.dataset.section = JSON.stringify({
             id: section.id || `${subject}${courseCode}-${section.section_number}`,
@@ -3578,4 +3578,81 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ... existing code ...
+});
+
+// Check if backend APIs are available
+function checkApiAvailability() {
+    fetch('/api/graph?course=CPSC321&all=false')
+        .then(response => {
+            if (!response.ok) {
+                console.warn('Prerequisite API is not available. Using mock data instead.');
+            } else {
+                console.log('Prerequisite API is available.');
+            }
+        })
+        .catch(error => console.warn('Prerequisite API is not available:', error));
+
+    fetch('/export/apple-calendar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => console.log('Export API available:', data))
+    .catch(error => console.warn('Export API is not available:', error));
+
+    fetch('/courses/courses')
+        .then(response => response.json())
+        .then(data => console.log('Courses:', data))
+        .catch(error => console.warn('Course API is not available:', error));
+
+    fetch('/sections/search?subject=CPSC')
+        .then(response => response.json())
+        .then(data => console.log('Sections:', data))
+        .catch(error => console.warn('Section API is not available:', error));
+}
+
+// Setup event listeners for export buttons
+function setupExportButtons() {
+    document.querySelector('.export-ioscalendar').addEventListener('click', () => {
+        exportToCalendar('/export/apple-calendar');
+    });
+
+    document.querySelector('.export-googlecalendar').addEventListener('click', () => {
+        exportToCalendar('/export/google-calendar');
+    });
+}
+
+// Function to export calendar data
+function exportToCalendar(apiUrl) {
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => console.log('Export Success:', data))
+    .catch(error => console.error('Export Failed:', error));
+}
+
+// Function to change semester selection
+function changeSemester(semester, element) {
+    const button = document.querySelector('.semester-button');
+    button.innerHTML = semester + ' <span class="arrow">▼</span>';
+}
+
+// Toggle dark mode theme
+function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle('dark-mode');
+    const isDarkMode = body.classList.contains('dark-mode');
+
+    document.querySelectorAll('.theme-toggle').forEach(button => {
+        button.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+    });
+}
+
+// Add event listeners to theme toggle buttons
+document.querySelectorAll('.theme-toggle').forEach(button => {
+    button.addEventListener('click', toggleTheme);
 });
