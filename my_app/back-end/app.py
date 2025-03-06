@@ -13,15 +13,12 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Register Blueprints with Correct URL Prefixes
+# Register Blueprints with Correct URL Prefixes
 app.register_blueprint(user_bp, url_prefix='/user')
-app.register_blueprint(course_bp, url_prefix='/courses')  # /courses now correctly routes
-app.register_blueprint(section_bp, url_prefix='/sections')  # /sections now correctly routes
-app.register_blueprint(export_bp, url_prefix='/export')  # /export now correctly routes
-app.register_blueprint(course_bp, url_prefix='/course_bp')  # Fixing course_bp path
-app.register_blueprint(export_bp, url_prefix='/export_bp')  # Fixing export_bp path
-app.register_blueprint(prereq_bp, url_prefix='/api')  # Fixing prereq_bp path
-app.register_blueprint(section_bp, url_prefix='/section_bp')
-
+app.register_blueprint(course_bp, url_prefix='/courses')  # Only one registration
+app.register_blueprint(section_bp, url_prefix='/sections')  # Only one registration
+app.register_blueprint(export_bp, url_prefix='/export')  # Only one registration
+app.register_blueprint(prereq_bp, url_prefix='/api')  # Only one registration
 
 # Serve Frontend Files
 INTERFACE_FOLDER = os.path.join(os.path.dirname(__file__), '..', 'interface')
