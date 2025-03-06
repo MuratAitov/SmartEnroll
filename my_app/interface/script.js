@@ -2984,89 +2984,27 @@ function addSectionsSidebarEventListeners(sidebar, sections) {
 
 // Function to add a section to the schedule
 function addSectionToSchedule(section) {
-    // Check if we have a valid section object
-    if (!section) {
-        console.error("Invalid section data provided");
+    let startHour = section.startTime ? parseInt(section.startTime.split(":")[0]) : NaN;
+    let rowIndex = !isNaN(startHour) ? startHour - 8 + 2 : null;
+
+    if (rowIndex === null || isNaN(rowIndex)) {
+        console.error("Invalid row index, skipping:", section.startTime);
         return;
     }
-    
-    console.log("Adding section to schedule:", section); // Debug log to see what data we're working with
-    
-    // Extract section details
-    const sectionId = section.id || section.section_id || `${section.subject}${section.courseCode}-${section.section}`;
-    const courseTitle = section.title || section.course_title || "Unknown Course";
-    const sectionNumber = section.section || section.section_number || "Unknown Section";
-    const instructor = section.instructor || section.professor || "TBA";
-    const location = section.location || section.room || "TBA";
-    
-    // Extract meeting times - ensure we're using the database values
-    const meetingDays = section.days || section.meeting_days || [];
-    const startTime = section.start_time || section.startTime || "12:00";
-    const endTime = section.end_time || section.endTime || "13:00";
-    
-    // Convert time strings to schedule grid positions
-    const startHour = convertTimeToHour(startTime);
-    const endHour = convertTimeToHour(endTime);
-    const duration = endHour - startHour;
-    
-    // Generate a consistent color based on the course code
-    const courseCode = section.course_code || section.courseCode || "UNKNOWN";
-    const color = generateCourseColor(courseCode);
-    
-    console.log(`Section ${sectionId} meets on days: ${meetingDays}, from ${startTime} to ${endTime}`);
-    console.log(`Instructor: ${instructor}, Location: ${location}`);
-    
-    // Add the course block to each meeting day
-    meetingDays.forEach(day => {
-        const dayIndex = getDayIndex(day);
-        if (dayIndex === -1) {
-            console.warn(`Invalid day format: ${day}`);
+
+    let dayIndex = ["M", "T", "W", "R", "F"].indexOf(section.day) + 1;
+    if (dayIndex === 0) {
+        console.error("Invalid day index, skipping:", section.day);
         return;
     }
-    
-        // Create the course block element
-        const courseBlock = document.createElement('div');
-        courseBlock.className = 'course-block';
-        courseBlock.style.backgroundColor = color;
-        courseBlock.style.height = `${duration * 60}px`; // Each hour is 60px
-        courseBlock.style.top = `${(startHour - 8) * 60}px`; // Offset by 8 (8am is the first row)
-        courseBlock.style.width = '100%';
-        courseBlock.style.left = '0';
-        
-        // Set the content of the course block
-        courseBlock.innerHTML = `
-            <div class="section-title">${courseCode} ${sectionNumber}</div>
-            <div class="section-instructor">${instructor}</div>
-            <div class="section-location">${location}</div>
-            <div class="section-time">${formatTime(startTime)} - ${formatTime(endTime)}</div>
-        `;
-        
-        // Store the section data for reference
-        courseBlock.dataset.sectionId = sectionId;
-        courseBlock.dataset.courseCode = courseCode;
-        courseBlock.dataset.sectionNumber = sectionNumber;
-        courseBlock.dataset.instructor = instructor;
-        courseBlock.dataset.location = location;
-        courseBlock.dataset.startTime = startTime;
-        courseBlock.dataset.endTime = endTime;
-        courseBlock.dataset.day = day;
-        
-        // Add the course block to the schedule
-        const cell = document.querySelector(`.schedule-grid tr:nth-child(${startHour - 7}) td:nth-child(${dayIndex + 2})`);
-        if (cell) {
-            cell.appendChild(courseBlock);
-            addEventBlockListeners(courseBlock);
-        } else {
-            console.error(`Could not find cell for day ${day} at time ${startTime}`);
-        }
-    });
-    
-    // Update the credits display
-    const credits = section.credits || 3; // Default to 3 if not specified
-    updateCredits(credits);
-    
-    // Log success
-    console.log(`Added ${courseCode} ${sectionNumber} to schedule`);
+
+    let cell = document.querySelector(`.schedule-grid tr:nth-child(${rowIndex}) td:nth-child(${dayIndex})`);
+    if (!cell) {
+        console.error("Schedule grid cell not found for:", rowIndex, dayIndex);
+        return;
+    }
+
+    cell.innerHTML = `<div class="event">${section.name}</div>`;
 }
 
 // Helper function to convert time string to hour number (e.g., "13:30" -> 13.5)
@@ -3317,7 +3255,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function checkSectionApiAvailability() {
     console.log("Checking section API availability");
     
-    return fetch('/section_bp/search?subject=CPSC')
+    return fetch('/sections?subject=CPSC')
         .then(response => {
             const isAvailable = response.ok;
             console.log("Section API available:", isAvailable);
@@ -3340,7 +3278,7 @@ function searchSections(params = {}) {
     if (params.attribute) queryParams.append('attribute', params.attribute);
     if (params.instructor) queryParams.append('instructor', params.instructor);
     
-    const url = `/section_bp/search?${queryParams.toString()}`;
+    const url = `/sections?${queryParams.toString()}`;
     console.log("Fetching sections from:", url);
     
     return fetch(url)
@@ -3582,7 +3520,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Check if backend APIs are available
 function checkApiAvailability() {
-    fetch('/api/graph?course=CPSC321&all=false')
+    fetch('/courses/prerequisites?course=CPSC321&all=false')
         .then(response => {
             if (!response.ok) {
                 console.warn('Prerequisite API is not available. Using mock data instead.');
@@ -3601,12 +3539,12 @@ function checkApiAvailability() {
     .then(data => console.log('Export API available:', data))
     .catch(error => console.warn('Export API is not available:', error));
 
-    fetch('/courses/courses')
+    fetch('/courses')
         .then(response => response.json())
         .then(data => console.log('Courses:', data))
         .catch(error => console.warn('Course API is not available:', error));
 
-    fetch('/sections/search?subject=CPSC')
+    fetch('/sections?subject=CPSC')
         .then(response => response.json())
         .then(data => console.log('Sections:', data))
         .catch(error => console.warn('Section API is not available:', error));
@@ -3656,3 +3594,135 @@ function toggleTheme() {
 document.querySelectorAll('.theme-toggle').forEach(button => {
     button.addEventListener('click', toggleTheme);
 });
+
+// Function to preview a section on the schedule
+function previewSection(section) {
+    // Clear any existing preview
+    clearSectionPreview();
+    
+    // Create preview blocks with a different style
+    section.schedule.forEach(timeSlot => {
+        const block = createSectionBlock(timeSlot, section, true);
+        if (block) {
+            block.classList.add('preview-block');
+            document.querySelector('.schedule-grid').appendChild(block);
+        }
+    });
+}
+
+// Function to clear section preview
+function clearSectionPreview() {
+    document.querySelectorAll('.preview-block').forEach(block => block.remove());
+}
+
+// Function to create a section block
+function createSectionBlock(timeSlot, section, isPreview = false) {
+    const days = ['M', 'T', 'W', 'R', 'F'];
+    const startHour = convertTimeToHour(timeSlot.startTime);
+    const endHour = convertTimeToHour(timeSlot.endTime);
+    const duration = endHour - startHour;
+    
+    const block = document.createElement('div');
+    block.className = isPreview ? 'course-block preview-block' : 'course-block';
+    block.style.position = 'absolute';
+    block.style.height = `${duration * 60}px`;
+    block.style.backgroundColor = isPreview ? 'rgba(180, 18, 49, 0.5)' : section.color || '#808080';
+    block.style.opacity = isPreview ? '0.7' : '1';
+    block.style.border = isPreview ? '2px dashed #B41231' : '1px solid rgba(0,0,0,0.1)';
+    
+    // Add section information
+    block.innerHTML = `
+        <div class="section-title">${section.courseCode} - ${section.section}</div>
+        <div class="section-details">
+            <div>${timeSlot.startTime} - ${timeSlot.endTime}</div>
+            <div>${section.instructor}</div>
+            <div>${section.location}</div>
+        </div>
+    `;
+    
+    // Position the block
+    const dayIndex = days.indexOf(timeSlot.day);
+    if (dayIndex !== -1) {
+        const cell = document.querySelector(`.schedule-grid td[data-day="${timeSlot.day}"][data-hour="${Math.floor(startHour)}"]`);
+        if (cell) {
+            const cellRect = cell.getBoundingClientRect();
+            block.style.top = `${(startHour - Math.floor(startHour)) * 60}px`;
+            block.style.left = `${dayIndex * cellRect.width}px`;
+            block.style.width = `${cellRect.width}px`;
+            return block;
+        }
+    }
+    return null;
+}
+
+// Function to add section preview functionality to section items
+function addSectionPreviewListeners(sectionItem, section) {
+    // Preview on hover
+    sectionItem.addEventListener('mouseenter', () => {
+        previewSection(section);
+    });
+    
+    sectionItem.addEventListener('mouseleave', () => {
+        clearSectionPreview();
+    });
+    
+    // Add to schedule on click
+    sectionItem.addEventListener('click', () => {
+        clearSectionPreview();
+        addSectionToSchedule(section);
+    });
+}
+
+// Update showSectionsSidebarWithRealData to include preview functionality
+function showSectionsSidebarWithRealData(subject, courseCode, sectionsData) {
+    console.log("Showing sections sidebar with real data:", sectionsData);
+    
+    // Create the sidebar element
+    const sidebar = document.createElement('div');
+    sidebar.className = 'sections-sidebar';
+    
+    // Create the header
+    const header = document.createElement('div');
+    header.className = 'sections-header';
+    header.innerHTML = `
+        <h3>${subject} ${courseCode}</h3>
+        <button class="close-btn">&times;</button>
+    `;
+    
+    // Create the sections list
+    const sectionsList = document.createElement('div');
+    sectionsList.className = 'sections-list';
+    
+    // Add sections to the list
+    sectionsData.forEach(section => {
+        const sectionItem = document.createElement('div');
+        sectionItem.className = 'section-item';
+        sectionItem.innerHTML = `
+            <div class="section-number">Section ${section.section}</div>
+            <div class="section-details">
+                <div>${section.instructor}</div>
+                <div>${section.schedule.map(slot => `${slot.day} ${slot.startTime}-${slot.endTime}`).join(', ')}</div>
+                <div>${section.location}</div>
+                <div>${section.enrollmentCurrent}/${section.enrollmentMax} enrolled</div>
+            </div>
+        `;
+        
+        // Add preview functionality
+        addSectionPreviewListeners(sectionItem, section);
+        
+        sectionsList.appendChild(sectionItem);
+    });
+    
+    // Assemble the sidebar
+    sidebar.appendChild(header);
+    sidebar.appendChild(sectionsList);
+    
+    // Add the sidebar to the document
+    document.body.appendChild(sidebar);
+    
+    // Add close button functionality
+    header.querySelector('.close-btn').addEventListener('click', () => {
+        sidebar.remove();
+        clearSectionPreview();
+    });
+}
