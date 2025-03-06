@@ -9,6 +9,7 @@ CORS(app)
 
 @course_bp.route('/courses', methods=['GET'])
 def get_courses():
+    # Your logic here
     courses = DatabaseService.get_courses()
     if courses is not None:
         return jsonify({"success": True, "data": courses}), 200
