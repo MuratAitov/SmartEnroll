@@ -231,6 +231,19 @@
             .catch(error => {
                 console.warn('Export API is not available:', error);
             });
+            
+            // Check if course API is available
+            fetch('/course_bp/courses')
+                .then(response => {
+                    if (!response.ok) {
+                        console.warn('Course API is not available. Using sample course data instead.');
+                    } else {
+                        console.log('Course API is available.');
+                    }
+                })
+                .catch(error => {
+                    console.warn('Course API is not available:', error);
+                });
         }
         
         // Check API availability when the page loads

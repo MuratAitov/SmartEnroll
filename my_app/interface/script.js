@@ -1659,9 +1659,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (courseCode) {
                     loadPrerequisiteTree(courseCode, allLevels);
-                }
-            }
-        });
+        }
+    }
+});
     }
 
     // Fix Google Calendar export functionality
@@ -1694,7 +1694,243 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Initialize authentication forms
+    initializeAuthForms();
+
+    // Add Course button event listener
+    const addCourseBtn = document.querySelector('.add-course-btn');
+    if (addCourseBtn) {
+        addCourseBtn.addEventListener('click', addCourse);
+    }
 });
+
+// Function to initialize authentication forms
+function initializeAuthForms() {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const authModal = document.getElementById('authModal');
+    const authTabs = document.querySelectorAll('.auth-tab');
+    
+    // Handle tab switching
+    authTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active class from all tabs and forms
+            authTabs.forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            
+            // Show corresponding form
+            const tabName = this.getAttribute('data-tab');
+            const form = document.getElementById(tabName + 'Form');
+            if (form) {
+                form.classList.add('active');
+            }
+        });
+    });
+    
+    // Handle login form submission
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userName = document.getElementById('loginUserName').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!userName || !password) {
+                alert('Please enter both username and password');
+                return;
+            }
+            
+            loginUser({
+                user_name: userName,
+                password: password
+            })
+            .then(response => {
+                console.log('Login successful:', response);
+                
+                // Store user data in localStorage
+                if (response.data) {
+                    localStorage.setItem('user', JSON.stringify(response.data));
+                    
+                    // Update UI to reflect logged-in state
+                    updateAuthState(true, response.data);
+                    
+                    // Close the auth modal
+                    if (authModal) {
+                        authModal.classList.remove('show');
+                    }
+                    
+                    // Show success message
+                    alert('Login successful!');
+                }
+            })
+            .catch(error => {
+                console.error('Login error:', error);
+                alert(error.message || 'Login failed. Please try again.');
+            });
+        });
+    }
+    
+    // Handle registration form submission
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userName = document.getElementById('regUserName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const name = document.getElementById('regName').value;
+            
+            if (!userName || !email || !password || !name) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            registerUser({
+                user_name: userName,
+                email: email,
+                password: password,
+                name: name
+            })
+            .then(response => {
+                console.log('Registration successful:', response);
+                
+                // Show success message
+                alert('Registration successful! You can now log in.');
+                
+                // Switch to login tab
+                const loginTab = document.querySelector('.auth-tab[data-tab="login"]');
+                if (loginTab) {
+                    loginTab.click();
+                }
+                
+                // Clear registration form
+                registerForm.reset();
+            })
+            .catch(error => {
+                console.error('Registration error:', error);
+                alert(error.message || 'Registration failed. Please try again.');
+            });
+        });
+    }
+    
+    // Handle sign in link click
+    const signInLink = document.querySelector('a[href="#signin"]');
+    if (signInLink) {
+        signInLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Show auth modal
+            if (authModal) {
+                authModal.classList.add('show');
+            }
+            
+            // Switch to login tab
+            const loginTab = document.querySelector('.auth-tab[data-tab="login"]');
+            if (loginTab) {
+                loginTab.click();
+            }
+        });
+    }
+    
+    // Handle sign out link click
+    const signOutLink = document.querySelector('a[href="#signout"]');
+    if (signOutLink) {
+        signOutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Clear user data from localStorage
+            localStorage.removeItem('user');
+            
+            // Update UI to reflect logged-out state
+            updateAuthState(false);
+            
+            // Show success message
+            alert('You have been signed out.');
+        });
+    }
+    
+    // Check if user is already logged in
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+        try {
+            const userData = JSON.parse(storedUser);
+            updateAuthState(true, userData);
+        } catch (error) {
+            console.error('Error parsing stored user data:', error);
+            localStorage.removeItem('user');
+        }
+    }
+}
+
+// Function to update UI based on authentication state
+function updateAuthState(isAuthenticated, userData = null) {
+    const body = document.body;
+    
+    if (isAuthenticated && userData) {
+        // Add authenticated class to body
+        body.classList.add('is-authenticated');
+        
+        // Update username display
+        const usernameElements = document.querySelectorAll('.username');
+        usernameElements.forEach(element => {
+            element.textContent = userData.name || userData.user_name;
+        });
+        
+        console.log('User authenticated:', userData);
+    } else {
+        // Remove authenticated class from body
+        body.classList.remove('is-authenticated');
+        
+        // Clear username display
+        const usernameElements = document.querySelectorAll('.username');
+        usernameElements.forEach(element => {
+            element.textContent = '';
+        });
+        
+        console.log('User logged out');
+    }
+}
+
+// User Authentication Functions
+function registerUser(userData) {
+    return fetch('/user_bp/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.error || 'Registration failed');
+            });
+        }
+        return response.json();
+    });
+}
+
+function loginUser(credentials) {
+    return fetch('/user_bp/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.error || 'Login failed');
+            });
+        }
+        return response.json();
+    });
+}
 
 // Update the openHerakPDF function with the correct directory path
 function openHerakPDF() {
@@ -1786,94 +2022,6 @@ document.getElementById('authModal').addEventListener('click', (e) => {
     if (e.target === e.currentTarget) {
         e.target.classList.remove('show');
     }
-});
-
-// Update the updateAuthState function
-function updateAuthState(isAuthenticated, userData = null) {
-    if (isAuthenticated && userData) {
-        document.body.classList.add('is-authenticated');
-        document.querySelector('a[href="#signin"]').style.display = 'none';
-        document.querySelector('a[href="#signout"]').style.display = 'block';
-        // Set the username in the dropdown
-        document.querySelector('.username').textContent = userData.user_name;
-    } else {
-        document.body.classList.remove('is-authenticated');
-        document.querySelector('a[href="#signin"]').style.display = 'block';
-        document.querySelector('a[href="#signout"]').style.display = 'none';
-        // Clear the username
-        document.querySelector('.username').textContent = '';
-    }
-}
-
-// Update the login form handler to pass user data
-document.getElementById('loginForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const user_name = document.getElementById('loginUserName').value;
-    const password = document.getElementById('loginPassword').value;
-
-    try {
-        const response = await fetch('http://localhost:5001/user/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_name, password })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            // Login successful - pass the user data
-            updateAuthState(true, data.data);
-            document.getElementById('authModal').classList.remove('show');
-            document.getElementById('loginForm').reset();
-        } else {
-            // Login failed
-            alert(data.error || 'Login failed');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred during login');
-    }
-});
-
-// Update the register form handler
-document.getElementById('registerForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const user_name = document.getElementById('regUserName').value;
-    const email = document.getElementById('regEmail').value;
-    const password = document.getElementById('regPassword').value;
-    const name = document.getElementById('regName').value;
-
-    try {
-        const response = await fetch('http://localhost:5001/user/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_name, email, password, name })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            // Registration successful
-            alert('Registration successful! Please login.');
-            document.querySelector('[data-tab="login"]').click();
-            document.getElementById('registerForm').reset();
-        } else {
-            // Registration failed
-            alert(data.error || 'Registration failed');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred during registration');
-    }
-});
-
-// Update the logout handler to clear user data
-document.querySelector('a[href="#signout"]').addEventListener('click', (e) => {
-    e.preventDefault();
-    updateAuthState(false);
-    document.getElementById('userDropdown').classList.remove('show');
 });
 
 // Initialize auth state on page load with no user data
@@ -2434,3 +2582,861 @@ function collectScheduleData() {
         courses: courses
     };
 }
+
+// Function to handle adding a course
+function addCourse() {
+    console.log('Add Course button clicked');
+    
+    // Get form values
+    const subject = document.querySelector('.sidebar input[placeholder="Subject"]').value;
+    const courseCode = document.querySelector('.sidebar input[placeholder="Course code"]').value;
+    const instructor = document.querySelector('.sidebar input[placeholder="Instructor"]').value;
+    
+    console.log('Form values:', { subject, courseCode, instructor });
+    
+    // Check if at least subject or course code is provided
+    if (!subject && !courseCode) {
+        alert('Please enter at least a subject or course code');
+        return;
+    }
+    
+    // Show loading state
+    showLoadingState();
+    
+    // Try to fetch real section data from API
+    checkCourseApiAvailability()
+        .then(apiAvailable => {
+            if (apiAvailable) {
+                console.log('Course API is available, fetching real data');
+                // Logic to fetch real data would go here
+                // For now, we'll still use sample data
+                setTimeout(() => {
+                    hideLoadingState();
+                    showSectionsSidebar(subject, courseCode);
+                }, 500);
+            } else {
+                console.log('Course API is not available, using sample data');
+                // Use sample data after a short delay to simulate loading
+                setTimeout(() => {
+                    hideLoadingState();
+                    showSectionsSidebar(subject, courseCode);
+                }, 500);
+            }
+        })
+        .catch(error => {
+            console.error('Error checking API availability:', error);
+            hideLoadingState();
+            showSectionsSidebar(subject, courseCode);
+        });
+}
+
+// Function to show sections sidebar
+function showSectionsSidebar(subject, courseCode) {
+    console.log('Showing sections sidebar for:', subject, courseCode);
+    
+    // Remove existing sections sidebar if it exists
+    const existingSidebar = document.querySelector('.sections-sidebar');
+    if (existingSidebar) {
+        existingSidebar.remove();
+    }
+    
+    // Create new sections sidebar
+    const sectionsSidebar = document.createElement('div');
+    sectionsSidebar.className = 'sections-sidebar';
+    
+    // Generate course title
+    const courseTitle = subject + (courseCode ? ' ' + courseCode : '');
+    
+    // Generate sample sections data
+    const sections = generateSampleSections(courseTitle);
+    
+    // Create sidebar content
+    sectionsSidebar.innerHTML = `
+        <div class="sections-header">
+            <h3>${courseTitle} Sections</h3>
+            <div class="sections-controls">
+                <select class="sections-sort">
+                    <option value="section">Sort by Section</option>
+                    <option value="instructor">Sort by Instructor</option>
+                    <option value="time">Sort by Time</option>
+                </select>
+                <button class="reset-sections-btn">Reset</button>
+            </div>
+        </div>
+        <div class="sections-list">
+            ${sections.map(section => `
+                <div class="section-item" data-section-id="${section.id}">
+                    <div class="section-number">${section.sectionNumber}</div>
+                    <div class="section-details">
+                        <div>${section.instructor}</div>
+                        <div>${section.days.join(', ')} ${section.startTime} - ${section.endTime}</div>
+                    </div>
+                    <div class="section-day-blocks">
+                        ${section.days.map(day => `
+                            <div class="section-day-block" style="background-color: ${section.color}"></div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    
+    // Add to main container
+    const emptySpace = document.querySelector('.empty-space');
+    if (emptySpace) {
+        emptySpace.parentNode.replaceChild(sectionsSidebar, emptySpace);
+    } else {
+        document.querySelector('main').appendChild(sectionsSidebar);
+    }
+    
+    console.log('Sections sidebar added to DOM');
+    
+    // Add event listeners
+    addSectionsSidebarEventListeners(sectionsSidebar, sections);
+}
+
+// Initialize course data when document is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded');
+    
+    // Add Course button event listener
+    const addCourseBtn = document.querySelector('.add-course-btn');
+    if (addCourseBtn) {
+        console.log('Add Course button found, attaching event listener');
+        
+        // Remove any existing event listeners by cloning the node
+        const newAddCourseBtn = addCourseBtn.cloneNode(true);
+        addCourseBtn.parentNode.replaceChild(newAddCourseBtn, addCourseBtn);
+        
+        // Add the event listener to the new button
+        newAddCourseBtn.addEventListener('click', function(e) {
+            console.log('Add Course button clicked (from event listener)');
+            e.preventDefault();
+            addCourse();
+        });
+    } else {
+        console.error('Add Course button not found');
+    }
+    
+    // ... rest of your initialization code ...
+});
+
+// Function to check if course API is available
+function checkCourseApiAvailability() {
+    console.log('Checking course API availability');
+    
+    return fetch('/course_bp/courses')
+        .then(response => {
+            const isAvailable = response.ok;
+            console.log('Course API available:', isAvailable);
+            return isAvailable;
+        })
+        .catch(error => {
+            console.warn('Course API check failed:', error);
+            return false;
+        });
+}
+
+// Course API Functions
+function fetchCourses() {
+    return fetch('/course_bp/courses')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch courses');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                return data.data;
+            } else {
+                throw new Error(data.error || 'Failed to fetch courses');
+            }
+        });
+}
+
+function fetchSections(courseId) {
+    return fetch(`/course_bp/sections/${encodeURIComponent(courseId)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch sections');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                return data.data;
+            } else {
+                throw new Error(data.error || 'Failed to fetch sections');
+            }
+        });
+}
+
+function fetchProfessors() {
+    return fetch('/course_bp/professors')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch professors');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                return data.data;
+            } else {
+                throw new Error(data.error || 'Failed to fetch professors');
+            }
+        });
+}
+
+// Function to show loading state
+function showLoadingState() {
+    console.log('Showing loading state');
+    // Create and show loading indicator
+    const loadingIndicator = document.createElement('div');
+    loadingIndicator.className = 'loading-indicator';
+    loadingIndicator.innerHTML = 'Loading...';
+    loadingIndicator.style.position = 'fixed';
+    loadingIndicator.style.top = '50%';
+    loadingIndicator.style.left = '50%';
+    loadingIndicator.style.transform = 'translate(-50%, -50%)';
+    loadingIndicator.style.padding = '10px 20px';
+    loadingIndicator.style.background = 'rgba(0, 0, 0, 0.7)';
+    loadingIndicator.style.color = 'white';
+    loadingIndicator.style.borderRadius = '5px';
+    loadingIndicator.style.zIndex = '1000';
+    
+    document.body.appendChild(loadingIndicator);
+}
+
+// Function to hide loading state
+function hideLoadingState() {
+    console.log('Hiding loading state');
+    // Remove loading indicator
+    const loadingIndicator = document.querySelector('.loading-indicator');
+    if (loadingIndicator) {
+        loadingIndicator.remove();
+    }
+}
+
+// Function to add event listeners to sections sidebar
+function addSectionsSidebarEventListeners(sidebar, sections) {
+    console.log("Adding event listeners to sections sidebar");
+    
+    // Add click event listeners to section items
+    const sectionItems = sidebar.querySelectorAll('.section-item');
+    sectionItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const sectionId = parseInt(this.getAttribute('data-section-id'));
+            const section = sections.find(s => s.id === sectionId);
+            
+            if (section) {
+                console.log("Section selected:", section);
+                
+                // Toggle selected class
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    // Remove from schedule
+                    const courseBlock = document.querySelector(`.course-block[data-section-id="${section.id}"]`);
+                    if (courseBlock) {
+                        courseBlock.remove();
+                    }
+                    // Update credits
+                    updateCredits(-3); // Assuming 3 credits per course
+                } else {
+                    // Deselect any other sections from the same course
+                    const sameCourseItems = sidebar.querySelectorAll('.section-item.selected');
+                    sameCourseItems.forEach(sameCourseItem => {
+                        const sameSectionId = parseInt(sameCourseItem.getAttribute('data-section-id'));
+                        const sameSection = sections.find(s => s.id === sameSectionId);
+                        
+                        // Check if it's the same course but different section
+                        if (sameSection && sameSection.title === section.title && sameSection.id !== section.id) {
+                            sameCourseItem.classList.remove('selected');
+                            // Remove from schedule
+                            const courseBlock = document.querySelector(`.course-block[data-section-id="${sameSection.id}"]`);
+                            if (courseBlock) {
+                                courseBlock.remove();
+                            }
+                            // Update credits (will be added back with the new section)
+                            updateCredits(-3);
+                        }
+                    });
+                    
+                    this.classList.add('selected');
+                    addSectionToSchedule(section);
+                }
+            }
+        });
+    });
+    
+    // Add sort functionality
+    const sortSelect = sidebar.querySelector('.sections-sort');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            const sortValue = this.value;
+            console.log("Sorting sections by:", sortValue);
+            
+            const sectionsList = sidebar.querySelector('.sections-list');
+            const sectionItems = Array.from(sectionsList.querySelectorAll('.section-item'));
+            
+            // Sort the sections based on the selected criteria
+            sectionItems.sort((a, b) => {
+                const sectionIdA = parseInt(a.getAttribute('data-section-id'));
+                const sectionIdB = parseInt(b.getAttribute('data-section-id'));
+                const sectionA = sections.find(s => s.id === sectionIdA);
+                const sectionB = sections.find(s => s.id === sectionIdB);
+                
+                if (!sectionA || !sectionB) return 0;
+                
+                switch (sortValue) {
+                    case 'section':
+                        return sectionA.sectionNumber.localeCompare(sectionB.sectionNumber);
+                    case 'instructor':
+                        return sectionA.instructor.localeCompare(sectionB.instructor);
+                    case 'time':
+                        // Compare days first
+                        const dayCompare = sectionA.days[0].localeCompare(sectionB.days[0]);
+                        if (dayCompare !== 0) return dayCompare;
+                        
+                        // Then compare times
+                        return sectionA.startTime.localeCompare(sectionB.startTime);
+                    default:
+                        return 0;
+                }
+            });
+            
+            // Reorder the items in the DOM
+            sectionItems.forEach(item => {
+                sectionsList.appendChild(item);
+            });
+        });
+    }
+    
+    // Add reset button functionality
+    const resetButton = sidebar.querySelector('.reset-sections-btn');
+    if (resetButton) {
+        resetButton.addEventListener('click', function() {
+            console.log("Resetting sections");
+            
+            // Deselect all sections
+            const selectedSections = sidebar.querySelectorAll('.section-item.selected');
+            selectedSections.forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Remove all course blocks for this course
+            const sectionIds = sections.map(s => s.id);
+            sectionIds.forEach(id => {
+                const courseBlock = document.querySelector(`.course-block[data-section-id="${id}"]`);
+                if (courseBlock) {
+                    courseBlock.remove();
+                }
+            });
+            
+            // Reset credits (assuming all sections were 3 credits)
+            const selectedCount = selectedSections.length;
+            if (selectedCount > 0) {
+                updateCredits(-3 * selectedCount);
+            }
+        });
+    }
+}
+
+// Function to add a section to the schedule
+function addSectionToSchedule(section) {
+    console.log("Adding section to schedule:", section);
+    
+    // Remove any existing section with the same ID from the schedule
+    const existingSection = document.querySelector(`.course-block[data-section-id="${section.id}"]`);
+    if (existingSection) {
+        existingSection.remove();
+    }
+    
+    // Get the schedule grid
+    const scheduleGrid = document.querySelector('.schedule-grid table');
+    if (!scheduleGrid) {
+        console.error("Schedule grid not found");
+        return;
+    }
+    
+    // Process each day the section meets
+    section.days.forEach(day => {
+        // Map day abbreviation to column index
+        const dayMap = { 'M': 1, 'T': 2, 'W': 3, 'R': 4, 'F': 5 };
+        const dayIndex = dayMap[day];
+        
+        if (!dayIndex) {
+            console.error("Invalid day:", day);
+            return;
+        }
+        
+        // Parse start and end times
+        const startTimeParts = section.startTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
+        const endTimeParts = section.endTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
+        
+        if (!startTimeParts || !endTimeParts) {
+            console.error("Invalid time format:", section.startTime, section.endTime);
+            return;
+        }
+        
+        let startHour = parseInt(startTimeParts[1]);
+        const startMinutes = parseInt(startTimeParts[2]);
+        const startPeriod = startTimeParts[3].toUpperCase();
+        
+        let endHour = parseInt(endTimeParts[1]);
+        const endMinutes = parseInt(endTimeParts[2]);
+        const endPeriod = endTimeParts[3].toUpperCase();
+        
+        // Convert to 24-hour format
+        if (startPeriod === 'PM' && startHour < 12) startHour += 12;
+        if (startPeriod === 'AM' && startHour === 12) startHour = 0;
+        if (endPeriod === 'PM' && endHour < 12) endHour += 12;
+        if (endPeriod === 'AM' && endHour === 12) endHour = 0;
+        
+        // Calculate row indices (8:00 AM is the first row)
+        const startRowIndex = startHour - 8 + 1; // +1 for header row
+        const endRowIndex = endHour - 8 + 1; // +1 for header row
+        
+        // Calculate the duration in hours
+        const duration = endHour - startHour;
+        
+        // Create course block
+        const courseBlock = document.createElement('div');
+        courseBlock.className = 'course-block';
+        courseBlock.setAttribute('data-section-id', section.id);
+        courseBlock.style.backgroundColor = section.color;
+        courseBlock.style.position = 'absolute';
+        courseBlock.style.zIndex = '10';
+        courseBlock.style.borderRadius = '4px';
+        courseBlock.style.padding = '5px';
+        courseBlock.style.boxSizing = 'border-box';
+        courseBlock.style.overflow = 'hidden';
+        courseBlock.style.color = '#fff';
+        courseBlock.style.textShadow = '0 0 2px rgba(0,0,0,0.7)';
+        courseBlock.style.fontSize = '12px';
+        courseBlock.style.cursor = 'pointer';
+        
+        // Set content
+        courseBlock.innerHTML = `
+            <div class="section-title">${section.title}</div>
+            <div>${section.sectionNumber}</div>
+            <div>${section.instructor}</div>
+            <div>${section.startTime} - ${section.endTime}</div>
+        `;
+        
+        // Find the cell to place the course block
+        const cell = scheduleGrid.rows[startRowIndex].cells[dayIndex];
+        if (!cell) {
+            console.error("Cell not found for day", day, "at hour", startHour);
+            return;
+        }
+        
+        // Position the course block
+        const cellRect = cell.getBoundingClientRect();
+        const tableRect = scheduleGrid.getBoundingClientRect();
+        
+        // Calculate position relative to the table
+        const top = cell.offsetTop;
+        const left = cell.offsetLeft;
+        const width = cell.offsetWidth;
+        const height = cell.offsetHeight * duration;
+        
+        courseBlock.style.top = `${top}px`;
+        courseBlock.style.left = `${left}px`;
+        courseBlock.style.width = `${width}px`;
+        courseBlock.style.height = `${height}px`;
+        
+        // Add the course block to the schedule grid
+        scheduleGrid.parentNode.appendChild(courseBlock);
+        
+        // Add event listener for removing the course
+        courseBlock.addEventListener('click', function() {
+            // Remove the course block
+            this.remove();
+            
+            // Deselect the section in the sidebar
+            const sectionItem = document.querySelector(`.section-item[data-section-id="${section.id}"]`);
+            if (sectionItem) {
+                sectionItem.classList.remove('selected');
+            }
+            
+            // Update credits
+            updateCredits(-3); // Assuming 3 credits per course
+            
+            console.log("Removed section from schedule:", section);
+        });
+    });
+    
+    // Update credits
+    updateCredits(3); // Assuming 3 credits per course
+}
+
+// Function to clear the schedule
+function clearSchedule() {
+    // Remove all course blocks
+    const courseBlocks = document.querySelectorAll('.course-block');
+    courseBlocks.forEach(block => {
+        block.remove();
+    });
+    
+    // Reset credits
+    const creditsBox = document.querySelector('.credits-box');
+    if (creditsBox) {
+        creditsBox.textContent = '0 Credits';
+    }
+}
+
+// Function to update credits display
+function updateCredits(credits) {
+    console.log('Updating credits by:', credits);
+    
+    const creditsBox = document.querySelector('.credits-box');
+    if (creditsBox) {
+        const currentCredits = parseInt(creditsBox.textContent.split(' ')[0]) || 0;
+        const newCredits = currentCredits + credits;
+        creditsBox.textContent = `${newCredits} Credits`;
+    }
+}
+
+// Function to generate sample sections data
+function generateSampleSections(courseTitle) {
+    console.log('Generating sample sections for:', courseTitle);
+    
+    const colors = [
+        '#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', 
+        '#B5EAD7', '#C7CEEA', '#F8B195', '#F67280'
+    ];
+    
+    const numSections = Math.floor(Math.random() * 3) + 4; // 4-6 sections
+    console.log('Generating', numSections, 'sections');
+    
+    const sections = [];
+    const weekdays = ['M', 'T', 'W', 'R', 'F'];
+    const instructors = [
+        'Dr. Smith', 'Dr. Johnson', 'Prof. Williams', 
+        'Prof. Brown', 'Dr. Jones', 'Prof. Miller'
+    ];
+    
+    for (let i = 0; i < numSections; i++) {
+        // Random days (1-3 days)
+        const numDays = Math.floor(Math.random() * 3) + 1;
+        const shuffledDays = [...weekdays].sort(() => 0.5 - Math.random());
+        const days = shuffledDays.slice(0, numDays);
+        
+        // Random times
+        const startHour = Math.floor(Math.random() * 8) + 8; // 8 AM - 3 PM
+        const duration = Math.floor(Math.random() * 2) + 1; // 1-2 hours
+        const endHour = startHour + duration;
+        
+        const startTime = `${startHour}:00 ${startHour >= 12 ? 'PM' : 'AM'}`;
+        const endTime = `${endHour}:00 ${endHour >= 12 ? 'PM' : 'AM'}`;
+        
+        // Random instructor and section number
+        const instructor = instructors[Math.floor(Math.random() * instructors.length)];
+        const sectionNumber = Math.floor(Math.random() * 10) + 1;
+        
+        sections.push({
+            id: i + 1,
+            title: courseTitle,
+            sectionNumber: `Section ${sectionNumber.toString().padStart(2, '0')}`,
+            days: days,
+            startTime: startTime,
+            endTime: endTime,
+            instructor: instructor,
+            color: colors[i % colors.length]
+        });
+    }
+    
+    console.log('Generated sections:', sections);
+    return sections;
+}
+
+// Add CSS styles for course blocks if they don't exist
+document.addEventListener('DOMContentLoaded', function() {
+    // ... existing code ...
+    
+    // Add CSS for course blocks if not already present
+    if (!document.getElementById('course-block-styles')) {
+        const style = document.createElement('style');
+        style.id = 'course-block-styles';
+        style.textContent = `
+            .course-block {
+                position: absolute;
+                border-radius: 4px;
+                padding: 5px;
+                box-sizing: border-box;
+                overflow: hidden;
+                color: #fff;
+                text-shadow: 0 0 2px rgba(0,0,0,0.7);
+                font-size: 12px;
+                cursor: pointer;
+                z-index: 10;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                transition: transform 0.1s ease;
+            }
+            
+            .course-block:hover {
+                transform: scale(1.02);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            }
+            
+            .section-title {
+                font-weight: bold;
+                margin-bottom: 2px;
+            }
+            
+            .schedule-grid {
+                position: relative;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+});
+
+// Add function to check if the section API is available
+function checkSectionApiAvailability() {
+    console.log("Checking section API availability");
+    
+    return fetch('/section_bp/search?subject=CPSC')
+        .then(response => {
+            const isAvailable = response.ok;
+            console.log("Section API available:", isAvailable);
+            return isAvailable;
+        })
+        .catch(error => {
+            console.warn("Section API check failed:", error);
+            return false;
+        });
+}
+
+// Add function to search sections using the backend API
+function searchSections(params = {}) {
+    console.log("Searching sections with params:", params);
+    
+    // Build query string from params
+    const queryParams = new URLSearchParams();
+    if (params.subject) queryParams.append('subject', params.subject);
+    if (params.course_code) queryParams.append('course_code', params.course_code);
+    if (params.attribute) queryParams.append('attribute', params.attribute);
+    if (params.instructor) queryParams.append('instructor', params.instructor);
+    
+    const url = `/section_bp/search?${queryParams.toString()}`;
+    console.log("Fetching sections from:", url);
+    
+    return fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Section API error: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Sections data received:", data);
+            return data;
+        })
+        .catch(error => {
+            console.error("Error fetching sections:", error);
+            return { data: [] }; // Return empty data on error
+        });
+}
+
+// Modify the addCourse function to use the section API
+function addCourse() {
+    console.log("Add Course button clicked");
+    
+    // Get form values
+    const subject = document.querySelector('.sidebar input[placeholder="Subject"]').value;
+    const courseCode = document.querySelector('.sidebar input[placeholder="Course code"]').value;
+    const instructor = document.querySelector('.sidebar input[placeholder="Instructor"]').value;
+    const attribute = document.querySelector('.sidebar input[placeholder="Attributes"]').value;
+    
+    console.log("Form values:", { subject, courseCode, instructor, attribute });
+    
+    // Validate input - at least subject or course code should be provided
+    if (!subject && !courseCode) {
+        alert("Please enter at least a subject or course code");
+        return;
+    }
+    
+    // Show loading state
+    showLoadingState();
+    
+    // Check if section API is available
+    checkSectionApiAvailability()
+        .then(apiAvailable => {
+            if (apiAvailable) {
+                console.log("Section API is available, fetching real data");
+                
+                // Prepare search parameters
+                const searchParams = {
+                    subject: subject,
+                    course_code: courseCode,
+                    instructor: instructor || undefined,
+                    attribute: attribute || undefined
+                };
+                
+                // Search for sections using the API
+                return searchSections(searchParams)
+                    .then(result => {
+                        hideLoadingState();
+                        
+                        if (result.data && result.data.length > 0) {
+                            // Show sections sidebar with real data
+                            showSectionsSidebarWithRealData(subject, courseCode, result.data);
+                        } else {
+                            console.log("No sections found, using sample data");
+                            showSectionsSidebar(subject, courseCode);
+                        }
+                    });
+            } else {
+                console.log("Section API is not available, using sample data");
+                // Use sample data after a short delay to simulate loading
+                setTimeout(() => {
+                    hideLoadingState();
+                    showSectionsSidebar(subject, courseCode);
+                }, 500);
+            }
+        })
+        .catch(error => {
+            console.error("Error checking API availability:", error);
+            hideLoadingState();
+            showSectionsSidebar(subject, courseCode);
+        });
+}
+
+// Add function to display sections sidebar with real data from the API
+function showSectionsSidebarWithRealData(subject, courseCode, sectionsData) {
+    console.log("Showing sections sidebar with real data for:", subject, courseCode);
+    console.log("Sections data:", sectionsData);
+    
+    // Remove existing sections sidebar if it exists
+    const existingSidebar = document.querySelector('.sections-sidebar');
+    if (existingSidebar) {
+        existingSidebar.remove();
+    }
+    
+    // Create new sections sidebar
+    const sectionsSidebar = document.createElement('div');
+    sectionsSidebar.className = 'sections-sidebar';
+    
+    // Generate course title
+    const courseTitle = subject + " " + courseCode;
+    
+    // Convert API data to our sections format
+    const sections = sectionsData.map((section, index) => {
+        // Parse days from the API data (assuming it's in a format like "MWF" or "TR")
+        const days = section.days ? section.days.split('') : [];
+        
+        // Parse times (assuming format like "10:00 AM - 11:15 AM")
+        let startTime = "8:00 AM";
+        let endTime = "9:00 AM";
+        
+        if (section.time) {
+            const timeParts = section.time.split(' - ');
+            if (timeParts.length === 2) {
+                startTime = timeParts[0];
+                endTime = timeParts[1];
+            }
+        }
+        
+        // Get a color from our predefined colors
+        const colors = [
+            '#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', 
+            '#B5EAD7', '#C7CEEA', '#F8B195', '#F67280'
+        ];
+        const color = colors[index % colors.length];
+        
+        return {
+            id: section.id || index + 1,
+            title: courseTitle,
+            sectionNumber: section.section_number || `Section ${(index + 1).toString().padStart(2, '0')}`,
+            days: days,
+            startTime: startTime,
+            endTime: endTime,
+            instructor: section.instructor || "TBA",
+            color: color,
+            // Keep any additional data from the API
+            apiData: section
+        };
+    });
+    
+    // Create sidebar content
+    const sidebarContent = `
+        <div class="sections-header">
+            <h3>${courseTitle} Sections</h3>
+            <div class="sections-controls">
+                <select class="sections-sort">
+                    <option value="section">Sort by Section</option>
+                    <option value="instructor">Sort by Instructor</option>
+                    <option value="time">Sort by Time</option>
+                </select>
+                <button class="reset-sections-btn">Reset</button>
+            </div>
+        </div>
+        <div class="sections-list">
+            ${sections.map(section => `
+                <div class="section-item" data-section-id="${section.id}">
+                    <div class="section-number">${section.sectionNumber}</div>
+                    <div class="section-details">
+                        <div>${section.instructor}</div>
+                        <div>${section.days.join(', ')} ${section.startTime} - ${section.endTime}</div>
+                    </div>
+                    <div class="section-day-blocks">
+                        ${section.days.map(day => `
+                            <div class="section-day-block" style="background-color: ${section.color}"></div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    
+    sectionsSidebar.innerHTML = sidebarContent;
+    
+    // Add to main container
+    const emptySpace = document.querySelector('.empty-space');
+    if (emptySpace) {
+        emptySpace.parentNode.replaceChild(sectionsSidebar, emptySpace);
+    } else {
+        document.querySelector('main').appendChild(sectionsSidebar);
+    }
+    
+    console.log("Sections sidebar with real data added to DOM");
+    
+    // Add event listeners
+    addSectionsSidebarEventListeners(sectionsSidebar, sections);
+}
+
+// Update the API availability check script to include section API
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded");
+    
+    // Check all APIs availability
+    checkApiAvailability(); // Check prerequisite API
+    checkCourseApiAvailability(); // Check course API
+    checkSectionApiAvailability(); // Check section API
+    
+    // ... existing code ...
+    
+    // Initialize the Add Course button click event
+    const addCourseBtn = document.querySelector('.add-course-btn');
+    if (addCourseBtn) {
+        console.log("Add Course button found, attaching event listener");
+        
+        // Remove any existing event listeners by cloning the node
+        const newAddCourseBtn = addCourseBtn.cloneNode(true);
+        addCourseBtn.parentNode.replaceChild(newAddCourseBtn, addCourseBtn);
+        
+        // Add the event listener to the new button
+        newAddCourseBtn.addEventListener('click', function(e) {
+            console.log("Add Course button clicked (from event listener)");
+            e.preventDefault();
+            addCourse();
+        });
+    } else {
+        console.error("Add Course button not found");
+    }
+    
+    // ... existing code ...
+});

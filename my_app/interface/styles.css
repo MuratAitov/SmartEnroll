@@ -2750,3 +2750,388 @@ body.dark-mode .error-message {
     border-color: #842029;
     color: #ea868f;
 }
+
+/* Sections Sidebar Styles */
+.sections-sidebar {
+    position: fixed;
+    top: 60px;
+    right: 0;
+    width: 300px;
+    height: calc(100vh - 60px);
+    background-color: white;
+    border-left: 1px solid #e9ecef;
+    overflow-y: auto;
+    z-index: 10;
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sections-header {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sections-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #495057;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.sections-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.sections-sort {
+    padding: 8px 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    background-color: white;
+    color: #495057;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 48%;
+}
+
+.sections-sort:hover {
+    border-color: #ced4da;
+    background-color: #f8f9fa;
+}
+
+.reset-sections-btn {
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    color: #495057;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 48%;
+}
+
+.reset-sections-btn:hover {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+
+.sections-list {
+    overflow-y: auto;
+}
+
+.section-item {
+    padding: 12px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #e9ecef;
+}
+
+.section-item:hover {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    transform: translateY(-2px);
+}
+
+.section-item.selected {
+    background-color: #e7f5ff;
+    border-color: #74c0fc;
+}
+
+.section-number {
+    font-weight: 600;
+    font-size: 16px;
+    color: #495057;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-details {
+    font-size: 14px;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.section-day-blocks {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.section-day-block {
+    padding: 3px 6px;
+    background-color: #e9ecef;
+    border-radius: 3px;
+    font-size: 12px;
+    color: #495057;
+}
+
+body.dark-mode .section-number {
+    color: #e0e0e0;
+}
+
+body.dark-mode .section-details {
+    color: #adb5bd;
+}
+
+body.dark-mode .section-day-block {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+/* Dark mode styles for sections sidebar */
+body.dark-mode .sections-sidebar {
+    background-color: #1e1e1e;
+    border-left: 1px solid #333;
+    color: #e0e0e0;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .sections-header {
+    border-bottom: 2px solid #1a4989; /* Slightly lighter Gonzaga blue for dark mode */
+}
+
+body.dark-mode .sections-header h3 {
+    color: #4a7ac0; /* Lighter Gonzaga blue for dark mode */
+}
+
+body.dark-mode .sections-sort {
+    background-color: #2c2c2c;
+    border: 1px solid #444;
+    color: #e0e0e0;
+}
+
+body.dark-mode .sections-sort:hover {
+    background-color: #333;
+    border-color: #555;
+}
+
+body.dark-mode .reset-sections-btn {
+    background-color: #2c2c2c;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+body.dark-mode .reset-sections-btn:hover {
+    background-color: #333;
+    border-color: #555;
+}
+
+body.dark-mode .section-item {
+    background-color: #2c2c2c;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+body.dark-mode .section-item:hover {
+    background-color: #333;
+    border-color: #555;
+}
+
+body.dark-mode .section-item.selected {
+    background-color: #1c4a6e;
+    border-color: #3b82f6;
+}
+
+body.dark-mode .section-number {
+    background-color: #1a4989; /* Slightly lighter Gonzaga blue for dark mode */
+}
+
+body.dark-mode .section-details {
+    color: #ccc;
+}
+
+/* Course block styles with Gonzaga colors */
+.course-block {
+    position: absolute;
+    border-radius: 4px;
+    padding: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+    color: #fff;
+    text-shadow: 0 0 2px rgba(0,0,0,0.7);
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.1s ease;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.course-block:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    z-index: 11;
+}
+
+.section-title {
+    font-weight: bold;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Add a Gonzaga-themed loading indicator */
+.loading-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 25px;
+    background-color: #002967; /* Gonzaga blue */
+    color: white;
+    border-radius: 5px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    border-left: 5px solid #c8102e; /* Gonzaga red */
+    font-weight: 500;
+}
+
+/* Add a Gonzaga-themed tooltip for course blocks */
+.course-tooltip {
+    position: absolute;
+    background-color: #002967; /* Gonzaga blue */
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border-left: 3px solid #c8102e; /* Gonzaga red */
+    max-width: 250px;
+}
+
+.course-tooltip.visible {
+    opacity: 1;
+}
+
+/* Add Gonzaga-themed scrollbar for sections sidebar */
+.sections-sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sections-sidebar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.sections-sidebar::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.sections-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+body.dark-mode .sections-sidebar::-webkit-scrollbar-track {
+    background: #2c2c2c;
+}
+
+body.dark-mode .sections-sidebar::-webkit-scrollbar-thumb {
+    background: #555;
+}
+
+body.dark-mode .sections-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* Update main layout to accommodate both sidebars */
+main {
+    display: flex;
+    padding: 20px;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.schedule-grid {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin: 0 15px;
+}
+
+body.dark-mode .sidebar {
+    background-color: #001A49;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1024px) {
+    main {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+    }
+    
+    .sidebar, .sections-sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+    }
+    
+    .schedule-grid {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+    }
+}
+
+.sections-search {
+    margin-bottom: 15px;
+}
+
+.sections-search input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #495057;
+    background-color: white;
+    transition: all 0.2s;
+}
+
+.sections-search input:focus {
+    outline: none;
+    border-color: #74c0fc;
+    box-shadow: 0 0 0 2px rgba(116, 192, 252, 0.25);
+}
+
+body.dark-mode .sections-search input {
+    background-color: #2c2c2c;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+body.dark-mode .sections-search input:focus {
