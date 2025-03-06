@@ -22,7 +22,6 @@
                     <div class="semester-group">
                         <button class="semester-button">Fall 2024 <span class="arrow">▼</span></button>
                         <div class="semester-content">
-                            <a href="#" onclick="changeSemester('Fall 2024', this)">Fall 2024</a>
                             <a href="#" onclick="changeSemester('Summer 2025', this)">Summer 2025</a>
                             <a href="#" onclick="changeSemester('Spring 2025', this)">Spring 2025</a>
                             <a href="#" onclick="changeSemester('Fall 2024', this)">Fall 2024</a>
@@ -38,8 +37,7 @@
                     <a href="#registration">Registration</a>
                     <a href="#map">Map</a>
                     <a href="#finals">Finals</a>
-                    <a href="#rmp" class="logged-in-content">Rate My Professor</a>
-                    <a href="#reflection" class="logged-in-content">Reflection</a>
+                    <a href="#rmp">Rate My Professor</a>
                 </div>
 
                 <div class="user-controls">
@@ -83,7 +81,7 @@
             </div>
             
             <div class="form-group">
-                <input type="text" placeholder="Subject">
+                <input type="text" placeholder="Subject" autocomplete="off">
             </div>
             
             <div class="form-group">
@@ -120,6 +118,10 @@
                     <option>Online</option>
                     <option>Hybrid</option>
                 </select>
+            </div>
+            
+            <div class="form-group">
+                <button class="add-course-btn">Add Course</button>
             </div>
         </div>
 
@@ -192,5 +194,49 @@
     </div>
 
     <script src="script.js"></script>
+    <!-- Add script to handle API communication -->
+    <script>
+        // This script handles communication with the Python backend
+        // It will be used to fetch prerequisite data
+        
+        // Check if the API is available
+        function checkApiAvailability() {
+            fetch('/api/graph?course=CPSC321&all=false')
+                .then(response => {
+                    if (!response.ok) {
+                        console.warn('Prerequisite API is not available. Using mock data instead.');
+                    } else {
+                        console.log('Prerequisite API is available.');
+                    }
+                })
+                .catch(error => {
+                    console.warn('Prerequisite API is not available:', error);
+                });
+                
+            // Also check if the export controller API is available
+            fetch('/export_bp/apple-calendar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({test: true})
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.warn('Export API is not available. Export functionality may not work.');
+                } else {
+                    console.log('Export API is available.');
+                }
+            })
+            .catch(error => {
+                console.warn('Export API is not available:', error);
+            });
+        }
+        
+        // Check API availability when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkApiAvailability();
+        });
+    </script>
 </body>
 </html> 

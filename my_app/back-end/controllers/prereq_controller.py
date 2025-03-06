@@ -1,11 +1,11 @@
 from flask import Blueprint, request, jsonify
 from services.prereq_service import build_prerequisite_graph
 
-prereq_bp = Blueprint('prereq_bp', __name__)
+# Create blueprint with a URL prefix
+prereq_bp = Blueprint('prereq_bp', __name__, url_prefix='/api')
 
 @prereq_bp.route('/graph', methods=['GET'])
 def get_prereq_graph():
-
     course = request.args.get('course')
     all_levels = request.args.get('all', 'false').lower() == 'true'
 

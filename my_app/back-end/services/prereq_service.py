@@ -5,96 +5,94 @@ from credentials import SUPABASE_URL, SUPABASE_KEY
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def build_prerequisite_graph(course_code: str,
-                             include_all_levels: bool = False,
-                             visited: Optional[Set[str]] = None,
-                             nodes: Optional[List[Dict]] = None,
-                             edges: Optional[List[Dict]] = None) -> Dict:
+def build_prerequisite_graph(course_code, include_all_levels=False):
+    """
+    Builds a prerequisite graph for a given course
+    
+    Args:
+        course_code (str): The course code to build the graph for
+        include_all_levels (bool): Whether to include all levels of prerequisites
+        
+    Returns:
+        dict: A dictionary containing nodes and links for the graph
+    """
+    try:
+        # Get the course information
+        course_response = supabase.from_('courses').select('*').eq('code', course_code).execute()
+        if not course_response.data:
+            return {"error": f"Course {course_code} not found"}
+        
+        course = course_response.data[0]
+        
+        # Initialize the graph
+        graph = {
+            "nodes": [{"id": course_code, "name": course["title"], "level": 0}],
+            "links": []
+        }
+        
+        # Get direct prerequisites
+        prereq_response = supabase.from_('prerequisites').select('*').eq('course_code', course_code).execute()
+        
+        if not prereq_response.data:
+            return graph  # No prerequisites
+        
+        # Process prerequisites
+        for prereq in prereq_response.data:
+            prereq_code = prereq["prereq_code"]
+            
+            # Get prerequisite course info
+            prereq_course_response = supabase.from_('courses').select('*').eq('code', prereq_code).execute()
+            if prereq_course_response.data:
+                prereq_course = prereq_course_response.data[0]
+                
+                # Add node if not already in graph
+                if not any(node["id"] == prereq_code for node in graph["nodes"]):
+                    graph["nodes"].append({
+                        "id": prereq_code,
+                        "name": prereq_course["title"],
+                        "level": 1
+                    })
+                
+                # Add link
+                graph["links"].append({
+                    "source": prereq_code,
+                    "target": course_code,
+                    "type": "PREREQ"
+                })
+                
+                # If include_all_levels is True, recursively get prerequisites of prerequisites
+                if include_all_levels:
+                    nested_graph = build_prerequisite_graph(prereq_code, True)
+                    
+                    # Add nodes and links from nested graph if they don't already exist
+                    for node in nested_graph.get("nodes", []):
+                        if not any(n["id"] == node["id"] for n in graph["nodes"]):
+                            # Increment level
+                            node["level"] = node["level"] + 1
+                            graph["nodes"].append(node)
+                    
+                    for link in nested_graph.get("links", []):
+                        if not any(l["source"] == link["source"] and l["target"] == link["target"] for l in graph["links"]):
+                            graph["links"].append(link)
+        
+        return graph
+    
+    except Exception as e:
+        print(f"Error building prerequisite graph: {str(e)}")
+        return {"error": f"Failed to build prerequisite graph: {str(e)}"}
 
-    # Инициализируем структуры при первом вызове
-    if visited is None:
-        visited = set()
-    if nodes is None:
-        nodes = []
-    if edges is None:
-        edges = []
-
-    # Если уже посещали этот курс, пропускаем (чтобы не зациклиться)
-    if course_code in visited:
-        return {"nodes": nodes, "edges": edges}
-
-    visited.add(course_code)
-
-    # Добавляем узел (если ещё не добавлен)
-    if not any(n["id"] == course_code for n in nodes):
-        nodes.append({"id": course_code})
-
-    # Получаем все записи из таблицы "prerequisites" с таким course_code
-    response = supabase.table("prerequisites").select("*").eq("course_code", course_code).execute()
-
-    # Если нет записей — значит нет пререквизитов
-    if not response.data:
-        return {"nodes": nodes, "edges": edges}
-
-    # Предположим, берём только первую запись (или все, если у тебя несколько вариантов)
-    record = response.data[0]
-    prereq_json = record.get("prerequisite_schema")
-
-    # Если поле пустое
-    if not prereq_json:
-        return {"nodes": nodes, "edges": edges}
-
-    # Если поле хранится как строка, парсим
-    if isinstance(prereq_json, str):
-        prereq_data = json.loads(prereq_json)
-    else:
-        prereq_data = prereq_json
-
-    # Считаем, что prereq_data имеет формат:
-    # {
-    #   "type": "or"/"and",
-    #   "requirements": [
-    #       {"course": "CPSC 322", "min_grade": "D"},
-    #       ...
-    #   ]
-    # }
-    prereq_type = prereq_data.get("type", "and")
-    requirements = prereq_data.get("requirements", [])
-
-    for req in requirements:
-        child_course = req.get("course")
-        min_grade = req.get("min_grade")
-
-        if not child_course:
-            continue
-
-        # Добавляем узел
-        if not any(n["id"] == child_course for n in nodes):
-            nodes.append({"id": child_course})
-
-        # Добавляем ребро: child_course → course_code
-        edges.append({
-            "source": child_course,
-            "target": course_code,
-            "relation": prereq_type,
-            "min_grade": min_grade
-        })
-
-        # Если нужно собрать все уровни (рекурсия)
-        if include_all_levels:
-            build_prerequisite_graph(
-                course_code=child_course,
-                include_all_levels=True,
-                visited=visited,
-                nodes=nodes,
-                edges=edges
-            )
-
-    return {
-        "nodes": nodes,
-        "edges": edges
-    }
-
+# Mock data for testing without database
+mock_graph = {
+    "nodes": [
+        {"id": "CPSC 321", "name": "Database Management Systems", "level": 0},
+        {"id": "CPSC 224", "name": "Software Development", "level": 1},
+        {"id": "CPSC 122", "name": "Computational Thinking", "level": 2}
+    ],
+    "links": [
+        {"source": "CPSC 224", "target": "CPSC 321", "type": "PREREQ"},
+        {"source": "CPSC 122", "target": "CPSC 224", "type": "PREREQ"}
+    ]
+}
 
 #
 if __name__ == "__main__":
