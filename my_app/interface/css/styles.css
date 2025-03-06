@@ -1,70 +1,51 @@
 /* Dark mode styles - placed at the top for higher specificity */
-body.dark-mode {
     background-color: #001A49 !important;
     color: #ffffff !important;
 }
 
-body.dark-mode nav {
     background-color: #ffffff !important;
 }
 
-body.dark-mode .nav-links a {
     color: #142A50 !important;
 }
 
-body.dark-mode .nav-links a.active {
     color: #142A50 !important;
 }
 
-body.dark-mode .nav-button {
     color: #142A50 !important;
 }
 
-body.dark-mode .dropdown-content {
     background-color: #142A50 !important;
     color: #ffffff !important;
 }
 
-body.dark-mode .dropdown-content a,
-body.dark-mode .theme-toggle,
-body.dark-mode .student-name {
     color: #ffffff !important;
 }
 
-body.dark-mode .student-id {
     color: #C4C8CE !important;
 }
 
-body.dark-mode .dropdown-content a:hover,
-body.dark-mode .theme-toggle:hover {
     background-color: #B41231 !important;
 }
 
-body.dark-mode .dropdown-divider {
     background-color: #2a4573 !important;
 }
 
-body.dark-mode .sidebar {
     background-color: #023373 !important;
     color: #ffffff !important;
     border-color: #023373 !important;
 }
 
-body.dark-mode .sidebar-tabs a {
     color: #C4C8CE !important;
 }
 
-body.dark-mode .sidebar-tabs a.active {
     color: #ffffff !important;
 }
 
-body.dark-mode select,
-body.dark-mode input {
     color: #ffffff !important;
     background-color: #1e3a6d !important;
 }
 
-body.dark-mode select option {
     background-color: #142A50 !important;
     color: #ffffff !important;
 }
@@ -105,12 +86,10 @@ header {
     background-color: #142A50;
     color: white;
     padding: 15px 30px;
-    display: flex;
     align-items: center;
     gap: 20px;
 }
 .logo {
-    display: flex;
     align-items: center;
     gap: 10px;
     min-width: fit-content;
@@ -123,8 +102,6 @@ header {
     margin-right: 10px;
 }
 .logo-text {
-    display: flex;
-    flex-direction: column;
     line-height: 1;
     align-items: center;
 }
@@ -152,7 +129,6 @@ header {
     transform: none;
 }
 .nav-tabs {
-    display: flex;
     gap: 25px;
     margin-bottom: 20px;
 }
@@ -171,14 +147,12 @@ header {
     color: #142A50;
 }
 main {
-    display: flex;
     gap: 20px;
     padding: 20px;
     max-width: 1400px;  /* Set a max-width for large screens */
     margin: 0 auto;     /* Center the content */
 }
 .sidebar {
-    flex: 0 0 320px;  /* Fixed width of 320px, won't grow or shrink */
     min-width: 320px; /* Ensure minimum width */
     background-color: white;
     border-radius: 8px;
@@ -187,12 +161,10 @@ main {
     height: fit-content;
 }
 .sidebar-tabs {
-    display: flex;
     gap: 15px;
     margin-bottom: 20px;
     border-bottom: 1px solid #e0e4e8;
     padding-bottom: 10px;
-    flex-wrap: nowrap;
 }
 .sidebar-tabs a {
     color: #C4C8CE;
@@ -201,7 +173,6 @@ main {
     position: relative;
     font-size: 0.9em;
     white-space: nowrap;
-    flex-shrink: 0;
     transition: color 0.2s;
 }
 .sidebar-tabs a.active {
@@ -234,14 +205,12 @@ main {
     outline: none;
 }
 .level-buttons {
-    display: flex;
     gap: 8px;
     margin: 10px 0;
     width: 100%;
     position: relative;
 }
 .division-btn {
-    flex: 1;  /* Make each button take up equal space */
     padding: 8px 12px;
     border: 1px solid #C4C8CE;
     background-color: transparent;
@@ -269,7 +238,6 @@ main {
     display: none;
 }
 .schedule-container {
-    flex: 1;          /* Take up remaining space */
     background-color: white;
     border-radius: 8px;  /* Match sidebar's border radius */
     padding: 20px;
@@ -279,29 +247,22 @@ main {
     overflow: hidden;  /* Ensure content doesn't overflow rounded corners */
 }
 
-.schedule-grid {
     width: 100%;
     border-radius: 8px;
     overflow: hidden;
 }
 
-.schedule-grid table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;  /* This ensures equal column widths */
 }
 
-.schedule-grid td:first-child {
     width: 80px;  /* Fixed width for time column */
 }
 
-.schedule-grid th:not(:first-child),
-.schedule-grid td:not(:first-child) {
     width: calc((100% - 80px) / 5);  /* Evenly distribute remaining width */
 }
 
-/* Schedule grid header styles - light mode */
-.schedule-grid th {
     top: 0;
     position: relative;
     background-color: white !important;
@@ -311,13 +272,11 @@ main {
 }
 
 /* Dark mode header styles - override light mode */
-body.dark-mode .schedule-grid th {
     background-color: #023373 !important;
     color: #ffffff !important;
     border-color: #012454 !important;
 }
 
-.schedule-grid td:first-child {
     left: 0;
     width: 80px;
     text-align: center;
@@ -328,7 +287,6 @@ body.dark-mode .schedule-grid th {
     line-height: 60px;
 }
 
-.schedule-grid td {
     position: relative;  /* For absolute positioning of event blocks */
     height: 60px;
     padding: 0;
@@ -337,44 +295,31 @@ body.dark-mode .schedule-grid th {
     background-color: white !important;
 }
 
-.schedule-grid th:not(:first-child),
-.schedule-grid td:not(:first-child) {
     width: calc((100% - 80px) / 5);
 }
 
 /* Dark mode schedule styles */
-body.dark-mode .schedule-container {
     background-color: #023373 !important;
     border-color: #023373 !important;
     border-radius: 8px;
 }
 
-body.dark-mode .schedule-grid {
     background-color: #023373 !important;
     border-radius: 8px;
     overflow: hidden;
 }
 
-body.dark-mode .schedule-grid th, 
-body.dark-mode .schedule-grid td:first-child {
     background-color: #023373 !important;
     color: #ffffff !important;
 }
 
-body.dark-mode .schedule-grid td {
     background-color: #023373 !important;
     border-color: #012454 !important;
 }
 
-body.dark-mode .schedule-grid tr:nth-child(even) td {
     background-color: #023373 !important;
 }
 
-/* Schedule grid borders in dark mode */
-body.dark-mode .schedule-grid td,
-body.dark-mode .schedule-grid th,
-body.dark-mode .schedule-grid thead tr,
-body.dark-mode .schedule-grid thead {
     border-color: #012454 !important;
 }
 
@@ -472,7 +417,6 @@ input:focus, select:focus {
     font-size: 1.1em;
 }
 nav {
-    flex: 1;
     height: 50px;
     padding: 0;
     font-size: clamp(12px, 1vw, 16px);
@@ -482,7 +426,6 @@ nav {
 
 .nav-sections {
     height: 100%;
-    display: flex;
     align-items: center;
     justify-content: space-between;
     gap: clamp(10px, 2vw, 20px);
@@ -490,7 +433,6 @@ nav {
 
 /* Left controls containing semester group */
 .left-controls {
-    display: flex;
     align-items: center;
     gap: 15px;
     margin-right: auto; /* Push other elements to the right */
@@ -498,18 +440,15 @@ nav {
 
 /* Update semester group styles */
 .semester-group {
-    display: flex;
     align-items: center;
     gap: clamp(8px, 1vw, 12px);
     padding-right: 0;
     border-right: none;
-    flex-shrink: 0;
     position: relative;
 }
 
 /* Center nav links */
 .nav-links {
-    display: flex;
     align-items: center;
     gap: 40px;
     margin: 0 auto;
@@ -530,7 +469,6 @@ nav {
 }
 
 /* Ensure consistent spacing in both light and dark modes */
-body.dark-mode .nav-links {
     gap: 40px; /* Keep the same gap in dark mode */
 }
 
@@ -543,18 +481,15 @@ body.dark-mode .nav-links {
 
 .credits-box {
     padding: 5px clamp(8px, 1vw, 12px);
-    flex-shrink: 0;
     color: #ffffff;
 }
 
 .nav-button, .semester-button {
     padding: 5px clamp(5px, 0.5vw, 10px);
     min-height: 30px;
-    display: flex;
     align-items: center;
     gap: 5px;
     white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .logo-img {
@@ -674,79 +609,60 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Navigation bar */
-body.dark-mode nav {
     background-color: #ffffff !important;
 }
 
-body.dark-mode .nav-links a {
     color: #142A50;
 }
 
-body.dark-mode .nav-button {
     color: #142A50;
 }
 
 /* Dropdown styles */
-body.dark-mode .dropdown-content {
     background-color: #142A50;
     color: #ffffff;
 }
 
-body.dark-mode .dropdown-content a,
-body.dark-mode .theme-toggle,
-body.dark-mode .student-name {
     color: #ffffff;
 }
 
-body.dark-mode .student-id {
     color: #C4C8CE;
 }
 
-body.dark-mode .dropdown-content a:hover,
-body.dark-mode .theme-toggle:hover {
     background-color: #B41231;
     color: #ffffff;
 }
 
-body.dark-mode .dropdown-divider {
     background-color: #2a4573;
 }
 
 /* Main content area */
-body.dark-mode .sidebar {
     background-color: #023373;
     color: #ffffff;
 }
 
-body.dark-mode .sidebar-tabs a {
     color: #C4C8CE;
 }
 
-body.dark-mode .sidebar-tabs a.active {
     color: #ffffff;
 }
 
 /* Form elements */
-body.dark-mode select,
-body.dark-mode input {
     color: #ffffff;
     background-color: #1e3a6d;
 }
 
-body.dark-mode select option {
     background-color: #142A50;
     color: #ffffff;
 }
 
 .nav-right {
-    display: flex;
     align-items: center;
     gap: 15px;
     margin-left: auto;
 }
 
 .nav-button {
-    display: flex;
     align-items: center;
     gap: 6px;
     background: none;
@@ -775,97 +691,75 @@ body.dark-mode select option {
 
 /* Ensure both buttons have the same height and vertical alignment */
 .user-dropdown {
-    display: flex;
     align-items: center;
     height: 36px;
 }
 
 /* Header styles in dark mode */
-body.dark-mode header {
     background-color: #ffffff !important;
 }
 
-body.dark-mode .university-name,
-body.dark-mode .university-subtitle {
     color: #142A50 !important;
 }
 
-/* Schedule grid styles in dark mode */
-body.dark-mode .schedule-grid {
     background-color: #023373 !important;
     border-radius: 8px;  /* Ensure border radius in dark mode */
     overflow: hidden;
 }
 
-body.dark-mode .schedule-grid th, 
-body.dark-mode .schedule-grid td:first-child {
     background-color: #023373 !important;
     color: #ffffff !important;
 }
 
-body.dark-mode .schedule-grid td {
     border-color: #022859 !important;
     color: #ffffff !important;
 }
 
-body.dark-mode .schedule-grid tr:nth-child(even) td {
     background-color: #023373 !important;
 }
 
 /* Top border of header row */
-body.dark-mode .schedule-grid thead tr {
     border-color: #022859 !important;
 }
 
 /* Horizontal divider line below header */
-body.dark-mode .schedule-grid thead {
     border-bottom-color: #022859 !important;
 }
 
 /* Navigation styles in dark mode */
-body.dark-mode nav {
     background-color: #ffffff !important;
 }
 
-body.dark-mode .nav-links a {
     color: #142A50 !important;
 }
 
-body.dark-mode .nav-button {
     color: #142A50 !important;
 }
 
 /* Navigation hover styles */
-body.dark-mode .nav-links a:hover {
     color: #B41231 !important;
 }
 
 /* Dropdown hover styles */
-body.dark-mode .dropdown-content a:hover,
-body.dark-mode .theme-toggle:hover {
     background-color: #B41231;
     color: #ffffff !important;
 }
 
 /* Sidebar tab hover styles */
-body.dark-mode .sidebar-tabs a:hover {
     color: #B41231 !important;
 }
 
 /* Level button hover styles */
-body.dark-mode .division-btn:hover {
     background-color: #B41231 !important;
     color: #ffffff !important;
 }
 
 /* Export button hover styles */
-body.dark-mode .nav-button:hover {
     background-color: rgba(20, 42, 80, 0.2);  /* Darker grey with transparency */
     color: #142A50 !important;
 }
 
 /* User dropdown button hover styles */
-body.dark-mode .user-dropdown .nav-button:hover {
     color: #B41231 !important;
 }
 
@@ -881,7 +775,6 @@ body.dark-mode .user-dropdown .nav-button:hover {
     padding: 8px 16px;
     border: none;
     cursor: pointer;
-    display: flex;
     align-items: center;
     gap: 8px;
     font-size: inherit;
@@ -917,21 +810,17 @@ body.dark-mode .user-dropdown .nav-button:hover {
 }
 
 /* Dark mode styles for semester dropdown */
-body.dark-mode .semester-content {
     background-color: #142A50;
 }
 
-body.dark-mode .semester-content a {
     color: #ffffff;
 }
 
-body.dark-mode .semester-content a:hover {
     background-color: #B41231;
     color: #ffffff;
 }
 
 /* Dark mode styles */
-body.dark-mode .semester-button {
     color: #142A50;
 }
 
@@ -950,11 +839,9 @@ body.dark-mode .semester-button {
 }
 
 /* Dark mode navigation hover styles */
-body.dark-mode .nav-links a:hover {
     color: #B41231 !important;
 }
 
-body.dark-mode .nav-links a.active:hover {
     color: #B41231 !important;
 }
 
@@ -971,12 +858,10 @@ body.dark-mode .nav-links a.active:hover {
 /* Add these styles for the credits box */
 .credits-box {
     padding: 5px clamp(8px, 1vw, 12px);
-    flex-shrink: 0;
     color: #ffffff;
 }
 
 /* Dark mode style for credits box */
-body.dark-mode .credits-box {
     color: #142A50 !important;
 }
 
@@ -994,7 +879,6 @@ body.dark-mode .credits-box {
 }
 
 .tree-header {
-    display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
@@ -1032,7 +916,6 @@ body.dark-mode .credits-box {
 }
 
 .day-header {
-    display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
@@ -1096,7 +979,6 @@ body.dark-mode .credits-box {
 }
 
 .export-button {
-    display: flex;
     align-items: center;
     gap: 5px;
     color: #ffffff;
@@ -1137,15 +1019,12 @@ body.dark-mode .credits-box {
 }
 
 /* Dark mode styles for export dropdown */
-body.dark-mode .export-dropdown {
     background-color: #142A50;
 }
 
-body.dark-mode .export-dropdown a {
     color: #ffffff;
 }
 
-body.dark-mode .export-dropdown a:hover {
     background-color: #B41231;
     color: #ffffff;
 }
@@ -1162,8 +1041,6 @@ body.dark-mode .export-dropdown a:hover {
 }
 
 /* Dark mode hover styles for user dropdown */
-body.dark-mode .dropdown-content a:hover,
-body.dark-mode .theme-toggle:hover {
     background-color: #B41231;
     color: #ffffff;
 }
@@ -1175,9 +1052,6 @@ body.dark-mode .theme-toggle:hover {
 }
 
 .user-info:hover .username,
-body.dark-mode .user-info,
-body.dark-mode .username,
-body.dark-mode .user-info:hover .username {
     color: inherit;
 }
 
@@ -1195,7 +1069,6 @@ body.dark-mode .user-info:hover .username {
     border: none;
     color: #495057;
     cursor: pointer;
-    display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 1em;  /* Match the font size of other inputs */
@@ -1209,7 +1082,6 @@ body.dark-mode .user-info:hover .username {
 }
 
 /* Dark mode styles for the arrow */
-body.dark-mode .dropdown-button .arrow {
     color: #ffffff;
 }
 
@@ -1244,19 +1116,15 @@ body.dark-mode .dropdown-button .arrow {
 }
 
 /* Dark mode styles */
-body.dark-mode .dropdown-button {
     color: #ffffff;
 }
 
-body.dark-mode .dropdown-list {
     background-color: #1e3a6d;
 }
 
-body.dark-mode .dropdown-item {
     color: #ffffff;
 }
 
-body.dark-mode .dropdown-item:hover {
     background-color: #B41231;
 }
 
@@ -1265,7 +1133,6 @@ body.dark-mode .dropdown-item:hover {
     /* Main layout */
     main {
         padding: 10px;
-        flex-direction: column;
     }
 
     .sidebar,
@@ -1276,7 +1143,6 @@ body.dark-mode .dropdown-item:hover {
 
     /* Header and navigation */
     .nav-sections {
-        flex-direction: column;
         gap: 10px;
         padding: 10px 0;
     }
@@ -1304,13 +1170,10 @@ body.dark-mode .dropdown-item:hover {
         padding-left: 0;
     }
 
-    /* Schedule grid */
-    .schedule-grid {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
 
-    .schedule-grid table {
         min-width: 600px;  /* Ensure table is scrollable on mobile */
     }
 
@@ -1320,7 +1183,6 @@ body.dark-mode .dropdown-item:hover {
     }
 
     .level-buttons {
-        flex-direction: row;  /* Keep buttons side by side */
         gap: 5px;
     }
 
@@ -1398,7 +1260,6 @@ body.dark-mode .dropdown-item:hover {
 /* Add smooth scrolling for iOS */
 @supports (-webkit-overflow-scrolling: touch) {
     .nav-links,
-    .schedule-grid,
     .sidebar {
         -webkit-overflow-scrolling: touch;
     }
@@ -1419,7 +1280,6 @@ body.dark-mode .dropdown-item:hover {
     width: 100%;
     height: 56px;  /* Fixed height for all form groups */
     box-sizing: border-box;
-    display: flex;  /* Make all form groups flex containers */
     align-items: center;  /* Center content vertically */
 }
 
@@ -1439,7 +1299,6 @@ body.dark-mode .dropdown-item:hover {
 /* Weekday buttons container */
 .recurring-events-view .form-group .weekday-buttons {
     width: 100%;
-    display: flex;
     gap: 8px;
     justify-content: space-between;
     margin: 0;  /* Remove margin */
@@ -1447,7 +1306,6 @@ body.dark-mode .dropdown-item:hover {
 
 /* Time input container styles */
 .recurring-events-view .form-group:has(.time-input) {
-    display: flex;
     align-items: center;
     padding: 0 15px;
     height: 56px;
@@ -1466,7 +1324,6 @@ body.dark-mode .dropdown-item:hover {
     line-height: 36px;
 }
 
-/* Remove flex display from inputs */
 .courses-view .form-group input,
 .recurring-events-view .form-group input {
     width: 100%;
@@ -1480,57 +1337,47 @@ body.dark-mode .dropdown-item:hover {
 }
 
 /* Dark mode styles for recurring events */
-body.dark-mode .recurring-events-view .form-group {
     border-color: #495057;
     background-color: #142A50;  /* Dark background */
 }
 
-body.dark-mode .recurring-events-view input {
     color: #ffffff;  /* White text */
     background: transparent;
 }
 
-body.dark-mode .recurring-events-view input::placeholder {
     color: #C4C8CE;  /* Lighter color for placeholder text */
 }
 
-body.dark-mode .weekday-btn {
     color: #ffffff;
     border-color: #495057;
     background-color: transparent;
 }
 
-body.dark-mode .weekday-btn:hover {
     background-color: #B41231;
     color: #ffffff;
     border-color: #B41231;
 }
 
-body.dark-mode .weekday-btn.selected {
     background-color: #002467 !important;
     color: #ffffff !important;
     border-color: #002467 !important;
 }
 
-body.dark-mode .add-event-btn {
     background-color: #4A90E2;
     color: #ffffff;
 }
 
-body.dark-mode .add-event-btn:hover {
     background-color: #357ABD;
 }
 
 /* Weekday buttons styles */
 .weekday-buttons {
-    display: flex;
     gap: 8px;
     margin: 10px 0;
     justify-content: space-between;
 }
 
 .weekday-btn {
-    flex: 1;
     padding: 8px 12px;
     border: 1px solid #C4C8CE;
     background-color: transparent;
@@ -1554,12 +1401,10 @@ body.dark-mode .add-event-btn:hover {
 }
 
 /* Dark mode styles */
-body.dark-mode .weekday-btn {
     color: #6c757d;
     border-color: #C4C8CE;
 }
 
-body.dark-mode .weekday-btn.selected {
     background-color: #ffffff !important;
     border-color: #ffffff !important;
     color: #023373 !important;
@@ -1582,8 +1427,6 @@ body.dark-mode .weekday-btn.selected {
 }
 
 /* Dark mode hover styles */
-body.dark-mode .weekday-btn:hover,
-body.dark-mode .division-btn:hover {
     background-color: #B41231 !important;
     border-color: #B41231 !important;
     color: #ffffff !important;
@@ -1592,7 +1435,6 @@ body.dark-mode .division-btn:hover {
 
 /* Time input container styles */
 .recurring-events-view .form-group:has(.time-input) {
-    display: flex;
     align-items: center;
     padding: 0 15px;
     height: 56px;
@@ -1611,7 +1453,6 @@ body.dark-mode .division-btn:hover {
 }
 
 /* Dark mode styles */
-body.dark-mode .recurring-events-view .form-group:has(.time-input) label {
     color: #ffffff;
 }
 
@@ -1643,16 +1484,13 @@ body.dark-mode .recurring-events-view .form-group:has(.time-input) label {
 }
 
 /* Dark mode styles */
-body.dark-mode .autocomplete-list {
     background-color: #1e3a6d;
     border-color: #495057;
 }
 
-body.dark-mode .autocomplete-item {
     color: #ffffff;
 }
 
-body.dark-mode .autocomplete-item:hover {
     background-color: #142A50;
 }
 
@@ -1666,8 +1504,6 @@ body.dark-mode .autocomplete-item:hover {
     background-color: #808080;
     color: white;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
     gap: 2px;
     box-sizing: border-box;  /* Include padding in width calculation */
 }
@@ -1689,7 +1525,6 @@ body.dark-mode .autocomplete-item:hover {
 }
 
 /* Dark mode styles */
-body.dark-mode .event-block {
     background-color: #808080;  /* Keep gray background in dark mode */
 }
 
@@ -1716,16 +1551,13 @@ body.dark-mode .event-block {
 }
 
 /* Dark mode styles */
-body.dark-mode .context-menu {
     background-color: #1e3a6d;
     border-color: #495057;
 }
 
-body.dark-mode .menu-item {
     color: white;
 }
 
-body.dark-mode .menu-item:hover {
     background-color: #142A50;
 }
 
@@ -1746,7 +1578,6 @@ body.dark-mode .menu-item:hover {
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
-    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2000;
@@ -1761,13 +1592,11 @@ body.dark-mode .menu-item:hover {
 }
 
 .edit-buttons {
-    display: flex;
     gap: 10px;
     margin-top: 15px;
 }
 
 .save-btn, .cancel-btn {
-    flex: 1;
     padding: 8px;
     border: none;
     border-radius: 4px;
@@ -1785,12 +1614,10 @@ body.dark-mode .menu-item:hover {
 }
 
 /* Dark mode styles */
-body.dark-mode .edit-form {
     background-color: #1e3a6d;
     color: white;
 }
 
-body.dark-mode .edit-form input {
     color: white;
     background-color: #142A50;
 }
@@ -1804,13 +1631,11 @@ body.dark-mode .edit-form input {
 }
 
 .edit-form .weekday-buttons {
-    display: flex;
     gap: 8px;
     justify-content: space-between;
 }
 
 .edit-form .weekday-btn {
-    flex: 1;
     padding: 8px;
     border: 1px solid #e0e4e8;
     background: none;
@@ -1826,7 +1651,6 @@ body.dark-mode .edit-form input {
 }
 
 /* Dark mode styles */
-body.dark-mode .edit-form input[type="time"] {
     background-color: #142A50;
     border-color: #495057;
     color: white;
@@ -1835,13 +1659,9 @@ body.dark-mode .edit-form input[type="time"] {
 /* Pre-req tree styles */
 .prereq-tree-view {
     padding: 0;  /* Remove padding to match courses view */
-    display: flex;
-    flex-direction: column;
 }
 
 .prereq-search-form {
-    display: flex;
-    flex-direction: column;
     gap: 15px;
 }
 
@@ -1911,7 +1731,6 @@ body.dark-mode .edit-form input[type="time"] {
     font-size: 16px;
     color: #495057;
     margin-bottom: 5px;
-    display: flex;
     justify-content: space-between;
     align-items: center;
 }
@@ -1923,7 +1742,6 @@ body.dark-mode .edit-form input[type="time"] {
 }
 
 .section-day-blocks {
-    display: flex;
     gap: 5px;
     margin-top: 8px;
 }
@@ -1936,78 +1754,63 @@ body.dark-mode .edit-form input[type="time"] {
     color: #495057;
 }
 
-body.dark-mode .section-number {
     color: #e0e0e0;
 }
 
-body.dark-mode .section-details {
     color: #adb5bd;
 }
 
-body.dark-mode .section-day-block {
     background-color: #333;
     color: #e0e0e0;
 }
 
 /* Dark mode styles for sections sidebar */
-body.dark-mode .sections-sidebar {
     background-color: #1e1e1e;
     border-left: 1px solid #333;
     color: #e0e0e0;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
 }
 
-body.dark-mode .sections-header {
     border-bottom: 2px solid #1a4989; /* Slightly lighter Gonzaga blue for dark mode */
 }
 
-body.dark-mode .sections-header h3 {
     color: #4a7ac0; /* Lighter Gonzaga blue for dark mode */
 }
 
-body.dark-mode .sections-sort {
     background-color: #2c2c2c;
     border: 1px solid #444;
     color: #e0e0e0;
 }
 
-body.dark-mode .sections-sort:hover {
     background-color: #333;
     border-color: #555;
 }
 
-body.dark-mode .reset-sections-btn {
     background-color: #2c2c2c;
     border-color: #444;
     color: #e0e0e0;
 }
 
-body.dark-mode .reset-sections-btn:hover {
     background-color: #333;
     border-color: #555;
 }
 
-body.dark-mode .section-item {
     background-color: #2c2c2c;
     border-color: #444;
     color: #e0e0e0;
 }
 
-body.dark-mode .section-item:hover {
     background-color: #333;
     border-color: #555;
 }
 
-body.dark-mode .section-item.selected {
     background-color: #1c4a6e;
     border-color: #3b82f6;
 }
 
-body.dark-mode .section-number {
     background-color: #1a4989; /* Slightly lighter Gonzaga blue for dark mode */
 }
 
-body.dark-mode .section-details {
     color: #ccc;
 }
 
@@ -2098,21 +1901,17 @@ body.dark-mode .section-details {
     background: #a8a8a8;
 }
 
-body.dark-mode .sections-sidebar::-webkit-scrollbar-track {
     background: #2c2c2c;
 }
 
-body.dark-mode .sections-sidebar::-webkit-scrollbar-thumb {
     background: #555;
 }
 
-body.dark-mode .sections-sidebar::-webkit-scrollbar-thumb:hover {
     background: #666;
 }
 
 /* Update main layout to accommodate both sidebars */
 main {
-    display: flex;
     padding: 20px;
     height: calc(100vh - 60px);
     overflow: hidden;
@@ -2125,16 +1924,12 @@ main {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 15px;
     overflow-y: auto;
-    flex-shrink: 0;
 }
 
-.schedule-grid {
-    flex-grow: 1;
     overflow-y: auto;
     margin: 0 15px;
 }
 
-body.dark-mode .sidebar {
     background-color: #001A49;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
@@ -2142,7 +1937,6 @@ body.dark-mode .sidebar {
 /* Responsive adjustments */
 @media screen and (max-width: 1024px) {
     main {
-        flex-direction: column;
         height: auto;
         overflow: visible;
     }
@@ -2153,7 +1947,6 @@ body.dark-mode .sidebar {
         height: auto;
     }
     
-    .schedule-grid {
         margin-left: 0;
         margin-right: 0;
         width: 100%;
@@ -2181,13 +1974,11 @@ body.dark-mode .sidebar {
     box-shadow: 0 0 0 2px rgba(116, 192, 252, 0.25);
 }
 
-body.dark-mode .sections-search input {
     background-color: #2c2c2c;
     border-color: #444;
     color: #e0e0e0;
 }
 
-body.dark-mode .sections-search input:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
 }

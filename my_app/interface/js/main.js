@@ -1,11 +1,8 @@
 // Utility Functions
-function toggleTheme() {
     const body = document.body;
     const logoImg = document.querySelector('.logo img');
     const themeToggles = document.querySelectorAll('.theme-toggle');
     
-    body.classList.toggle('dark-mode');
-    const isDarkMode = body.classList.contains('dark-mode');
     
     // Update theme toggle buttons text
     themeToggles.forEach(button => {
@@ -20,7 +17,6 @@ function toggleTheme() {
     }
 }
 
-function changeSemester(semester, element) {
     const button = document.querySelector('.semester-button');
     const content = document.querySelector('.semester-content');
     
@@ -40,7 +36,6 @@ function toggleTreeItem(header) {
 function createMapSidebar() {
     return `
         <div class="sidebar-tabs">
-            <a href="#" class="schedule-tab active">Schedule</a>
             <a href="#" class="floor-plan-tab">Floor Plan</a>
         </div>
         
@@ -66,7 +61,6 @@ function createMapSidebar() {
             </div>
         </div>
         
-        <div class="schedule-view" style="display: block;">
             <div class="weekday-panels">
                 <div class="day-panel">
                     <div class="day-header" onclick="toggleDayPanel(this)">
@@ -147,7 +141,6 @@ function createContextMenu(x, y, eventBlock) {
     `;
 
     // Add event listeners for menu items
-    menu.querySelector('.edit').addEventListener('click', () => {
         // Get current values
         const currentName = eventBlock.querySelector('.event-name').textContent;
         const currentTime = eventBlock.querySelector('.event-time').textContent;
@@ -189,13 +182,11 @@ function createContextMenu(x, y, eventBlock) {
 
         // Add event listeners for weekday buttons
         editForm.querySelectorAll('.weekday-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
                 btn.classList.toggle('selected');
             });
         });
 
         // Handle save
-        editForm.querySelector('.save-btn').addEventListener('click', () => {
             const newName = editForm.querySelector('#edit-name').value;
             const newStart = editForm.querySelector('#edit-start').value;
             const newEnd = editForm.querySelector('#edit-end').value;
@@ -222,7 +213,6 @@ function createContextMenu(x, y, eventBlock) {
                 const startCell = document.querySelector(`table tr:nth-child(${startHour - 8 + 2}) td:nth-child(${dayIndex + 1})`);
                 
                 if (startCell) {
-                    addEventToSchedule(newName, [day], newStart, newEnd);
                 }
             });
 
@@ -230,14 +220,12 @@ function createContextMenu(x, y, eventBlock) {
         });
 
         // Handle cancel
-        editForm.querySelector('.cancel-btn').addEventListener('click', () => {
             editDialog.remove();
         });
 
         menu.remove();
     });
 
-    menu.querySelector('.color').addEventListener('click', () => {
         // Remove any existing color picker
         const existingPicker = document.querySelector('.color-picker');
         if (existingPicker) {
@@ -268,7 +256,6 @@ function createContextMenu(x, y, eventBlock) {
             colorOption.className = 'color-option';
             colorOption.style.backgroundColor = color;
             
-            colorOption.addEventListener('click', () => {
                 // Get the event name to find related blocks
                 const eventName = eventBlock.querySelector('.event-name').textContent;
                 const eventTime = eventBlock.querySelector('.event-time').textContent;
@@ -298,7 +285,6 @@ function createContextMenu(x, y, eventBlock) {
         document.body.appendChild(colorPicker);
 
         // Close color picker when clicking outside
-        document.addEventListener('click', function closeColorPicker(e) {
             if (!colorPicker.contains(e.target) && !menu.contains(e.target)) {
                 colorPicker.remove();
                 document.removeEventListener('click', closeColorPicker);
@@ -308,7 +294,6 @@ function createContextMenu(x, y, eventBlock) {
         menu.remove();
     });
 
-    menu.querySelector('.duplicate').addEventListener('click', () => {
         const clone = eventBlock.cloneNode(true);
         
         // Define colors for duplicates
@@ -382,7 +367,6 @@ function createContextMenu(x, y, eventBlock) {
         clone.style.top = eventBlock.style.top;
         
         // Add event listeners to the clone
-        addEventBlockListeners(clone);
         
         // Add to the same cell
         eventBlock.parentNode.appendChild(clone);
@@ -391,7 +375,6 @@ function createContextMenu(x, y, eventBlock) {
     });
 
     // Updated delete functionality
-    menu.querySelector('.delete').addEventListener('click', () => {
         if (confirm('Are you sure you want to delete this event?')) {
             const cell = eventBlock.parentElement;
             eventBlock.remove();
@@ -418,7 +401,6 @@ function createContextMenu(x, y, eventBlock) {
     document.body.appendChild(menu);
 
     // Close menu when clicking outside
-    document.addEventListener('click', function closeMenu(e) {
         if (!menu.contains(e.target)) {
             menu.remove();
             document.removeEventListener('click', closeMenu);
@@ -426,17 +408,12 @@ function createContextMenu(x, y, eventBlock) {
     });
 }
 
-// Update the addEventBlockListeners function
-function addEventBlockListeners(eventBlock) {
-    eventBlock.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         createContextMenu(e.pageX, e.pageY, eventBlock);
     });
 }
 
-// Update the addEventToSchedule function
-function addEventToSchedule(eventName, days, startTime, endTime) {
     // Convert times to hour and minute numbers
     const [startHour, startMinute] = startTime.split(':').map(Number);
     const [endHour, endMinute] = endTime.split(':').map(Number);
@@ -476,7 +453,6 @@ function addEventToSchedule(eventName, days, startTime, endTime) {
             `;
             
             // Add event listeners to the new block
-            addEventBlockListeners(eventBlock);
 
             startCell.style.position = 'relative';
             startCell.appendChild(eventBlock);
@@ -787,15 +763,12 @@ function initializeRecurringEventsForm() {
     if (recurringEventsForm) {
         // Add the event listener to all input fields
         recurringEventsForm.querySelectorAll('input').forEach(input => {
-            input.addEventListener('keypress', handleEnterKeyPress);
         });
         
         // Also add the event listener to the form itself
-        recurringEventsForm.addEventListener('keypress', handleEnterKeyPress);
     }
 }
 
-// Modify the registration click handler to include tab switching functionality
 function initializeRegistrationSidebar() {
     const coursesTab = document.querySelector('.courses-tab');
     const recurringEventsTab = document.querySelector('.recurring-events-tab');
@@ -806,7 +779,6 @@ function initializeRegistrationSidebar() {
     
     // Tab switching
     if (recurringEventsTab) {
-        recurringEventsTab.addEventListener('click', function(e) {
             e.preventDefault();
             
             // Remove active class from all tabs
@@ -824,7 +796,6 @@ function initializeRegistrationSidebar() {
     }
 
     if (coursesTab) {
-        coursesTab.addEventListener('click', function(e) {
             e.preventDefault();
             
             // Remove active class from all tabs
@@ -842,7 +813,6 @@ function initializeRegistrationSidebar() {
     }
 
     if (prereqTreeTab) {
-        prereqTreeTab.addEventListener('click', function(e) {
             e.preventDefault();
             
             // Remove active class from all tabs
@@ -862,7 +832,6 @@ function initializeRegistrationSidebar() {
     // Initialize division buttons
     const divisionBtns = document.querySelectorAll('.division-btn');
     divisionBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
             if (this.classList.contains('selected')) {
                 this.classList.remove('selected');
                 this.style.cssText = `
@@ -889,40 +858,23 @@ function initializeRegistrationSidebar() {
         });
     });
 
-    // Campus dropdown functionality
-    const campusDropdown = document.querySelector('.campus-dropdown');
     if (campusDropdown) {
-        const dropdownButton = campusDropdown.querySelector('.dropdown-button');
-        const dropdownList = campusDropdown.querySelector('.dropdown-list');
-        const dropdownItems = campusDropdown.querySelectorAll('.dropdown-item');
 
-        dropdownButton.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            dropdownList.classList.toggle('show');
             const arrow = this.querySelector('.arrow');
             if (arrow) {
-                arrow.style.transform = dropdownList.classList.contains('show') 
                     ? 'rotate(180deg)' 
                     : 'rotate(0deg)';
             }
         });
 
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', function(e) {
                 e.preventDefault();
                 const selectedText = this.textContent;
-                dropdownButton.innerHTML = selectedText + ' <span class="arrow">▼</span>';
-                dropdownList.classList.remove('show');
-                dropdownButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
             });
         });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
             if (!campusDropdown.contains(e.target)) {
-                dropdownList.classList.remove('show');
-                const arrow = dropdownButton.querySelector('.arrow');
                 if (arrow) {
                     arrow.style.transform = 'rotate(0deg)';
                 }
@@ -933,7 +885,6 @@ function initializeRegistrationSidebar() {
     // Weekday button functionality
     const weekdayBtns = document.querySelectorAll('.weekday-btn');
     weekdayBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
             this.classList.toggle('selected');
         });
     });
@@ -941,7 +892,6 @@ function initializeRegistrationSidebar() {
     // Time input formatting
     const timeInputs = document.querySelectorAll('.time-input');
     timeInputs.forEach(input => {
-        input.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
             
             if (value.length >= 2) {
@@ -967,7 +917,6 @@ function initializeRegistrationSidebar() {
         });
 
         // Add blur event to format incomplete times
-        input.addEventListener('blur', function(e) {
             let value = e.target.value;
             if (value) {
                 const parts = value.split(':');
@@ -984,7 +933,6 @@ function initializeRegistrationSidebar() {
     const subjectList = document.getElementById('subjectList');
 
     if (subjectInput && subjectList) {
-        subjectInput.addEventListener('input', function() {
             const value = this.value.toLowerCase();
             const matches = subjects.filter(subject => 
                 subject.toLowerCase().includes(value)
@@ -1001,7 +949,6 @@ function initializeRegistrationSidebar() {
         });
 
         // Handle click on autocomplete item
-        subjectList.addEventListener('click', function(e) {
             if (e.target.classList.contains('autocomplete-item')) {
                 subjectInput.value = e.target.textContent;
                 subjectList.style.display = 'none';
@@ -1009,7 +956,6 @@ function initializeRegistrationSidebar() {
         });
 
         // Close autocomplete list when clicking outside
-        document.addEventListener('click', function(e) {
             if (!subjectInput.contains(e.target) && !subjectList.contains(e.target)) {
                 subjectList.style.display = 'none';
             }
@@ -1021,7 +967,6 @@ function initializeRegistrationSidebar() {
     const attributeList = document.getElementById('attributeList');
 
     if (attributeInput && attributeList) {
-        attributeInput.addEventListener('input', function() {
             const value = this.value.toLowerCase();
             const matches = attributes.filter(attribute => 
                 attribute.toLowerCase().includes(value)
@@ -1038,7 +983,6 @@ function initializeRegistrationSidebar() {
         });
 
         // Handle click on autocomplete item
-        attributeList.addEventListener('click', function(e) {
             if (e.target.classList.contains('autocomplete-item')) {
                 attributeInput.value = e.target.textContent;
                 attributeList.style.display = 'none';
@@ -1046,7 +990,6 @@ function initializeRegistrationSidebar() {
         });
 
         // Close autocomplete list when clicking outside
-        document.addEventListener('click', function(e) {
             if (!attributeInput.contains(e.target) && !attributeList.contains(e.target)) {
                 attributeList.style.display = 'none';
             }
@@ -1058,7 +1001,6 @@ function initializeRegistrationSidebar() {
     const campusList = document.getElementById('campusList');
 
     if (campusInput && campusList) {
-        campusInput.addEventListener('input', function() {
             const value = this.value.toLowerCase();
             const matches = campuses.filter(campus => 
                 campus.toLowerCase().includes(value)
@@ -1075,7 +1017,6 @@ function initializeRegistrationSidebar() {
         });
 
         // Handle click on autocomplete item
-        campusList.addEventListener('click', function(e) {
             if (e.target.classList.contains('autocomplete-item')) {
                 campusInput.value = e.target.textContent;
                 campusList.style.display = 'none';
@@ -1083,7 +1024,6 @@ function initializeRegistrationSidebar() {
         });
 
         // Close autocomplete list when clicking outside
-        document.addEventListener('click', function(e) {
             if (!campusInput.contains(e.target) && !campusList.contains(e.target)) {
                 campusList.style.display = 'none';
             }
@@ -1095,7 +1035,6 @@ function initializeRegistrationSidebar() {
     const methodsList = document.getElementById('methodsList');
 
     if (methodsInput && methodsList) {
-        methodsInput.addEventListener('input', function() {
             const value = this.value.toLowerCase();
             const matches = instructionalMethods.filter(method => 
                 method.toLowerCase().includes(value)
@@ -1112,7 +1051,6 @@ function initializeRegistrationSidebar() {
         });
 
         // Handle click on autocomplete item
-        methodsList.addEventListener('click', function(e) {
             if (e.target.classList.contains('autocomplete-item')) {
                 methodsInput.value = e.target.textContent;
                 methodsList.style.display = 'none';
@@ -1120,7 +1058,6 @@ function initializeRegistrationSidebar() {
         });
 
         // Close autocomplete list when clicking outside
-        document.addEventListener('click', function(e) {
             if (!methodsInput.contains(e.target) && !methodsList.contains(e.target)) {
                 methodsList.style.display = 'none';
             }
@@ -1128,9 +1065,6 @@ function initializeRegistrationSidebar() {
     }
 
     // Add event button functionality
-    const addEventBtn = document.querySelector('.add-event-btn');
-    if (addEventBtn) {
-        addEventBtn.addEventListener('click', function() {
             const eventName = document.getElementById('eventNameInput').value;
             const startTime = document.getElementById('start-time').value;
             const endTime = document.getElementById('end-time').value;
@@ -1156,8 +1090,6 @@ function initializeRegistrationSidebar() {
                 return;
             }
 
-            // Add event to schedule
-            addEventToSchedule(eventName, null, startTime, endTime);
             
             // Clear inputs after successful addition
             document.getElementById('eventNameInput').value = '';
@@ -1174,18 +1106,12 @@ function initializeRegistrationSidebar() {
     const exportButton = exportContainer.querySelector('.export-button');
     
     if (exportButton) {
-        // Add the dropdown content after the button
         exportContainer.insertAdjacentHTML('beforeend', createExportDropdown());
         
-        const exportDropdown = exportContainer.querySelector('.export-dropdown');
         
-        // Toggle dropdown on button click
-        exportButton.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Close user dropdown if open
-            const userDropdown = document.querySelector('.user-dropdown .dropdown-content');
             if (userDropdown) {
                 userDropdown.classList.remove('show');
             }
@@ -1203,22 +1129,18 @@ function initializeRegistrationSidebar() {
         const exportCalendar = exportContainer.querySelector('.export-calendar');
         const exportPDF = exportContainer.querySelector('.export-pdf');
 
-        exportCalendar.addEventListener('click', function(e) {
             e.preventDefault();
             exportToAppleCalendar(); // Call the export function
             exportDropdown.classList.remove('show');
             exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
         });
 
-        exportPDF.addEventListener('click', function(e) {
             e.preventDefault();
             console.log('Exporting as PDF...');
             exportDropdown.classList.remove('show');
             exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
         });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
             if (!exportContainer.contains(e.target)) {
                 exportDropdown.classList.remove('show');
                 exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
@@ -1233,14 +1155,12 @@ function initializeRegistrationSidebar() {
 // Update the createExportDropdown function
 function createExportDropdown() {
     return `
-        <div class="export-dropdown">
             <a href="#" class="export-calendar">Export to Calendar</a>
             <a href="#" class="export-pdf">Export as PDF</a>
         </div>
     `;
 }
 
-// Update the semester dropdown content
 function createSemesterDropdown() {
     return `
         <div class="semester-content">
@@ -1258,12 +1178,8 @@ function createSemesterDropdown() {
 
 // Update the export calendar functionality
 function exportToAppleCalendar() {
-    // Get schedule data from your grid
-    const scheduleGrid = document.querySelector('.schedule-grid');
     const events = [];
     
-    // Find all event blocks in the schedule
-    const eventBlocks = scheduleGrid.querySelectorAll('.event-block');
     
     eventBlocks.forEach(block => {
         const eventName = block.querySelector('.event-name').textContent;
@@ -1305,7 +1221,6 @@ function exportToAppleCalendar() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'course_schedule.ics';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1330,18 +1245,14 @@ function formatDateForICS(day, time) {
 }
 
 // Update the export calendar click handler
-document.querySelector('.export-ioscalendar').addEventListener('click', function(e) {
     e.preventDefault();
     exportToAppleCalendar();
-    document.querySelector('.export-dropdown').classList.remove('show');
 });
 
 // Main Event Listener
-document.addEventListener('DOMContentLoaded', function() {
     // Navigation Links
     const navLinks = document.querySelectorAll('.nav-links a');
     navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
             e.preventDefault();
             navLinks.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
@@ -1353,14 +1264,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const semesterContent = document.querySelector('.semester-content');
     
     if (semesterButton && semesterContent) {
-        // Toggle dropdown on button click
-        semesterButton.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Close other dropdowns if open
-            const exportDropdown = document.querySelector('.export-dropdown');
-            const userDropdown = document.querySelector('.user-dropdown .dropdown-content');
             if (exportDropdown) exportDropdown.classList.remove('show');
             if (userDropdown) userDropdown.classList.remove('show');
             
@@ -1373,8 +1279,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
             if (!semesterButton.contains(e.target) && !semesterContent.contains(e.target)) {
                 semesterContent.classList.remove('show');
                 const arrow = semesterButton.querySelector('.arrow');
@@ -1384,9 +1288,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Update semester text and close dropdown when option is selected
         semesterContent.querySelectorAll('a').forEach(option => {
-            option.addEventListener('click', function(e) {
                 e.preventDefault();
                 const selectedText = this.textContent;
                 semesterButton.innerHTML = selectedText + ' <span class="arrow">▼</span>';
@@ -1399,7 +1301,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sidebar Tabs
     const sidebarTabs = document.querySelectorAll('.sidebar-tabs a');
     sidebarTabs.forEach(tab => {
-        tab.addEventListener('click', function(e) {
             e.preventDefault();
             sidebarTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
@@ -1409,17 +1310,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Theme Toggle
     const themeToggles = document.querySelectorAll('.theme-toggle');
     themeToggles.forEach(toggle => {
-        toggle.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            toggleTheme();
         });
     });
 
     // Division Buttons
     const divisionBtns = document.querySelectorAll('.division-btn');
     divisionBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
             if (this.classList.contains('selected')) {
                 this.classList.remove('selected');
                 this.style.cssText = `
@@ -1449,15 +1347,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // User Dropdown
     const userDropdown = document.getElementById('userDropdown');
     if (userDropdown) {
-        const dropdownButton = document.querySelector('.user-dropdown .nav-button');
 
-        // Toggle dropdown on button click
-        dropdownButton.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Close export dropdown if open
-            const exportDropdown = document.querySelector('.export-dropdown');
             if (exportDropdown) {
                 exportDropdown.classList.remove('show');
             }
@@ -1471,12 +1364,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
             if (!userDropdown.contains(e.target) && 
-                !e.target.matches('.user-dropdown .nav-button')) {
                 userDropdown.classList.remove('show');
-                const arrow = dropdownButton.querySelector('.arrow');
                 if (arrow) {
                     arrow.style.transform = 'rotate(0deg)';
                 }
@@ -1485,31 +1374,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Set initial states
-    const registrationLink = document.querySelector('.nav-links a[href="#registration"]');
     const mapLink = document.querySelector('.nav-links a[href="#map"]');
     const sidebar = document.querySelector('.sidebar');
 
-    // Initialize registration view
-    if (registrationLink) {
-        registrationLink.classList.add('active');
         sidebar.innerHTML = createRegistrationSidebar();
         initializeRegistrationSidebar();
     }
 
     // Update Registration navigation handler
-    registrationLink.addEventListener('click', function(e) {
         e.preventDefault();
         document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
         this.classList.add('active');
         
-        // Always recreate the registration sidebar
         sidebar.innerHTML = createRegistrationSidebar();
         initializeRegistrationSidebar();
         
-        // Reset the schedule container
-        const scheduleContainer = document.querySelector('.schedule-grid');
-        if (scheduleContainer) {
-            scheduleContainer.innerHTML = `
                 <table>
                     <tr>
                         <th></th>
@@ -1537,13 +1416,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 </table>
             `;
             // Reset any styles that might have been added
-            scheduleContainer.style.padding = '';
-            scheduleContainer.style.overflow = '';
         }
     });
 
     // Update Map navigation handler
-    mapLink.addEventListener('click', function(e) {
         e.preventDefault();
         document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
         this.classList.add('active');
@@ -1553,24 +1429,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add tab switching functionality
         const floorPlanTab = document.querySelector('.floor-plan-tab');
-        const scheduleTab = document.querySelector('.schedule-tab');
         const floorTree = document.querySelector('.floor-tree');
-        const scheduleView = document.querySelector('.schedule-view');
         
-        floorPlanTab.addEventListener('click', function(e) {
             e.preventDefault();
             this.classList.add('active');
-            scheduleTab.classList.remove('active');
             floorTree.style.display = 'block';
-            scheduleView.style.display = 'none';
         });
         
-        scheduleTab.addEventListener('click', function(e) {
             e.preventDefault();
             this.classList.add('active');
             floorPlanTab.classList.remove('active');
             floorTree.style.display = 'none';
-            scheduleView.style.display = 'block';
         });
     });
 
@@ -1580,23 +1449,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add this line to your initialization code (where you initialize other components)
     initializeExportDropdown();
 
-    // Export dropdown functionality
     const exportButton = document.querySelector('.export-button');
-    const exportDropdown = document.querySelector('.export-dropdown');
 
     if (exportButton && exportDropdown) {
-        // Toggle dropdown on button click
-        exportButton.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Close other dropdowns
             const userDropdown = document.getElementById('userDropdown');
             if (userDropdown) {
                 userDropdown.classList.remove('show');
             }
             
-            // Toggle export dropdown
             exportDropdown.classList.toggle('show');
             
             // Rotate arrow
@@ -1608,8 +1471,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
             if (!exportButton.contains(e.target)) {
                 exportDropdown.classList.remove('show');
                 const arrow = exportButton.querySelector('.arrow');
@@ -1624,7 +1485,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const exportPDF = exportDropdown.querySelector('.export-pdf');
 
         if (exportCalendar) {
-            exportCalendar.addEventListener('click', function(e) {
                 e.preventDefault();
                 exportToAppleCalendar();
                 exportDropdown.classList.remove('show');
@@ -1632,7 +1492,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (exportPDF) {
-            exportPDF.addEventListener('click', function(e) {
                 e.preventDefault();
                 console.log('Exporting as PDF...');
                 exportDropdown.classList.remove('show');
@@ -1646,7 +1505,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add event listener for prereq search button
     const searchPrereqBtn = document.getElementById('searchPrereqBtn');
     if (searchPrereqBtn) {
-        searchPrereqBtn.addEventListener('click', function() {
             const courseInput = document.getElementById('prereqCourseInput');
             const allLevelsCheckbox = document.getElementById('showAllLevelsCheckbox');
             
@@ -1671,12 +1529,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Add the correct event listener
-        newGoogleCalendarLink.addEventListener('click', function(e) {
             e.preventDefault();
             exportToGoogleCalendar();
             
-            // Close the dropdown after clicking
-            const exportDropdown = document.querySelector('.export-dropdown');
             if (exportDropdown) {
                 exportDropdown.classList.remove('show');
             }
@@ -1698,7 +1553,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add Course button event listener
     const addCourseBtn = document.querySelector('.add-course-btn');
     if (addCourseBtn) {
-        addCourseBtn.addEventListener('click', addCourse);
     }
 
     checkApiAvailability();
@@ -1714,7 +1568,6 @@ function initializeAuthForms() {
     
     // Handle tab switching
     authTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
             // Remove active class from all tabs and forms
             authTabs.forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
@@ -1733,7 +1586,6 @@ function initializeAuthForms() {
     
     // Handle login form submission
     if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const userName = document.getElementById('loginUserName').value;
@@ -1774,9 +1626,7 @@ function initializeAuthForms() {
         });
     }
     
-    // Handle registration form submission
     if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const userName = document.getElementById('regUserName').value;
@@ -1807,7 +1657,6 @@ function initializeAuthForms() {
                     loginTab.click();
                 }
                 
-                // Clear registration form
                 registerForm.reset();
             })
             .catch(error => {
@@ -1820,7 +1669,6 @@ function initializeAuthForms() {
     // Handle sign in link click
     const signInLink = document.querySelector('a[href="#signin"]');
     if (signInLink) {
-        signInLink.addEventListener('click', function(e) {
             e.preventDefault();
             
             // Show auth modal
@@ -1839,7 +1687,6 @@ function initializeAuthForms() {
     // Handle sign out link click
     const signOutLink = document.querySelector('a[href="#signout"]');
     if (signOutLink) {
-        signOutLink.addEventListener('click', function(e) {
             e.preventDefault();
             
             // Clear user data from localStorage
@@ -1934,8 +1781,6 @@ function loginUser(credentials) {
 
 // Update the openHerakPDF function with the correct directory path
 function openHerakPDF() {
-    const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
-    if (scheduleContainer) {
         // Create PDF embed element
         const pdfViewer = document.createElement('embed');
         pdfViewer.src = 'Floor Plans/Herak Center.pdf';  // Updated path to include directory
@@ -1944,20 +1789,13 @@ function openHerakPDF() {
         pdfViewer.style.height = '100%';
         pdfViewer.style.minHeight = '600px';
         
-        // Replace schedule with PDF viewer
-        scheduleContainer.innerHTML = '';
-        scheduleContainer.appendChild(pdfViewer);
         
         // Add PDF viewer styles
-        scheduleContainer.style.padding = '0';  // Remove padding for full-width PDF
-        scheduleContainer.style.overflow = 'hidden';  // Prevent scrollbars
     }
 }
 
 // Also update the Jepson PDFs to use the same directory
 function openJepsonFirstFloorPDF() {
-    const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
-    if (scheduleContainer) {
         // Create PDF embed element
         const pdfViewer = document.createElement('embed');
         pdfViewer.src = 'Floor Plans/Jepson1stFloor.pdf';  // Path is already correct
@@ -1966,19 +1804,12 @@ function openJepsonFirstFloorPDF() {
         pdfViewer.style.height = '100%';
         pdfViewer.style.minHeight = '600px';
         
-        // Replace schedule with PDF viewer
-        scheduleContainer.innerHTML = '';
-        scheduleContainer.appendChild(pdfViewer);
         
         // Add PDF viewer styles
-        scheduleContainer.style.padding = '0';
-        scheduleContainer.style.overflow = 'hidden';
     }
 }
 
 function openJepsonBasementPDF() {
-    const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
-    if (scheduleContainer) {
         // Create PDF embed element
         const pdfViewer = document.createElement('embed');
         pdfViewer.src = 'Floor Plans/JepsonBasementpdf.pdf';  // Path is already correct
@@ -1987,18 +1818,12 @@ function openJepsonBasementPDF() {
         pdfViewer.style.height = '100%';
         pdfViewer.style.minHeight = '600px';
         
-        // Replace schedule with PDF viewer
-        scheduleContainer.innerHTML = '';
-        scheduleContainer.appendChild(pdfViewer);
         
         // Add PDF viewer styles
-        scheduleContainer.style.padding = '0';
-        scheduleContainer.style.overflow = 'hidden';
     }
 }
 
 // Show auth modal when clicking Sign In
-document.querySelector('a[href="#signin"]').addEventListener('click', (e) => {
     e.preventDefault();
     document.getElementById('authModal').classList.add('show');
     document.getElementById('userDropdown').classList.remove('show');
@@ -2006,7 +1831,6 @@ document.querySelector('a[href="#signin"]').addEventListener('click', (e) => {
 
 // Auth tabs functionality
 document.querySelectorAll('.auth-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
         // Remove active class from all tabs and forms
         document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
@@ -2018,7 +1842,6 @@ document.querySelectorAll('.auth-tab').forEach(tab => {
 });
 
 // Close modal when clicking outside
-document.getElementById('authModal').addEventListener('click', (e) => {
     if (e.target === e.currentTarget) {
         e.target.classList.remove('show');
     }
@@ -2027,15 +1850,11 @@ document.getElementById('authModal').addEventListener('click', (e) => {
 // Initialize auth state on page load with no user data
 updateAuthState(false);
 
-// Add this function to initialize the export dropdown
 function initializeExportDropdown() {
     const exportContainer = document.querySelector('.export-container');
     const exportButton = exportContainer.querySelector('.export-button');
     
-    // Create and append the dropdown if it doesn't exist
-    if (!exportContainer.querySelector('.export-dropdown')) {
         const exportDropdown = document.createElement('div');
-        exportDropdown.className = 'export-dropdown';
         exportDropdown.innerHTML = `
             <a href="#" class="export-calendar">Export to Calendar</a>
             <a href="#" class="export-pdf">Export as PDF</a>
@@ -2043,14 +1862,10 @@ function initializeExportDropdown() {
         exportContainer.appendChild(exportDropdown);
     }
 
-    const exportDropdown = exportContainer.querySelector('.export-dropdown');
 
-    // Toggle dropdown on button click
-    exportButton.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         
-        // Close user dropdown if open
         const userDropdown = document.getElementById('userDropdown');
         if (userDropdown) {
             userDropdown.classList.remove('show');
@@ -2065,8 +1880,6 @@ function initializeExportDropdown() {
         }
     });
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
         if (!exportContainer.contains(e.target)) {
             exportDropdown.classList.remove('show');
             exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
@@ -2085,7 +1898,6 @@ function handleAutocomplete(inputId, listId, items) {
     if (inputId === 'subjectInput') return;
     
     // Continue with autocomplete for other fields
-    input.addEventListener('input', function() {
         const value = this.value.toLowerCase();
         const matches = items.filter(item => 
             item.toLowerCase().includes(value)
@@ -2102,7 +1914,6 @@ function handleAutocomplete(inputId, listId, items) {
     });
     
     // Handle click on autocomplete item
-    list.addEventListener('click', function(e) {
         if (e.target.classList.contains('autocomplete-item')) {
             input.value = e.target.textContent;
             list.style.display = 'none';
@@ -2110,7 +1921,6 @@ function handleAutocomplete(inputId, listId, items) {
     });
 
     // Close autocomplete list when clicking outside
-    document.addEventListener('click', function(e) {
         if (!input.contains(e.target) && !list.contains(e.target)) {
             list.style.display = 'none';
         }
@@ -2236,7 +2046,6 @@ function renderPrerequisiteTree(graphData, containerId) {
     const allLevelsCheckbox = document.getElementById('showAllLevelsCheckbox');
     
     if (searchBtn && courseInput && allLevelsCheckbox) {
-        searchBtn.addEventListener('click', () => {
             const course = courseInput.value.trim();
             if (course) {
                 const allLevels = allLevelsCheckbox.checked;
@@ -2245,7 +2054,6 @@ function renderPrerequisiteTree(graphData, containerId) {
         });
         
         // Also trigger search on Enter key
-        courseInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 const course = courseInput.value.trim();
                 if (course) {
@@ -2285,7 +2093,6 @@ function initializePrereqTreeTab() {
     if (prereqTreeTab && coursesTab && recurringEventsTab && 
         coursesView && recurringEventsView && prereqTreeView) {
         
-    prereqTreeTab.addEventListener('click', function(e) {
         e.preventDefault();
         
         // Update active tab
@@ -2300,7 +2107,6 @@ function initializePrereqTreeTab() {
         });
         
         // Add click handlers for other tabs to ensure they hide the prereq tree view
-    coursesTab.addEventListener('click', function(e) {
         e.preventDefault();
         
         // Update active tab
@@ -2314,7 +2120,6 @@ function initializePrereqTreeTab() {
             prereqTreeView.style.display = 'none';
         });
         
-        recurringEventsTab.addEventListener('click', function(e) {
         e.preventDefault();
         
         // Update active tab
@@ -2330,21 +2135,15 @@ function initializePrereqTreeTab() {
     }
 }
 
-// Function to export schedule to Google Calendar
 function exportToGoogleCalendar() {
     // Show loading indicator or notification
     alert('Exporting to Google Calendar...');
     
-    // Collect schedule data to send to the server
-    const scheduleData = collectScheduleData();
     
     // Check if we have courses to export
-    if (!scheduleData.courses || scheduleData.courses.length === 0) {
-        alert('No courses found to export. Please add courses to your schedule first.');
         return;
     }
     
-    console.log('Exporting schedule data:', scheduleData);
     
     // Try server-side export first
     fetch('/export_bp/google-calendar', {
@@ -2352,7 +2151,6 @@ function exportToGoogleCalendar() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(scheduleData)
     })
     .then(response => {
         if (!response.ok) {
@@ -2375,7 +2173,6 @@ function exportToGoogleCalendar() {
             
             // If there's a calendar URL to view the result, offer to open it
             if (data.calendarUrl) {
-                if (confirm('Your schedule has been exported. Would you like to view it in Google Calendar?')) {
                     window.open(data.calendarUrl, '_blank');
                 }
             }
@@ -2391,15 +2188,12 @@ function exportToGoogleCalendar() {
         console.error('Error exporting to Google Calendar via server:', error);
         
         // Use client-side export as fallback
-        clientSideGoogleCalendarExport(scheduleData);
     });
 }
 
 // Client-side Google Calendar export (fallback when server is unavailable)
-function clientSideGoogleCalendarExport(scheduleData) {
     try {
         // Create ICS file content
-        const icsContent = generateICSContent(scheduleData);
         
         // Create a Blob with the ICS content
         const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
@@ -2407,7 +2201,6 @@ function clientSideGoogleCalendarExport(scheduleData) {
         // Create a download link for the ICS file
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'schedule.ics';
         
         // Append the link to the document, click it, and remove it
         document.body.appendChild(link);
@@ -2426,8 +2219,6 @@ function clientSideGoogleCalendarExport(scheduleData) {
     }
 }
 
-// Generate ICS file content from schedule data
-function generateICSContent(scheduleData) {
     // ICS file header
     let icsContent = [
         'BEGIN:VCALENDAR',
@@ -2438,7 +2229,6 @@ function generateICSContent(scheduleData) {
     ].join('\r\n') + '\r\n';
     
     // Get semester information
-    const semester = scheduleData.semester || 'Fall 2024';
     const year = semester.includes('2024') ? '2024' : 
                  semester.includes('2025') ? '2025' : 
                  new Date().getFullYear();
@@ -2466,7 +2256,6 @@ function generateICSContent(scheduleData) {
     };
     
     // Add each course as an event
-    scheduleData.courses.forEach(course => {
         // Skip if missing essential data
         if (!course.day || !course.startTime || !course.endTime) return;
         
@@ -2515,13 +2304,11 @@ function generateICSContent(scheduleData) {
     return icsContent;
 }
 
-// Helper function to collect schedule data from the UI
 function collectScheduleData() {
     // Get the current semester
     const semesterButton = document.querySelector('.semester-button');
     const currentSemester = semesterButton ? semesterButton.textContent.trim().split(' ')[0] + ' ' + semesterButton.textContent.trim().split(' ')[1] : 'Fall 2024';
     
-    // Get all course blocks from the schedule
     const courseBlocks = document.querySelectorAll('.course-block');
     const courses = [];
     
@@ -2696,7 +2483,6 @@ function showSectionsSidebar(subject, courseCode) {
 }
 
 // Initialize course data when document is ready
-document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM fully loaded');
     
     // Add Course button event listener
@@ -2709,7 +2495,6 @@ document.addEventListener('DOMContentLoaded', function() {
         addCourseBtn.parentNode.replaceChild(newAddCourseBtn, addCourseBtn);
         
         // Add the event listener to the new button
-        newAddCourseBtn.addEventListener('click', function(e) {
             console.log('Add Course button clicked (from event listener)');
             e.preventDefault();
             addCourse();
@@ -2865,7 +2650,6 @@ function addSectionsSidebarEventListeners(sidebar, sections) {
     // Add click event listeners to section items
     const sectionItems = sidebar.querySelectorAll('.section-item');
     sectionItems.forEach(item => {
-        item.addEventListener('click', function() {
             const sectionId = parseInt(this.getAttribute('data-section-id'));
             const section = sections.find(s => s.id === sectionId);
             
@@ -2875,7 +2659,6 @@ function addSectionsSidebarEventListeners(sidebar, sections) {
                 // Toggle selected class
                 if (this.classList.contains('selected')) {
                     this.classList.remove('selected');
-                    // Remove from schedule
                     const courseBlock = document.querySelector(`.course-block[data-section-id="${section.id}"]`);
                     if (courseBlock) {
                         courseBlock.remove();
@@ -2892,7 +2675,6 @@ function addSectionsSidebarEventListeners(sidebar, sections) {
                         // Check if it's the same course but different section
                         if (sameSection && sameSection.title === section.title && sameSection.id !== section.id) {
                             sameCourseItem.classList.remove('selected');
-                            // Remove from schedule
                             const courseBlock = document.querySelector(`.course-block[data-section-id="${sameSection.id}"]`);
                             if (courseBlock) {
                                 courseBlock.remove();
@@ -2912,7 +2694,6 @@ function addSectionsSidebarEventListeners(sidebar, sections) {
     // Add sort functionality
     const sortSelect = sidebar.querySelector('.sections-sort');
     if (sortSelect) {
-        sortSelect.addEventListener('change', function() {
             const sortValue = this.value;
             console.log("Sorting sections by:", sortValue);
             
@@ -2955,7 +2736,6 @@ function addSectionsSidebarEventListeners(sidebar, sections) {
     // Add reset button functionality
     const resetButton = sidebar.querySelector('.reset-sections-btn');
     if (resetButton) {
-        resetButton.addEventListener('click', function() {
             console.log("Resetting sections");
             
             // Deselect all sections
@@ -2982,7 +2762,6 @@ function addSectionsSidebarEventListeners(sidebar, sections) {
     }
 }
 
-// Function to add a section to the schedule
 function addSectionToSchedule(section) {
     let startHour = section.startTime ? parseInt(section.startTime.split(":")[0]) : NaN;
     let rowIndex = !isNaN(startHour) ? startHour - 8 + 2 : null;
@@ -2998,7 +2777,6 @@ function addSectionToSchedule(section) {
         return;
     }
 
-    let cell = document.querySelector(`.schedule-grid tr:nth-child(${rowIndex}) td:nth-child(${dayIndex})`);
     if (!cell) {
         console.error("Schedule grid cell not found for:", rowIndex, dayIndex);
         return;
@@ -3129,7 +2907,6 @@ function generateCourseColor(courseCode) {
     return color;
 }
 
-// Function to clear the schedule
 function clearSchedule() {
     // Remove all course blocks
     const courseBlocks = document.querySelectorAll('.course-block');
@@ -3210,7 +2987,6 @@ function generateSampleSections(courseTitle) {
 }
 
 // Add CSS styles for course blocks if they don't exist
-document.addEventListener('DOMContentLoaded', function() {
     // ... existing code ...
     
     // Add CSS for course blocks if not already present
@@ -3243,7 +3019,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 margin-bottom: 2px;
             }
             
-            .schedule-grid {
                 position: relative;
             }
         `;
@@ -3486,7 +3261,6 @@ function showSectionsSidebarWithRealData(subject, courseCode, sectionsData) {
 }
 
 // Update the API availability check script to include section API
-document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM fully loaded");
     
     // Check all APIs availability
@@ -3506,7 +3280,6 @@ document.addEventListener('DOMContentLoaded', function() {
         addCourseBtn.parentNode.replaceChild(newAddCourseBtn, addCourseBtn);
         
         // Add the event listener to the new button
-        newAddCourseBtn.addEventListener('click', function(e) {
             console.log("Add Course button clicked (from event listener)");
             e.preventDefault();
             addCourse();
@@ -3552,11 +3325,9 @@ function checkApiAvailability() {
 
 // Setup event listeners for export buttons
 function setupExportButtons() {
-    document.querySelector('.export-ioscalendar').addEventListener('click', () => {
         exportToCalendar('/export/apple-calendar');
     });
 
-    document.querySelector('.export-googlecalendar').addEventListener('click', () => {
         exportToCalendar('/export/google-calendar');
     });
 }
@@ -3574,16 +3345,12 @@ function exportToCalendar(apiUrl) {
 }
 
 // Function to change semester selection
-function changeSemester(semester, element) {
     const button = document.querySelector('.semester-button');
     button.innerHTML = semester + ' <span class="arrow">▼</span>';
 }
 
 // Toggle dark mode theme
-function toggleTheme() {
     const body = document.body;
-    body.classList.toggle('dark-mode');
-    const isDarkMode = body.classList.contains('dark-mode');
 
     document.querySelectorAll('.theme-toggle').forEach(button => {
         button.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
@@ -3592,20 +3359,16 @@ function toggleTheme() {
 
 // Add event listeners to theme toggle buttons
 document.querySelectorAll('.theme-toggle').forEach(button => {
-    button.addEventListener('click', toggleTheme);
 });
 
-// Function to preview a section on the schedule
 function previewSection(section) {
     // Clear any existing preview
     clearSectionPreview();
     
     // Create preview blocks with a different style
-    section.schedule.forEach(timeSlot => {
         const block = createSectionBlock(timeSlot, section, true);
         if (block) {
             block.classList.add('preview-block');
-            document.querySelector('.schedule-grid').appendChild(block);
         }
     });
 }
@@ -3643,7 +3406,6 @@ function createSectionBlock(timeSlot, section, isPreview = false) {
     // Position the block
     const dayIndex = days.indexOf(timeSlot.day);
     if (dayIndex !== -1) {
-        const cell = document.querySelector(`.schedule-grid td[data-day="${timeSlot.day}"][data-hour="${Math.floor(startHour)}"]`);
         if (cell) {
             const cellRect = cell.getBoundingClientRect();
             block.style.top = `${(startHour - Math.floor(startHour)) * 60}px`;
@@ -3658,16 +3420,12 @@ function createSectionBlock(timeSlot, section, isPreview = false) {
 // Function to add section preview functionality to section items
 function addSectionPreviewListeners(sectionItem, section) {
     // Preview on hover
-    sectionItem.addEventListener('mouseenter', () => {
         previewSection(section);
     });
     
-    sectionItem.addEventListener('mouseleave', () => {
         clearSectionPreview();
     });
     
-    // Add to schedule on click
-    sectionItem.addEventListener('click', () => {
         clearSectionPreview();
         addSectionToSchedule(section);
     });
@@ -3701,7 +3459,6 @@ function showSectionsSidebarWithRealData(subject, courseCode, sectionsData) {
             <div class="section-number">Section ${section.section}</div>
             <div class="section-details">
                 <div>${section.instructor}</div>
-                <div>${section.schedule.map(slot => `${slot.day} ${slot.startTime}-${slot.endTime}`).join(', ')}</div>
                 <div>${section.location}</div>
                 <div>${section.enrollmentCurrent}/${section.enrollmentMax} enrolled</div>
             </div>
@@ -3721,7 +3478,6 @@ function showSectionsSidebarWithRealData(subject, courseCode, sectionsData) {
     document.body.appendChild(sidebar);
     
     // Add close button functionality
-    header.querySelector('.close-btn').addEventListener('click', () => {
         sidebar.remove();
         clearSectionPreview();
     });
