@@ -1,15 +1,10 @@
-from flask import Blueprint, jsonify, Flask
+from flask import Blueprint, jsonify
 from services.db_service import DatabaseService
-from flask_cors import CORS
 
 course_bp = Blueprint('course_bp', __name__)
 
-app = Flask(__name__)
-CORS(app)
-
-@course_bp.route('/courses', methods=['GET'])
+@course_bp.route('/', methods=['GET'])  # Fixed path
 def get_courses():
-    # Your logic here
     courses = DatabaseService.get_courses()
     if courses is not None:
         return jsonify({"success": True, "data": courses}), 200
@@ -27,4 +22,4 @@ def get_professors():
     professors = DatabaseService.get_professors()
     if professors is not None:
         return jsonify({"success": True, "data": professors}), 200
-    return jsonify({"success": False, "error": "Failed to fetch professors"}), 500 
+    return jsonify({"success": False, "error": "Failed to fetch professors"}), 500

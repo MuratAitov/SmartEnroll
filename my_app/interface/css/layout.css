@@ -1,0 +1,77 @@
+    display: flex;
+    display: flex;
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    display: flex;
+    flex: 0 0 320px;  /* Fixed width of 320px, won't grow or shrink */
+    display: flex;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    display: flex;
+    flex: 1;  /* Make each button take up equal space */
+    flex: 1;          /* Take up remaining space */
+.schedule-grid {
+.schedule-grid table {
+.schedule-grid td:first-child {
+.schedule-grid th:not(:first-child),
+.schedule-grid td:not(:first-child) {
+/* Schedule grid header styles - light mode */
+.schedule-grid th {
+.schedule-grid td:first-child {
+.schedule-grid td {
+.schedule-grid th:not(:first-child),
+.schedule-grid td:not(:first-child) {
+/* Schedule grid borders in dark mode */
+    flex: 1;
+    display: flex;
+    display: flex;
+    display: flex;
+    flex-shrink: 0;
+    display: flex;
+    flex-shrink: 0;
+    display: flex;
+    flex-shrink: 0;
+    display: flex;
+    display: flex;
+    display: flex;
+/* Schedule grid styles in dark mode */
+    display: flex;
+    flex-shrink: 0;
+    display: flex;
+    display: flex;
+    display: flex;
+    display: flex;
+        flex-direction: column;
+        flex-direction: column;
+    /* Schedule grid */
+    .schedule-grid {
+    .schedule-grid table {
+        flex-direction: row;  /* Keep buttons side by side */
+    .schedule-grid,
+    display: flex;  /* Make all form groups flex containers */
+    display: flex;
+    display: flex;
+/* Remove flex display from inputs */
+    display: flex;
+    flex: 1;
+    display: flex;
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    display: flex;
+    flex: 1;
+    display: flex;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    display: flex;
+    display: flex;
+    flex-shrink: 0;
+.schedule-grid {
+    flex-grow: 1;
+        flex-direction: column;
+    .schedule-grid {
