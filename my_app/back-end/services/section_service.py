@@ -9,20 +9,26 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 def search_sections(subject: Optional[str] = None,
                     course_code: Optional[str] = None,
                     attribute: Optional[str] = None,
-                    instructor: Optional[str] = None) -> dict:
+                    instructor: Optional[str] = None,
+                    term: Optional[str] = "Fall 2025") -> dict:
     """
     Searches for sections in the 'sections' table using columns:
       - subject (e.g., 'CPSC')
       - course_code (e.g., '101')
       - attribute (partial match on 'attribute' column)
       - instructor (partial match on 'instructor' column)
-
+      - term (defaults to "Fall 2025")
+    
     Only applies filters if a parameter is provided (non-None).
     Returns a dictionary: either {'data': [...]} or {'error': ...}.
     """
 
-    # Начинаем формировать запрос
+    # Begin building the query
     query = supabase.table('sections').select('*')
+
+    # Apply term filter
+    if term:
+        query = query.eq('term', term)
 
     if subject:
         query = query.eq('subject', subject)
@@ -36,14 +42,9 @@ def search_sections(subject: Optional[str] = None,
     if instructor:
         query = query.ilike('instructor', f'%{instructor}%')
 
-    # Выполняем запрос
     response = query.execute()
 
-    # Проверяем статус-код
-        # Успешный ответ
     return {"data": response.data}
-    
 
-# Пример вызова:
 result = search_sections(subject="CPSC", course_code='260')
 print(result)

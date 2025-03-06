@@ -16,6 +16,10 @@ def search():
     course_code = request.args.get('course_code')
     attribute = request.args.get('attribute')
     instructor = request.args.get('instructor')
+    
+    # Fixed term value "Fall 2025", or use:
+    # term = request.args.get('term', 'Fall 2025')
+    term = "Fall 2025"
 
-    result = search_sections(subject, course_code, attribute, instructor)
+    result = search_sections(subject, course_code, attribute, instructor, term)
     return jsonify(result), 200
