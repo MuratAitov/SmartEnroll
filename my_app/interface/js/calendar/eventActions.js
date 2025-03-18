@@ -1,30 +1,13 @@
-function toggleDayPanel(header) {
-    const content = header.nextElementSibling;
-    const arrow = header.querySelector('.arrow');
-    content.classList.toggle('show');
-    arrow.style.transform = content.classList.contains('show') ? 'rotate(180deg)' : '';
+function setupContextMenu(eventBlock) {
+    const menu = createContextMenu(eventBlock);
+    setupEditEventAction(menu, eventBlock);
+    setupColorChangeAction(menu, eventBlock);
+    setupDuplicateEventAction(menu, eventBlock);
+    setupDeleteEventAction(menu, eventBlock);
+    document.body.appendChild(menu);
+    closeMenuOnClickOutside(menu);
 }
-
-function createContextMenu(x, y, eventBlock) {
-    // Remove any existing context menu
-    const existingMenu = document.querySelector('.context-menu');
-    if (existingMenu) {
-        existingMenu.remove();
-    }
-
-    const menu = document.createElement('div');
-    menu.className = 'context-menu';
-    menu.style.left = `${x}px`;
-    menu.style.top = `${y}px`;
-
-    menu.innerHTML = `
-        <div class="menu-item edit">Edit Event</div>
-        <div class="menu-item color">Change Color</div>
-        <div class="menu-item duplicate">Duplicate</div>
-        <div class="menu-item delete">Delete</div>
-    `;
-
-    // Add event listeners for menu items
+// Add event listeners for menu items
     menu.querySelector('.edit').addEventListener('click', () => {
         // Get current values
         const currentName = eventBlock.querySelector('.event-name').textContent;
@@ -302,135 +285,4 @@ function createContextMenu(x, y, eventBlock) {
             document.removeEventListener('click', closeMenu);
         }
     });
-}
-
-// Update the addEventBlockListeners function
-function addEventBlockListeners(eventBlock) {
-    eventBlock.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        createContextMenu(e.pageX, e.pageY, eventBlock);
-    });
-}
-
-// Update the addEventToSchedule function
-function addEventToSchedule(eventName, days, startTime, endTime) {
-    // Convert times to hour and minute numbers
-    const [startHour, startMinute] = startTime.split(':').map(Number);
-    const [endHour, endMinute] = endTime.split(':').map(Number);
-    
-    // Get all selected days
-    const selectedDays = [];
-    document.querySelectorAll('.weekday-btn.selected').forEach(btn => {
-        const day = btn.textContent;
-        const dayIndex = ['M', 'T', 'W', 'R', 'F'].indexOf(day) + 1;
-        selectedDays.push(dayIndex);
-    });
-
-    // Create event blocks for each selected day
-    selectedDays.forEach(dayIndex => {
-        // Find the start cell
-        const startRowIndex = startHour - 8 + 2; // +2 to account for header row and 8AM start
-        const startCell = document.querySelector(`table tr:nth-child(${startRowIndex}) td:nth-child(${dayIndex + 1})`);
-        
-        if (startCell) {
-            const eventBlock = document.createElement('div');
-            eventBlock.className = 'event-block';
-            
-            // Calculate position and height based on exact times
-            const startMinuteOffset = (startMinute / 60) * 60; // Convert minutes to pixels
-            const endMinuteOffset = (endMinute / 60) * 60;
-            const duration = ((endHour - startHour) * 60) + (endMinute - startMinute);
-            
-            // Set the block's style with precise positioning
-            eventBlock.style.top = `${startMinuteOffset}px`;
-            eventBlock.style.height = `${duration}px`;
-            eventBlock.style.zIndex = '1';
-            
-            // Create the event content with name and time
-            eventBlock.innerHTML = `
-                <div class="event-name">${eventName}</div>
-                <div class="event-time">${startTime} - ${endTime}</div>
-            `;
-            
-            // Add event listeners to the new block
-            addEventBlockListeners(eventBlock);
-
-            startCell.style.position = 'relative';
-            startCell.appendChild(eventBlock);
-        }
-    });
-}
-
-function exportToCalendar() {
-    // Current timestamp for DTSTAMP
-    const now = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-
-    // Start the calendar content
-    let icsContent = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Gonzaga University//Class Schedule//EN'
-    ].join('\r\n');
-
-    // Add each event
-    document.querySelectorAll('.event-block').forEach(eventBlock => {
-        const eventName = eventBlock.querySelector('.event-name').textContent;
-        const [startTime, endTime] = eventBlock.querySelector('.event-time').textContent.split(' - ');
-        
-        // Convert times to UTC format
-        const [startHour, startMinute] = startTime.split(':');
-        const [endHour, endMinute] = endTime.split(':');
-        
-        // Use next Monday as the start date
-        const nextMonday = getNextMonday();
-        const dtStart = formatDateForICS(nextMonday, startHour, startMinute);
-        const dtEnd = formatDateForICS(nextMonday, endHour, endMinute);
-
-        // Create RRULE based on selected days
-        const selectedDays = ['MO', 'TU', 'WE', 'TH', 'FR'];
-        const rrule = `RRULE:FREQ=WEEKLY;BYDAY=${selectedDays.join(',')};UNTIL=20251231T235959Z`;
-
-        // Add event to calendar
-        icsContent += '\r\n' + [
-            'BEGIN:VEVENT',
-            'UID:' + Date.now() + '@gonzaga.edu',
-            'DTSTAMP:' + now,
-            'SUMMARY:' + eventName,
-            'DTSTART:' + dtStart,
-            'DTEND:' + dtEnd,
-            rrule,
-            'END:VEVENT'
-        ].join('\r\n');
-    });
-
-    // Close the calendar
-    icsContent += '\r\nEND:VCALENDAR';
-
-    // Create and trigger download
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'class_schedule.ics';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-
-// Helper functions
-function getNextMonday() {
-    const today = new Date();
-    const day = today.getDay();
-    const diff = day === 0 ? 1 : 8 - day;
-    return new Date(today.setDate(today.getDate() + diff));
-}
-
-function formatDateForICS(date, hours, minutes) {
-    return date.getFullYear() +
-           String(date.getMonth() + 1).padStart(2, '0') +
-           String(date.getDate()).padStart(2, '0') + 'T' +
-           String(hours).padStart(2, '0') +
-           String(minutes).padStart(2, '0') + '00';
 }
