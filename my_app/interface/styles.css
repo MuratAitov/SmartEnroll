@@ -1,51 +1,70 @@
 /* Dark mode styles - placed at the top for higher specificity */
+body.dark-mode {
     background-color: #001A49 !important;
     color: #ffffff !important;
 }
 
+body.dark-mode nav {
     background-color: #ffffff !important;
 }
 
+body.dark-mode .nav-links a {
     color: #142A50 !important;
 }
 
+body.dark-mode .nav-links a.active {
     color: #142A50 !important;
 }
 
+body.dark-mode .nav-button {
     color: #142A50 !important;
 }
 
+body.dark-mode .dropdown-content {
     background-color: #142A50 !important;
     color: #ffffff !important;
 }
 
+body.dark-mode .dropdown-content a,
+body.dark-mode .theme-toggle,
+body.dark-mode .student-name {
     color: #ffffff !important;
 }
 
+body.dark-mode .student-id {
     color: #C4C8CE !important;
 }
 
-    background-color: #B41231 !important;
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover {
+    background-color: #1e3a6d !important;
 }
 
+body.dark-mode .dropdown-divider {
     background-color: #2a4573 !important;
 }
 
+body.dark-mode .sidebar {
     background-color: #023373 !important;
     color: #ffffff !important;
     border-color: #023373 !important;
 }
 
+body.dark-mode .sidebar-tabs a {
     color: #C4C8CE !important;
 }
 
+body.dark-mode .sidebar-tabs a.active {
     color: #ffffff !important;
 }
 
+body.dark-mode select,
+body.dark-mode input {
     color: #ffffff !important;
     background-color: #1e3a6d !important;
 }
 
+body.dark-mode select option {
     background-color: #142A50 !important;
     color: #ffffff !important;
 }
@@ -64,8 +83,7 @@
 }
 
 .theme-toggle:hover {
-    background-color: #B41231;
-    color: #ffffff;
+    background-color: #f5f7fa;
 }
 
 /* Add transitions for smooth color changes */
@@ -86,10 +104,12 @@ header {
     background-color: #142A50;
     color: white;
     padding: 15px 30px;
+    display: flex;
     align-items: center;
-    gap: 20px;
+    justify-content: space-between;
 }
 .logo {
+    display: flex;
     align-items: center;
     gap: 10px;
     min-width: fit-content;
@@ -102,6 +122,8 @@ header {
     margin-right: 10px;
 }
 .logo-text {
+    display: flex;
+    flex-direction: column;
     line-height: 1;
     align-items: center;
 }
@@ -129,6 +151,7 @@ header {
     transform: none;
 }
 .nav-tabs {
+    display: flex;
     gap: 25px;
     margin-bottom: 20px;
 }
@@ -147,12 +170,14 @@ header {
     color: #142A50;
 }
 main {
+    display: flex;
     gap: 20px;
     padding: 20px;
     max-width: 1400px;  /* Set a max-width for large screens */
     margin: 0 auto;     /* Center the content */
 }
 .sidebar {
+    flex: 0 0 320px;  /* Fixed width of 320px, won't grow or shrink */
     min-width: 320px; /* Ensure minimum width */
     background-color: white;
     border-radius: 8px;
@@ -161,10 +186,12 @@ main {
     height: fit-content;
 }
 .sidebar-tabs {
+    display: flex;
     gap: 15px;
     margin-bottom: 20px;
     border-bottom: 1px solid #e0e4e8;
     padding-bottom: 10px;
+    flex-wrap: nowrap;
 }
 .sidebar-tabs a {
     color: #C4C8CE;
@@ -173,6 +200,7 @@ main {
     position: relative;
     font-size: 0.9em;
     white-space: nowrap;
+    flex-shrink: 0;
     transition: color 0.2s;
 }
 .sidebar-tabs a.active {
@@ -205,12 +233,14 @@ main {
     outline: none;
 }
 .level-buttons {
+    display: flex;
     gap: 8px;
     margin: 10px 0;
     width: 100%;
     position: relative;
 }
 .division-btn {
+    flex: 1;  /* Make each button take up equal space */
     padding: 8px 12px;
     border: 1px solid #C4C8CE;
     background-color: transparent;
@@ -238,6 +268,7 @@ main {
     display: none;
 }
 .schedule-container {
+    flex: 1;          /* Take up remaining space */
     background-color: white;
     border-radius: 8px;  /* Match sidebar's border radius */
     padding: 20px;
@@ -247,22 +278,29 @@ main {
     overflow: hidden;  /* Ensure content doesn't overflow rounded corners */
 }
 
+.schedule-grid {
     width: 100%;
     border-radius: 8px;
     overflow: hidden;
 }
 
+.schedule-grid table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;  /* This ensures equal column widths */
 }
 
+.schedule-grid td:first-child {
     width: 80px;  /* Fixed width for time column */
 }
 
+.schedule-grid th:not(:first-child),
+.schedule-grid td:not(:first-child) {
     width: calc((100% - 80px) / 5);  /* Evenly distribute remaining width */
 }
 
+/* Schedule grid header styles - light mode */
+.schedule-grid th {
     top: 0;
     position: relative;
     background-color: white !important;
@@ -272,11 +310,13 @@ main {
 }
 
 /* Dark mode header styles - override light mode */
+body.dark-mode .schedule-grid th {
     background-color: #023373 !important;
     color: #ffffff !important;
     border-color: #012454 !important;
 }
 
+.schedule-grid td:first-child {
     left: 0;
     width: 80px;
     text-align: center;
@@ -287,6 +327,7 @@ main {
     line-height: 60px;
 }
 
+.schedule-grid td {
     position: relative;  /* For absolute positioning of event blocks */
     height: 60px;
     padding: 0;
@@ -295,31 +336,44 @@ main {
     background-color: white !important;
 }
 
+.schedule-grid th:not(:first-child),
+.schedule-grid td:not(:first-child) {
     width: calc((100% - 80px) / 5);
 }
 
 /* Dark mode schedule styles */
+body.dark-mode .schedule-container {
     background-color: #023373 !important;
     border-color: #023373 !important;
     border-radius: 8px;
 }
 
+body.dark-mode .schedule-grid {
     background-color: #023373 !important;
     border-radius: 8px;
     overflow: hidden;
 }
 
+body.dark-mode .schedule-grid th, 
+body.dark-mode .schedule-grid td:first-child {
     background-color: #023373 !important;
     color: #ffffff !important;
 }
 
+body.dark-mode .schedule-grid td {
     background-color: #023373 !important;
     border-color: #012454 !important;
 }
 
+body.dark-mode .schedule-grid tr:nth-child(even) td {
     background-color: #023373 !important;
 }
 
+/* Schedule grid borders in dark mode */
+body.dark-mode .schedule-grid td,
+body.dark-mode .schedule-grid th,
+body.dark-mode .schedule-grid thead tr,
+body.dark-mode .schedule-grid thead {
     border-color: #012454 !important;
 }
 
@@ -418,7 +472,8 @@ input:focus, select:focus {
 }
 nav {
     height: 50px;
-    padding: 0;
+    padding: 0 clamp(10px, 2vw, 20px);
+    background-color: #142A50;
     font-size: clamp(12px, 1vw, 16px);
     position: static;
     transition: all 0.3s ease;
@@ -426,70 +481,64 @@ nav {
 
 .nav-sections {
     height: 100%;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     gap: clamp(10px, 2vw, 20px);
+    max-width: 100%;
 }
 
-/* Left controls containing semester group */
-.left-controls {
-    align-items: center;
-    gap: 15px;
-    margin-right: auto; /* Push other elements to the right */
-}
-
-/* Update semester group styles */
 .semester-group {
+    display: flex;
     align-items: center;
     gap: clamp(8px, 1vw, 12px);
-    padding-right: 0;
-    border-right: none;
+    padding-right: clamp(10px, 2vw, 20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
     position: relative;
 }
 
-/* Center nav links */
 .nav-links {
+    display: flex;
     align-items: center;
-    gap: 40px;
-    margin: 0 auto;
-    justify-content: center; /* Center the links */
+    gap: clamp(10px, 2vw, 25px);
+    flex: 1;
+    white-space: nowrap;
+    position: static;
+    transform: none;
 }
 
 .nav-links a {
-    padding: 5px 0; /* Remove horizontal padding */
+    padding: 5px clamp(5px, 0.5vw, 10px);
     color: #C4C8CE;
     text-decoration: none;
     transition: color 0.2s;
-    white-space: nowrap;
 }
 
-/* Remove any margin/padding from individual links */
-.nav-links a:not(:last-child) {
-    margin-right: 0;
-}
-
-/* Ensure consistent spacing in both light and dark modes */
-    gap: 40px; /* Keep the same gap in dark mode */
-}
-
-/* Keep user controls on the right */
 .user-controls {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1vw, 15px);
     margin-left: auto;
     padding-left: clamp(10px, 2vw, 20px);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
 }
 
 .credits-box {
     padding: 5px clamp(8px, 1vw, 12px);
+    flex-shrink: 0;
     color: #ffffff;
 }
 
 .nav-button, .semester-button {
     padding: 5px clamp(5px, 0.5vw, 10px);
     min-height: 30px;
+    display: flex;
     align-items: center;
     gap: 5px;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .logo-img {
@@ -515,9 +564,6 @@ nav {
 
 .arrow {
     font-size: 0.8em;
-    transition: transform 0.2s ease;
-    margin-left: 8px;
-    color: #ffffff;
 }
 
 .user-dropdown {
@@ -543,8 +589,6 @@ nav {
 
 .user-info {
     padding: 8px 16px;
-    color: #142A50;
-    font-weight: 500;
 }
 
 .student-name {
@@ -572,8 +616,7 @@ nav {
 }
 
 .dropdown-content a:hover {
-    background-color: #B41231;
-    color: #ffffff;
+    background-color: #f5f7fa;
 }
 
 /* Show/hide content based on auth state */
@@ -599,70 +642,79 @@ body:not(.is-authenticated) .logged-in-content {
     display: none;
 }
 
-/* For nav links specifically */
-.nav-links a.logged-in-content {
-    display: none;
-}
-
-body.is-authenticated .nav-links a.logged-in-content {
-    display: inline-block;
-}
-
 /* Navigation bar */
+body.dark-mode nav {
     background-color: #ffffff !important;
 }
 
+body.dark-mode .nav-links a {
     color: #142A50;
 }
 
+body.dark-mode .nav-button {
     color: #142A50;
 }
 
 /* Dropdown styles */
+body.dark-mode .dropdown-content {
     background-color: #142A50;
     color: #ffffff;
 }
 
+body.dark-mode .dropdown-content a,
+body.dark-mode .theme-toggle,
+body.dark-mode .student-name {
     color: #ffffff;
 }
 
+body.dark-mode .student-id {
     color: #C4C8CE;
 }
 
-    background-color: #B41231;
-    color: #ffffff;
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover {
+    background-color: #1e3a6d;
 }
 
+body.dark-mode .dropdown-divider {
     background-color: #2a4573;
 }
 
 /* Main content area */
+body.dark-mode .sidebar {
     background-color: #023373;
     color: #ffffff;
 }
 
+body.dark-mode .sidebar-tabs a {
     color: #C4C8CE;
 }
 
+body.dark-mode .sidebar-tabs a.active {
     color: #ffffff;
 }
 
 /* Form elements */
+body.dark-mode select,
+body.dark-mode input {
     color: #ffffff;
     background-color: #1e3a6d;
 }
 
+body.dark-mode select option {
     background-color: #142A50;
     color: #ffffff;
 }
 
 .nav-right {
+    display: flex;
     align-items: center;
     gap: 15px;
     margin-left: auto;
 }
 
 .nav-button {
+    display: flex;
     align-items: center;
     gap: 6px;
     background: none;
@@ -691,75 +743,96 @@ body.is-authenticated .nav-links a.logged-in-content {
 
 /* Ensure both buttons have the same height and vertical alignment */
 .user-dropdown {
+    display: flex;
     align-items: center;
     height: 36px;
 }
 
 /* Header styles in dark mode */
+body.dark-mode header {
     background-color: #ffffff !important;
 }
 
+body.dark-mode .university-name,
+body.dark-mode .university-subtitle {
     color: #142A50 !important;
 }
 
+/* Schedule grid styles in dark mode */
+body.dark-mode .schedule-grid {
     background-color: #023373 !important;
     border-radius: 8px;  /* Ensure border radius in dark mode */
     overflow: hidden;
 }
 
+body.dark-mode .schedule-grid th, 
+body.dark-mode .schedule-grid td:first-child {
     background-color: #023373 !important;
     color: #ffffff !important;
 }
 
+body.dark-mode .schedule-grid td {
     border-color: #022859 !important;
     color: #ffffff !important;
 }
 
+body.dark-mode .schedule-grid tr:nth-child(even) {
     background-color: #023373 !important;
 }
 
 /* Top border of header row */
+body.dark-mode .schedule-grid thead tr {
     border-color: #022859 !important;
 }
 
 /* Horizontal divider line below header */
+body.dark-mode .schedule-grid thead {
     border-bottom-color: #022859 !important;
 }
 
 /* Navigation styles in dark mode */
+body.dark-mode nav {
     background-color: #ffffff !important;
 }
 
+body.dark-mode .nav-links a {
     color: #142A50 !important;
 }
 
+body.dark-mode .nav-button {
     color: #142A50 !important;
 }
 
 /* Navigation hover styles */
+body.dark-mode .nav-links a:hover {
     color: #B41231 !important;
 }
 
 /* Dropdown hover styles */
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover {
     background-color: #B41231;
     color: #ffffff !important;
 }
 
 /* Sidebar tab hover styles */
+body.dark-mode .sidebar-tabs a:hover {
     color: #B41231 !important;
 }
 
 /* Level button hover styles */
+body.dark-mode .division-btn:hover {
     background-color: #B41231 !important;
     color: #ffffff !important;
 }
 
 /* Export button hover styles */
-    background-color: rgba(20, 42, 80, 0.2);  /* Darker grey with transparency */
-    color: #142A50 !important;
+body.dark-mode .nav-button:hover {
+    color: #B41231 !important;
 }
 
 /* User dropdown button hover styles */
+body.dark-mode .user-dropdown .nav-button:hover {
     color: #B41231 !important;
 }
 
@@ -775,13 +848,14 @@ body.is-authenticated .nav-links a.logged-in-content {
     padding: 8px 16px;
     border: none;
     cursor: pointer;
+    display: flex;
     align-items: center;
     gap: 8px;
     font-size: inherit;
 }
 
 .semester-content {
-    display: none;
+    display: none;  /* Hide by default */
     position: absolute;
     top: 100%;
     left: 0;
@@ -789,19 +863,20 @@ body.is-authenticated .nav-links a.logged-in-content {
     min-width: 160px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     border-radius: 4px;
-    padding: 8px 0;
+    margin-top: 5px;
     z-index: 1000;
 }
 
 .semester-content.show {
-    display: block;
+    display: block;  /* Show only when .show class is present */
 }
 
 .semester-content a {
-    display: block;
-    padding: 8px 16px;
     color: #142A50;
+    padding: 8px 16px;
     text-decoration: none;
+    display: block;
+    transition: background-color 0.2s;
 }
 
 .semester-content a:hover {
@@ -810,17 +885,21 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles for semester dropdown */
+body.dark-mode .semester-content {
     background-color: #142A50;
 }
 
+body.dark-mode .semester-content a {
     color: #ffffff;
 }
 
+body.dark-mode .semester-content a:hover {
     background-color: #B41231;
     color: #ffffff;
 }
 
 /* Dark mode styles */
+body.dark-mode .semester-button {
     color: #142A50;
 }
 
@@ -839,9 +918,11 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode navigation hover styles */
+body.dark-mode .nav-links a:hover {
     color: #B41231 !important;
 }
 
+body.dark-mode .nav-links a.active:hover {
     color: #B41231 !important;
 }
 
@@ -858,10 +939,12 @@ body.is-authenticated .nav-links a.logged-in-content {
 /* Add these styles for the credits box */
 .credits-box {
     padding: 5px clamp(8px, 1vw, 12px);
+    flex-shrink: 0;
     color: #ffffff;
 }
 
 /* Dark mode style for credits box */
+body.dark-mode .credits-box {
     color: #142A50 !important;
 }
 
@@ -879,6 +962,7 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 .tree-header {
+    display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
@@ -889,6 +973,11 @@ body.is-authenticated .nav-links a.logged-in-content {
 .building-name {
     font-size: 16px;
     color: #142A50;
+}
+
+.arrow {
+    font-size: 12px;
+    transition: transform 0.2s ease;
 }
 
 .tree-content {
@@ -916,6 +1005,7 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 .day-header {
+    display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
@@ -978,23 +1068,17 @@ body.is-authenticated .nav-links a.logged-in-content {
     display: inline-block;
 }
 
-.export-button {
-    align-items: center;
-    gap: 5px;
-    color: #ffffff;
-}
-
 .export-dropdown {
-    display: none;
     position: absolute;
     top: 100%;
     right: 0;
     background-color: white;
-    min-width: 200px;
+    min-width: 180px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     border-radius: 4px;
     padding: 8px 0;
     z-index: 1000;
+    display: none;
     margin-top: 5px;
 }
 
@@ -1008,9 +1092,6 @@ body.is-authenticated .nav-links a.logged-in-content {
     color: #142A50;
     text-decoration: none;
     transition: background-color 0.2s;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .export-dropdown a:hover {
@@ -1019,12 +1100,15 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles for export dropdown */
+body.dark-mode .export-dropdown {
     background-color: #142A50;
 }
 
+body.dark-mode .export-dropdown a {
     color: #ffffff;
 }
 
+body.dark-mode .export-dropdown a:hover {
     background-color: #B41231;
     color: #ffffff;
 }
@@ -1035,23 +1119,22 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Update hover styles for user dropdown */
-.dropdown-content a:hover {
+.dropdown-content a:hover,
+.theme-toggle:hover {
     background-color: #B41231;
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 /* Dark mode hover styles for user dropdown */
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover {
     background-color: #B41231;
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 /* Ensure student info doesn't change color on hover */
 .user-info:hover {
     background-color: transparent;
-    cursor: default;
-}
-
-.user-info:hover .username,
     color: inherit;
 }
 
@@ -1069,6 +1152,7 @@ body.is-authenticated .nav-links a.logged-in-content {
     border: none;
     color: #495057;
     cursor: pointer;
+    display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 1em;  /* Match the font size of other inputs */
@@ -1082,6 +1166,7 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles for the arrow */
+body.dark-mode .dropdown-button .arrow {
     color: #ffffff;
 }
 
@@ -1116,15 +1201,19 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles */
+body.dark-mode .dropdown-button {
     color: #ffffff;
 }
 
+body.dark-mode .dropdown-list {
     background-color: #1e3a6d;
 }
 
+body.dark-mode .dropdown-item {
     color: #ffffff;
 }
 
+body.dark-mode .dropdown-item:hover {
     background-color: #B41231;
 }
 
@@ -1133,6 +1222,7 @@ body.is-authenticated .nav-links a.logged-in-content {
     /* Main layout */
     main {
         padding: 10px;
+        flex-direction: column;
     }
 
     .sidebar,
@@ -1143,6 +1233,7 @@ body.is-authenticated .nav-links a.logged-in-content {
 
     /* Header and navigation */
     .nav-sections {
+        flex-direction: column;
         gap: 10px;
         padding: 10px 0;
     }
@@ -1170,10 +1261,13 @@ body.is-authenticated .nav-links a.logged-in-content {
         padding-left: 0;
     }
 
+    /* Schedule grid */
+    .schedule-grid {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
 
+    .schedule-grid table {
         min-width: 600px;  /* Ensure table is scrollable on mobile */
     }
 
@@ -1183,6 +1277,7 @@ body.is-authenticated .nav-links a.logged-in-content {
     }
 
     .level-buttons {
+        flex-direction: row;  /* Keep buttons side by side */
         gap: 5px;
     }
 
@@ -1260,6 +1355,7 @@ body.is-authenticated .nav-links a.logged-in-content {
 /* Add smooth scrolling for iOS */
 @supports (-webkit-overflow-scrolling: touch) {
     .nav-links,
+    .schedule-grid,
     .sidebar {
         -webkit-overflow-scrolling: touch;
     }
@@ -1280,6 +1376,7 @@ body.is-authenticated .nav-links a.logged-in-content {
     width: 100%;
     height: 56px;  /* Fixed height for all form groups */
     box-sizing: border-box;
+    display: flex;  /* Make all form groups flex containers */
     align-items: center;  /* Center content vertically */
 }
 
@@ -1299,6 +1396,7 @@ body.is-authenticated .nav-links a.logged-in-content {
 /* Weekday buttons container */
 .recurring-events-view .form-group .weekday-buttons {
     width: 100%;
+    display: flex;
     gap: 8px;
     justify-content: space-between;
     margin: 0;  /* Remove margin */
@@ -1306,6 +1404,7 @@ body.is-authenticated .nav-links a.logged-in-content {
 
 /* Time input container styles */
 .recurring-events-view .form-group:has(.time-input) {
+    display: flex;
     align-items: center;
     padding: 0 15px;
     height: 56px;
@@ -1324,6 +1423,7 @@ body.is-authenticated .nav-links a.logged-in-content {
     line-height: 36px;
 }
 
+/* Remove flex display from inputs */
 .courses-view .form-group input,
 .recurring-events-view .form-group input {
     width: 100%;
@@ -1337,47 +1437,57 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles for recurring events */
+body.dark-mode .recurring-events-view .form-group {
     border-color: #495057;
     background-color: #142A50;  /* Dark background */
 }
 
+body.dark-mode .recurring-events-view input {
     color: #ffffff;  /* White text */
     background: transparent;
 }
 
+body.dark-mode .recurring-events-view input::placeholder {
     color: #C4C8CE;  /* Lighter color for placeholder text */
 }
 
+body.dark-mode .weekday-btn {
     color: #ffffff;
     border-color: #495057;
     background-color: transparent;
 }
 
+body.dark-mode .weekday-btn:hover {
     background-color: #B41231;
     color: #ffffff;
     border-color: #B41231;
 }
 
+body.dark-mode .weekday-btn.selected {
     background-color: #002467 !important;
     color: #ffffff !important;
     border-color: #002467 !important;
 }
 
+body.dark-mode .add-event-btn {
     background-color: #4A90E2;
     color: #ffffff;
 }
 
+body.dark-mode .add-event-btn:hover {
     background-color: #357ABD;
 }
 
 /* Weekday buttons styles */
 .weekday-buttons {
+    display: flex;
     gap: 8px;
     margin: 10px 0;
     justify-content: space-between;
 }
 
 .weekday-btn {
+    flex: 1;
     padding: 8px 12px;
     border: 1px solid #C4C8CE;
     background-color: transparent;
@@ -1401,10 +1511,12 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles */
+body.dark-mode .weekday-btn {
     color: #6c757d;
     border-color: #C4C8CE;
 }
 
+body.dark-mode .weekday-btn.selected {
     background-color: #ffffff !important;
     border-color: #ffffff !important;
     color: #023373 !important;
@@ -1427,6 +1539,8 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode hover styles */
+body.dark-mode .weekday-btn:hover,
+body.dark-mode .division-btn:hover {
     background-color: #B41231 !important;
     border-color: #B41231 !important;
     color: #ffffff !important;
@@ -1435,6 +1549,7 @@ body.is-authenticated .nav-links a.logged-in-content {
 
 /* Time input container styles */
 .recurring-events-view .form-group:has(.time-input) {
+    display: flex;
     align-items: center;
     padding: 0 15px;
     height: 56px;
@@ -1453,6 +1568,7 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles */
+body.dark-mode .recurring-events-view .form-group:has(.time-input) label {
     color: #ffffff;
 }
 
@@ -1484,13 +1600,16 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles */
+body.dark-mode .autocomplete-list {
     background-color: #1e3a6d;
     border-color: #495057;
 }
 
+body.dark-mode .autocomplete-item {
     color: #ffffff;
 }
 
+body.dark-mode .autocomplete-item:hover {
     background-color: #142A50;
 }
 
@@ -1504,6 +1623,8 @@ body.is-authenticated .nav-links a.logged-in-content {
     background-color: #808080;
     color: white;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     gap: 2px;
     box-sizing: border-box;  /* Include padding in width calculation */
 }
@@ -1525,6 +1646,7 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles */
+body.dark-mode .event-block {
     background-color: #808080;  /* Keep gray background in dark mode */
 }
 
@@ -1551,13 +1673,16 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles */
+body.dark-mode .context-menu {
     background-color: #1e3a6d;
     border-color: #495057;
 }
 
+body.dark-mode .menu-item {
     color: white;
 }
 
+body.dark-mode .menu-item:hover {
     background-color: #142A50;
 }
 
@@ -1578,6 +1703,7 @@ body.is-authenticated .nav-links a.logged-in-content {
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2000;
@@ -1592,11 +1718,13 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 .edit-buttons {
+    display: flex;
     gap: 10px;
     margin-top: 15px;
 }
 
 .save-btn, .cancel-btn {
+    flex: 1;
     padding: 8px;
     border: none;
     border-radius: 4px;
@@ -1614,12 +1742,14 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles */
-    background-color: #1e3a6d;
+body.dark-mode .edit-form {
+    background: #1e3a6d;
     color: white;
 }
 
+body.dark-mode .edit-form input {
     color: white;
-    background-color: #142A50;
+    background: #142A50;
 }
 
 .edit-form input[type="time"] {
@@ -1631,11 +1761,13 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 .edit-form .weekday-buttons {
+    display: flex;
     gap: 8px;
     justify-content: space-between;
 }
 
 .edit-form .weekday-btn {
+    flex: 1;
     padding: 8px;
     border: 1px solid #e0e4e8;
     background: none;
@@ -1651,334 +1783,548 @@ body.is-authenticated .nav-links a.logged-in-content {
 }
 
 /* Dark mode styles */
-    background-color: #142A50;
+body.dark-mode .edit-form input[type="time"] {
+    background: #142A50;
     border-color: #495057;
     color: white;
 }
 
 /* Pre-req tree styles */
 .prereq-tree-view {
-    padding: 0;  /* Remove padding to match courses view */
+    padding: 15px 0;
 }
 
-.prereq-search-form {
-    gap: 15px;
-}
-
-.prereq-search-form .form-group {
-    margin-bottom: 0;  /* Remove margin since we're using gap */
-    border: 1px solid #e0e4e8;
-    border-radius: 4px;
-    padding: 10px;
-    width: 100%;
-    background-color: white;
-    color: #495057;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    width: 48%;
-}
-
-.sections-sort:hover {
-    border-color: #ced4da;
-    background-color: #f8f9fa;
-}
-
-.reset-sections-btn {
-    padding: 8px 12px;
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 4px;
-    color: #495057;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    width: 48%;
-}
-
-.reset-sections-btn:hover {
-    background-color: #e9ecef;
-    border-color: #ced4da;
-}
-
-.sections-list {
-    overflow-y: auto;
-}
-
-.section-item {
-    padding: 12px;
-    border-radius: 4px;
-    background-color: #f8f9fa;
-    margin-bottom: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid #e9ecef;
-}
-
-.section-item:hover {
-    background-color: #e9ecef;
-    border-color: #ced4da;
-    transform: translateY(-2px);
-}
-
-.section-item.selected {
-    background-color: #e7f5ff;
-    border-color: #74c0fc;
-}
-
-.section-number {
-    font-weight: 600;
-    font-size: 16px;
-    color: #495057;
-    margin-bottom: 5px;
-    justify-content: space-between;
+.prereq-tree-container {
+    min-height: 200px;
+    display: flex;
     align-items: center;
+    justify-content: center;
 }
 
-.section-details {
-    font-size: 14px;
+.coming-soon {
     color: #6c757d;
-    margin-top: 5px;
+    font-style: italic;
 }
 
-.section-day-blocks {
-    gap: 5px;
-    margin-top: 8px;
+/* Dark mode styles */
+body.dark-mode .coming-soon {
+    color: #C4C8CE;
 }
 
-.section-day-block {
-    padding: 3px 6px;
-    background-color: #e9ecef;
-    border-radius: 3px;
-    font-size: 12px;
-    color: #495057;
-}
-
-    color: #e0e0e0;
-}
-
-    color: #adb5bd;
-}
-
-    background-color: #333;
-    color: #e0e0e0;
-}
-
-/* Dark mode styles for sections sidebar */
-    background-color: #1e1e1e;
-    border-left: 1px solid #333;
-    color: #e0e0e0;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-}
-
-    border-bottom: 2px solid #1a4989; /* Slightly lighter Gonzaga blue for dark mode */
-}
-
-    color: #4a7ac0; /* Lighter Gonzaga blue for dark mode */
-}
-
-    background-color: #2c2c2c;
-    border: 1px solid #444;
-    color: #e0e0e0;
-}
-
-    background-color: #333;
-    border-color: #555;
-}
-
-    background-color: #2c2c2c;
-    border-color: #444;
-    color: #e0e0e0;
-}
-
-    background-color: #333;
-    border-color: #555;
-}
-
-    background-color: #2c2c2c;
-    border-color: #444;
-    color: #e0e0e0;
-}
-
-    background-color: #333;
-    border-color: #555;
-}
-
-    background-color: #1c4a6e;
-    border-color: #3b82f6;
-}
-
-    background-color: #1a4989; /* Slightly lighter Gonzaga blue for dark mode */
-}
-
-    color: #ccc;
-}
-
-/* Course block styles with Gonzaga colors */
-.course-block {
-    position: absolute;
+.export-calendar-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background-color: #4A90E2;
+    color: white;
+    border: none;
     border-radius: 4px;
-    padding: 5px;
-    box-sizing: border-box;
-    overflow: hidden;
-    color: #fff;
-    text-shadow: 0 0 2px rgba(0,0,0,0.7);
-    font-size: 12px;
     cursor: pointer;
-    z-index: 10;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    transition: transform 0.1s ease;
-    border: 1px solid rgba(0,0,0,0.1);
+    transition: background-color 0.2s;
 }
 
-.course-block:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    z-index: 11;
+.export-calendar-btn:hover {
+    background-color: #357ABD;
 }
 
-.section-title {
-    font-weight: bold;
-    margin-bottom: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+/* Dark mode styles */
+body.dark-mode .export-calendar-btn {
+    background-color: #357ABD;
 }
 
-/* Add a Gonzaga-themed loading indicator */
-.loading-indicator {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 15px 25px;
-    background-color: #002967; /* Gonzaga blue */
-    color: white;
-    border-radius: 5px;
-    z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    border-left: 5px solid #c8102e; /* Gonzaga red */
-    font-weight: 500;
-}
-
-/* Add a Gonzaga-themed tooltip for course blocks */
-.course-tooltip {
-    position: absolute;
-    background-color: #002967; /* Gonzaga blue */
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 14px;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s;
-    border-left: 3px solid #c8102e; /* Gonzaga red */
-    max-width: 250px;
-}
-
-.course-tooltip.visible {
-    opacity: 1;
-}
-
-/* Add Gonzaga-themed scrollbar for sections sidebar */
-.sections-sidebar::-webkit-scrollbar {
-    width: 8px;
-}
-
-.sections-sidebar::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.sections-sidebar::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
-}
-
-.sections-sidebar::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-    background: #2c2c2c;
-}
-
-    background: #555;
-}
-
-    background: #666;
-}
-
-/* Update main layout to accommodate both sidebars */
-main {
-    padding: 20px;
-    height: calc(100vh - 60px);
-    overflow: hidden;
-}
-
-.sidebar {
-    width: 250px;
-    background-color: #ffffff;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    overflow-y: auto;
-}
-
-    overflow-y: auto;
-    margin: 0 15px;
-}
-
-    background-color: #001A49;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+body.dark-mode .export-calendar-btn:hover {
+    background-color: #2868A6;
 }
 
 /* Responsive adjustments */
-@media screen and (max-width: 1024px) {
+@media (max-width: 1024px) {
     main {
-        height: auto;
-        overflow: visible;
+        padding: 10px;
+        flex-direction: column;
     }
-    
-    .sidebar, .sections-sidebar {
-        position: static;
+
+    .sidebar,
+    .schedule-container {
         width: 100%;
-        height: auto;
-    }
-    
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%;
+        min-width: unset;
     }
 }
 
-.sections-search {
-    margin-bottom: 15px;
-}
-
-.sections-search input {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #e9ecef;
-    border-radius: 4px;
-    font-size: 14px;
+/* Update time column styles */
+.schedule-grid td:first-child {
+    left: 0;
+    width: 80px;
+    text-align: center;
+    vertical-align: middle;  /* Center vertically */
+    font-size: 0.9em;
     color: #495057;
-    background-color: white;
-    transition: all 0.2s;
+    padding: 0;
+    height: 60px;
+    line-height: 60px;  /* Match the height for vertical centering */
 }
 
-.sections-search input:focus {
-    outline: none;
-    border-color: #74c0fc;
-    box-shadow: 0 0 0 2px rgba(116, 192, 252, 0.25);
+/* Ensure consistent styling in dark mode */
+body.dark-mode .schedule-grid td:first-child {
+    color: #C4C8CE;
+    background-color: #1e3a6d;
 }
 
-    background-color: #2c2c2c;
-    border-color: #444;
-    color: #e0e0e0;
+/* Update sidebar tab styles */
+.sidebar-tabs a {
+    color: #C4C8CE;
+    text-decoration: none;
+    padding: 5px 0;
+    position: relative;
+    font-size: 0.9em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.2s;
 }
 
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+.sidebar-tabs a.active {
+    color: #142A50;  /* Blue color when active */
+}
+
+.sidebar-tabs a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #B41231;  /* Red underline */
+}
+
+/* Dark mode styles */
+body.dark-mode .sidebar-tabs a.active {
+    color: #4A90E2;  /* Lighter blue for dark mode */
+}
+
+/* Dark mode schedule styles - only applied when dark mode is active */
+body.dark-mode .schedule-container {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    border-radius: 8px;  /* Ensure border radius in dark mode */
+}
+
+body.dark-mode .schedule-grid td {
+    background-color: #023373 !important;
+    border-color: #012454 !important;  /* Darker blue divider lines */
+}
+
+body.dark-mode .schedule-grid tr:nth-child(even) td {
+    background-color: #023373 !important;
+}
+
+body.dark-mode .schedule-grid td:first-child {
+    background-color: #023373 !important;
+}
+
+/* Schedule grid lines in dark mode */
+body.dark-mode .schedule-grid td,
+body.dark-mode .schedule-grid th {
+    border-color: #012454 !important;  /* Darker blue divider lines */
+}
+
+/* Top border of header row */
+body.dark-mode .schedule-grid thead tr {
+    border-color: #012454 !important;  /* Darker blue divider lines */
+}
+
+/* Horizontal divider line below header */
+body.dark-mode .schedule-grid thead {
+    border-bottom-color: #012454 !important;  /* Darker blue divider lines */
+}
+
+/* Background color remains #023373 */
+body.dark-mode .schedule-grid {
+    background-color: #023373 !important;
+    border-radius: 8px;  /* Ensure border radius in dark mode */
+    overflow: hidden;
+}
+
+body.dark-mode .schedule-grid td {
+    background-color: #023373 !important;
+}
+
+body.dark-mode .schedule-grid tr:nth-child(even) td {
+    background-color: #023373 !important;
+}
+
+/* Form inputs in dark mode */
+body.dark-mode .form-group,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode .dropdown-btn {
+    background-color: #023373 !important;
+    border-color: #D0D4D9 !important;
+    color: #D0D4D9 !important;
+}
+
+/* Remove any hover effects that might show lighter backgrounds */
+body.dark-mode .form-group:hover,
+body.dark-mode input:hover,
+body.dark-mode select:hover {
+    background-color: #023373 !important;
+}
+
+/* Placeholder text color */
+body.dark-mode input::placeholder,
+body.dark-mode select::placeholder {
+    color: #D0D4D9 !important;
+}
+
+/* Keep dropdown arrow visible */
+body.dark-mode select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23023373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
+    background-size: 16px !important;
+    padding-right: 30px !important;
+}
+
+/* Button selected state in dark mode */
+body.dark-mode .division-btn.selected,
+body.dark-mode .weekday-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;  /* Changed from white to blue */
+}
+
+/* Button hover state */
+body.dark-mode .division-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Button normal state */
+body.dark-mode .division-btn,
+body.dark-mode .weekday-btn {
+    background-color: #023373 !important;
+    border-color: #D0D4D9 !important;
+    color: #D0D4D9 !important;
+}
+
+/* Form group arrow in dark mode */
+body.dark-mode .form-group .arrow {
+    color: #023373 !important;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* Keep background color consistent */
+body.dark-mode .form-group {
+    position: relative;
+    background-color: #023373 !important;
+}
+
+/* Dropdown styling in dark mode */
+body.dark-mode .form-group {
+    position: relative;
+}
+
+/* Add visible arrow using pseudo-element */
+body.dark-mode .form-group::after {
+    content: '▼';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #D0D4D9;  /* Changed to light gray for visibility */
+    pointer-events: none;
+    font-size: 12px;
+}
+
+/* Style for select elements */
+body.dark-mode select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 30px !important;
+    background-color: #023373 !important;
+    border-color: #D0D4D9 !important;
+    color: #D0D4D9 !important;
+    cursor: pointer;
+}
+
+/* Change arrow color on hover */
+body.dark-mode .form-group:hover::after {
+    color: #ffffff;  /* Change to white on hover */
+}
+
+/* Navigation dropdown arrows in dark mode */
+body.dark-mode .nav-link .arrow,
+body.dark-mode .semester-button .arrow,
+body.dark-mode .export-button .arrow {
+    color: #023373 !important;
+    display: inline-block !important;
+    margin-left: 5px !important;
+}
+
+/* Hover state for nav dropdown arrows */
+body.dark-mode .nav-link:hover .arrow,
+body.dark-mode .semester-button:hover .arrow,
+body.dark-mode .export-button:hover .arrow {
+    color: #023373 !important;
+}
+
+/* Ensure arrow is visible when dropdown is open */
+body.dark-mode .show .arrow {
+    color: #023373 !important;
+}
+
+/* Rotate arrow when dropdown is open */
+body.dark-mode .show .arrow {
+    transform: rotate(180deg) !important;
+    transition: transform 0.2s ease;
+}
+
+/* Button hover state */
+.division-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Button selected/clicked state - light mode */
+.division-btn.selected {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode hover state - same as light mode */
+body.dark-mode .division-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode selected state - white background, blue text */
+body.dark-mode .division-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;
+}
+
+/* Weekday button selected state in light mode */
+.weekday-btn.selected {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+/* Weekday button hover state */
+.weekday-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode weekday button selected state */
+body.dark-mode .weekday-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;
+}
+
+/* Dark mode weekday button hover state */
+body.dark-mode .weekday-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Remove arrow from weekday buttons */
+.schedule-grid th {
+    background: #023373 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.schedule-grid th:last-child .arrow,
+.schedule-grid th .arrow {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.schedule-grid th F {
+    content: 'F' !important;
+}
+
+/* Remove arrows from all relevant buttons */
+.division-btn .arrow,
+.weekday-btn .arrow,
+.semester-button .arrow,
+.nav-button .arrow {
+    display: none !important;
+}
+
+/* Also remove any pseudo-element arrows */
+.division-btn::after,
+.weekday-btn::after,
+.semester-button::after,
+.nav-button::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Remove any background arrows */
+.division-btn,
+.weekday-btn,
+.semester-button,
+.nav-button {
+    background-image: none !important;
+}
+
+/* Remove white arrow from division buttons container */
+.level-buttons::after,
+.form-group::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Remove any pseudo elements that might be creating the arrow */
+.form-group .level-buttons,
+.form-group {
+    background-image: none !important;
+}
+
+/* Ensure no arrow on the container */
+.level-buttons {
+    position: relative;
+}
+
+.level-buttons::before,
+.level-buttons::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Remove justify-content if it exists */
+.form-group .level-buttons {
+    justify-content: stretch;
+}
+
+/* Add dropdown arrow */
+.level-buttons::after {
+    content: '▼';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #D0D4D9;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+/* Dark mode arrow color */
+body.dark-mode .level-buttons::after {
+    color: #023373;
+}
+
+/* Semester button arrow in light mode */
+.semester-button .arrow {
+    display: inline-block !important;
+    margin-left: 5px;
+    color: #ffffff !important;
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+/* Dark mode semester button arrow */
+body.dark-mode .semester-button .arrow {
+    color: #023373 !important;
+}
+
+/* Rotate arrow when dropdown is open */
+.semester-button.active .arrow {
+    transform: rotate(180deg);
+}
+
+/* Export button arrow in light mode */
+.export-button .arrow {
+    display: inline-block !important;
+    margin-left: 5px;
+    color: #ffffff !important;
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+/* Dark mode export button arrow */
+body.dark-mode .export-button .arrow {
+    color: #023373 !important;
+}
+
+/* Rotate arrow when dropdown is open */
+.export-button.active .arrow {
+    transform: rotate(180deg);
+}
+
+/* Navigation divider lines in dark mode */
+body.dark-mode .semester-group {
+    border-right-color: #0557c5 !important;
+}
+
+body.dark-mode .user-controls {
+    border-left-color: #0557c5 !important;
+}
+
+/* Original light mode styles remain unchanged */
+.semester-group {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-controls {
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Color picker styles */
+.color-picker {
+    position: absolute;
+    background: white;
+    border: 1px solid #e0e4e8;
+    border-radius: 4px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 1100;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.color-option {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+/* Dark mode styles */
+body.dark-mode .color-picker {
+    background-color: #1e3a6d;
+    border-color: #495057;
+}
+
+/* PDF viewer styles */
+embed[type="application/pdf"] {
+    border-radius: 8px;
+    border: none;
+}
+
+/* Dark mode styles for PDF container */
+body.dark-mode embed[type="application/pdf"] {
+    background-color: #023373;
 }

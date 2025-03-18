@@ -1,173 +1,436 @@
-            <a href="#" class="schedule-tab active">Schedule</a>
-        <div class="schedule-view" style="display: block;">
+function toggleDayPanel(header) {
+    const content = header.nextElementSibling;
+    const arrow = header.querySelector('.arrow');
+    content.classList.toggle('show');
+    arrow.style.transform = content.classList.contains('show') ? 'rotate(180deg)' : '';
+}
+
+function createContextMenu(x, y, eventBlock) {
+    // Remove any existing context menu
+    const existingMenu = document.querySelector('.context-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+
+    const menu = document.createElement('div');
+    menu.className = 'context-menu';
+    menu.style.left = `${x}px`;
+    menu.style.top = `${y}px`;
+
+    menu.innerHTML = `
+        <div class="menu-item edit">Edit Event</div>
+        <div class="menu-item color">Change Color</div>
+        <div class="menu-item duplicate">Duplicate</div>
+        <div class="menu-item delete">Delete</div>
+    `;
+
+    // Add event listeners for menu items
     menu.querySelector('.edit').addEventListener('click', () => {
+        // Get current values
+        const currentName = eventBlock.querySelector('.event-name').textContent;
+        const currentTime = eventBlock.querySelector('.event-time').textContent;
+        const [currentStart, currentEnd] = currentTime.split(' - ');
+
+        // Create edit form HTML
+        const editForm = document.createElement('div');
+        editForm.className = 'edit-form';
+        editForm.innerHTML = `
+            <div class="form-group">
+                <input type="text" id="edit-name" placeholder="Event Name" value="${currentName}">
+            </div>
+            <div class="form-group">
+                <div class="weekday-buttons">
+                    <button class="weekday-btn" data-day="T">T</button>
+                    <button class="weekday-btn" data-day="W">W</button>
+                    <button class="weekday-btn" data-day="R">R</button>
+                    <button class="weekday-btn" data-day="F">F</button>
+                    <button class="weekday-btn" data-day="M">M</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="time" id="edit-start" value="${currentStart}">
+            </div>
+            <div class="form-group">
+                <input type="time" id="edit-end" value="${currentEnd}">
+            </div>
+            <div class="edit-buttons">
+                <button class="save-btn">Save</button>
+                <button class="cancel-btn">Cancel</button>
+            </div>
+        `;
+
+        // Show edit form
+        const editDialog = document.createElement('div');
+        editDialog.className = 'edit-dialog';
+        editDialog.appendChild(editForm);
+        document.body.appendChild(editDialog);
+
+        // Add event listeners for weekday buttons
+        editForm.querySelectorAll('.weekday-btn').forEach(btn => {
             btn.addEventListener('click', () => {
+                btn.classList.toggle('selected');
+            });
+        });
+
+        // Handle save
         editForm.querySelector('.save-btn').addEventListener('click', () => {
+            const newName = editForm.querySelector('#edit-name').value;
+            const newStart = editForm.querySelector('#edit-start').value;
+            const newEnd = editForm.querySelector('#edit-end').value;
+            const selectedDays = Array.from(editForm.querySelectorAll('.weekday-btn.selected'))
+                .map(btn => btn.dataset.day);
+            
+            // Validate inputs
+            if (!newName || !newStart || !newEnd) {
+                alert('Please fill in all fields');
+                return;
+            }
+            if (selectedDays.length === 0) {
+                alert('Please select at least one day');
+                return;
+            }
+
+            // Remove existing event blocks
+            const cell = eventBlock.parentElement;
+            cell.innerHTML = '';
+
+            // Create new event blocks for each selected day
+            selectedDays.forEach(day => {
+                const dayIndex = ['M', 'T', 'W', 'R', 'F'].indexOf(day) + 1;
+                const startCell = document.querySelector(`table tr:nth-child(${startHour - 8 + 2}) td:nth-child(${dayIndex + 1})`);
+                
+                if (startCell) {
                     addEventToSchedule(newName, [day], newStart, newEnd);
+                }
+            });
+
+            editDialog.remove();
+        });
+
+        // Handle cancel
         editForm.querySelector('.cancel-btn').addEventListener('click', () => {
+            editDialog.remove();
+        });
+
+        menu.remove();
+    });
+
     menu.querySelector('.color').addEventListener('click', () => {
+        // Remove any existing color picker
+        const existingPicker = document.querySelector('.color-picker');
+        if (existingPicker) {
+            existingPicker.remove();
+        }
+
+        // Create color picker
+        const colorPicker = document.createElement('div');
+        colorPicker.className = 'color-picker';
+        
+        // Define colors
+        const colors = [
+            '#808080', // Gray
+            '#4A90E2', // Blue
+            '#B41231', // Red
+            '#357ABD', // Light Blue
+            '#002467', // Dark Blue
+            '#2ECC71', // Green
+            '#E67E22', // Orange
+            '#9B59B6', // Purple
+            '#E74C3C', // Bright Red
+            '#1ABC9C'  // Turquoise
+        ];
+
+        // Add color options
+        colors.forEach(color => {
+            const colorOption = document.createElement('div');
+            colorOption.className = 'color-option';
+            colorOption.style.backgroundColor = color;
+            
             colorOption.addEventListener('click', () => {
+                // Get the event name to find related blocks
+                const eventName = eventBlock.querySelector('.event-name').textContent;
+                const eventTime = eventBlock.querySelector('.event-time').textContent;
+                
+                // Find all event blocks with the same name and time
+                const allEventBlocks = document.querySelectorAll('.event-block');
+                allEventBlocks.forEach(block => {
+                    if (block.querySelector('.event-name').textContent === eventName &&
+                        block.querySelector('.event-time').textContent === eventTime) {
+                        block.style.backgroundColor = color;
+                    }
+                });
+                
+                colorPicker.remove();
+                menu.remove();
+            });
+            
+            colorPicker.appendChild(colorOption);
+        });
+
+        // Position the color picker next to the context menu
+        const menuRect = menu.getBoundingClientRect();
+        colorPicker.style.left = `${menuRect.right + 5}px`;
+        colorPicker.style.top = `${menuRect.top}px`;
+
+        // Add to document
+        document.body.appendChild(colorPicker);
+
+        // Close color picker when clicking outside
         document.addEventListener('click', function closeColorPicker(e) {
+            if (!colorPicker.contains(e.target) && !menu.contains(e.target)) {
+                colorPicker.remove();
+                document.removeEventListener('click', closeColorPicker);
+            }
+        });
+
+        menu.remove();
+    });
+
     menu.querySelector('.duplicate').addEventListener('click', () => {
+        const clone = eventBlock.cloneNode(true);
+        
+        // Define colors for duplicates
+        const colors = [
+            '#E74C3C',  // Bright Red
+            '#2ECC71',  // Green
+            '#E67E22',  // Orange
+            '#9B59B6',  // Purple
+            '#1ABC9C'   // Turquoise
+        ];
+        
+        // Get current color in RGB format for accurate comparison
+        const computedStyle = window.getComputedStyle(eventBlock);
+        const currentColor = computedStyle.backgroundColor;
+        
+        // Convert hex colors to RGB for comparison
+        const availableColors = colors.filter(color => {
+            const tempDiv = document.createElement('div');
+            tempDiv.style.color = color;
+            document.body.appendChild(tempDiv);
+            const rgbColor = window.getComputedStyle(tempDiv).color;
+            document.body.removeChild(tempDiv);
+            return rgbColor !== currentColor;
+        });
+        
+        // Set a random different color for the duplicate
+        const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+        clone.style.backgroundColor = randomColor;
+        
+        // Get original event name
+        const originalName = eventBlock.querySelector('.event-name').textContent;
+        
+        // Find existing copies and get the next number
+        const cell = eventBlock.parentNode;
+        const existingBlocks = cell.querySelectorAll('.event-block');
+        let copyNumber = 0;
+        
+        existingBlocks.forEach(block => {
+            const name = block.querySelector('.event-name').textContent;
+            if (name.startsWith(originalName + ' copy')) {
+                const match = name.match(/copy(\d+)?$/);
+                if (match) {
+                    const num = match[1] ? parseInt(match[1]) : 0;
+                    copyNumber = Math.max(copyNumber, num + 1);
+                } else {
+                    copyNumber = Math.max(copyNumber, 1);
+                }
+            }
+        });
+        
+        // Update only the clone's name
+        clone.querySelector('.event-name').textContent = `${originalName} copy${copyNumber || ''}`;
+        
+        // Calculate width and position based on total number of blocks
+        const totalBlocks = existingBlocks.length + 1;
+        const blockWidth = 96 / totalBlocks;
+        const gap = 2 / (totalBlocks - 1);
+        
+        // Reposition all blocks
+        existingBlocks.forEach((block, index) => {
+            block.style.width = `${blockWidth}%`;
+            block.style.left = `${(index * (blockWidth + gap))}%`;
+        });
+        
+        // Position the new clone
+        clone.style.width = `${blockWidth}%`;
+        clone.style.left = `${((totalBlocks - 1) * (blockWidth + gap))}%`;
+        
+        // Keep the same height and position
+        clone.style.height = eventBlock.style.height;
+        clone.style.top = eventBlock.style.top;
+        
+        // Add event listeners to the clone
         addEventBlockListeners(clone);
+        
+        // Add to the same cell
+        eventBlock.parentNode.appendChild(clone);
+        
+        menu.remove();
+    });
+
+    // Updated delete functionality
     menu.querySelector('.delete').addEventListener('click', () => {
+        if (confirm('Are you sure you want to delete this event?')) {
+            const cell = eventBlock.parentElement;
+            eventBlock.remove();
+            
+            // Get remaining blocks in the same cell
+            const remainingBlocks = cell.querySelectorAll('.event-block');
+            const totalBlocks = remainingBlocks.length;
+            
+            if (totalBlocks > 0) {
+                // Recalculate width and position for remaining blocks
+                const blockWidth = 96 / totalBlocks;
+                const gap = 2 / (totalBlocks - 1 || 1);
+                
+                // Reposition remaining blocks
+                remainingBlocks.forEach((block, index) => {
+                    block.style.width = `${blockWidth}%`;
+                    block.style.left = `${(index * (blockWidth + gap))}%`;
+                });
+            }
+        }
+        menu.remove();
+    });
+
+    document.body.appendChild(menu);
+
+    // Close menu when clicking outside
     document.addEventListener('click', function closeMenu(e) {
+        if (!menu.contains(e.target)) {
+            menu.remove();
+            document.removeEventListener('click', closeMenu);
+        }
+    });
+}
+
 // Update the addEventBlockListeners function
 function addEventBlockListeners(eventBlock) {
     eventBlock.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        createContextMenu(e.pageX, e.pageY, eventBlock);
+    });
+}
+
 // Update the addEventToSchedule function
 function addEventToSchedule(eventName, days, startTime, endTime) {
+    // Convert times to hour and minute numbers
+    const [startHour, startMinute] = startTime.split(':').map(Number);
+    const [endHour, endMinute] = endTime.split(':').map(Number);
+    
+    // Get all selected days
+    const selectedDays = [];
+    document.querySelectorAll('.weekday-btn.selected').forEach(btn => {
+        const day = btn.textContent;
+        const dayIndex = ['M', 'T', 'W', 'R', 'F'].indexOf(day) + 1;
+        selectedDays.push(dayIndex);
+    });
+
+    // Create event blocks for each selected day
+    selectedDays.forEach(dayIndex => {
+        // Find the start cell
+        const startRowIndex = startHour - 8 + 2; // +2 to account for header row and 8AM start
+        const startCell = document.querySelector(`table tr:nth-child(${startRowIndex}) td:nth-child(${dayIndex + 1})`);
+        
+        if (startCell) {
+            const eventBlock = document.createElement('div');
+            eventBlock.className = 'event-block';
+            
+            // Calculate position and height based on exact times
+            const startMinuteOffset = (startMinute / 60) * 60; // Convert minutes to pixels
+            const endMinuteOffset = (endMinute / 60) * 60;
+            const duration = ((endHour - startHour) * 60) + (endMinute - startMinute);
+            
+            // Set the block's style with precise positioning
+            eventBlock.style.top = `${startMinuteOffset}px`;
+            eventBlock.style.height = `${duration}px`;
+            eventBlock.style.zIndex = '1';
+            
+            // Create the event content with name and time
+            eventBlock.innerHTML = `
+                <div class="event-name">${eventName}</div>
+                <div class="event-time">${startTime} - ${endTime}</div>
+            `;
+            
+            // Add event listeners to the new block
             addEventBlockListeners(eventBlock);
-            input.addEventListener('keypress', handleEnterKeyPress);
-        recurringEventsForm.addEventListener('keypress', handleEnterKeyPress);
-        recurringEventsTab.addEventListener('click', function(e) {
-        coursesTab.addEventListener('click', function(e) {
-        prereqTreeTab.addEventListener('click', function(e) {
-        btn.addEventListener('click', function() {
-        dropdownButton.addEventListener('click', function(e) {
-            item.addEventListener('click', function(e) {
-        document.addEventListener('click', function(e) {
-        btn.addEventListener('click', function() {
-        input.addEventListener('input', function(e) {
-        input.addEventListener('blur', function(e) {
-        subjectInput.addEventListener('input', function() {
-        subjectList.addEventListener('click', function(e) {
-        document.addEventListener('click', function(e) {
-        attributeInput.addEventListener('input', function() {
-        attributeList.addEventListener('click', function(e) {
-        document.addEventListener('click', function(e) {
-        campusInput.addEventListener('input', function() {
-        campusList.addEventListener('click', function(e) {
-        document.addEventListener('click', function(e) {
-        methodsInput.addEventListener('input', function() {
-        methodsList.addEventListener('click', function(e) {
-        document.addEventListener('click', function(e) {
-    const addEventBtn = document.querySelector('.add-event-btn');
-    if (addEventBtn) {
-        addEventBtn.addEventListener('click', function() {
-            // Add event to schedule
-            addEventToSchedule(eventName, null, startTime, endTime);
-        exportButton.addEventListener('click', function(e) {
-        exportCalendar.addEventListener('click', function(e) {
-        exportPDF.addEventListener('click', function(e) {
-        document.addEventListener('click', function(e) {
-    // Get schedule data from your grid
-    const scheduleGrid = document.querySelector('.schedule-grid');
-    // Find all event blocks in the schedule
-    const eventBlocks = scheduleGrid.querySelectorAll('.event-block');
-    a.download = 'course_schedule.ics';
-document.querySelector('.export-ioscalendar').addEventListener('click', function(e) {
-document.addEventListener('DOMContentLoaded', function() {
-        link.addEventListener('click', function(e) {
-        semesterButton.addEventListener('click', function(e) {
-        document.addEventListener('click', function(e) {
-            option.addEventListener('click', function(e) {
-        tab.addEventListener('click', function(e) {
-        toggle.addEventListener('click', (e) => {
-        btn.addEventListener('click', function() {
-        dropdownButton.addEventListener('click', function(e) {
-        document.addEventListener('click', function(e) {
-        // Reset the schedule container
-        const scheduleContainer = document.querySelector('.schedule-grid');
-        if (scheduleContainer) {
-            scheduleContainer.innerHTML = `
-            scheduleContainer.style.padding = '';
-            scheduleContainer.style.overflow = '';
-    mapLink.addEventListener('click', function(e) {
-        const scheduleTab = document.querySelector('.schedule-tab');
-        const scheduleView = document.querySelector('.schedule-view');
-        floorPlanTab.addEventListener('click', function(e) {
-            scheduleTab.classList.remove('active');
-            scheduleView.style.display = 'none';
-        scheduleTab.addEventListener('click', function(e) {
-            scheduleView.style.display = 'block';
-        exportButton.addEventListener('click', function(e) {
-        document.addEventListener('click', function(e) {
-            exportCalendar.addEventListener('click', function(e) {
-            exportPDF.addEventListener('click', function(e) {
-        searchPrereqBtn.addEventListener('click', function() {
-        newGoogleCalendarLink.addEventListener('click', function(e) {
-        addCourseBtn.addEventListener('click', addCourse);
-        tab.addEventListener('click', function() {
-        loginForm.addEventListener('submit', function(e) {
-        registerForm.addEventListener('submit', function(e) {
-        signInLink.addEventListener('click', function(e) {
-        signOutLink.addEventListener('click', function(e) {
-    const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
-    if (scheduleContainer) {
-        // Replace schedule with PDF viewer
-        scheduleContainer.innerHTML = '';
-        scheduleContainer.appendChild(pdfViewer);
-        scheduleContainer.style.padding = '0';  // Remove padding for full-width PDF
-        scheduleContainer.style.overflow = 'hidden';  // Prevent scrollbars
-    const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
-    if (scheduleContainer) {
-        // Replace schedule with PDF viewer
-        scheduleContainer.innerHTML = '';
-        scheduleContainer.appendChild(pdfViewer);
-        scheduleContainer.style.padding = '0';
-        scheduleContainer.style.overflow = 'hidden';
-    const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
-    if (scheduleContainer) {
-        // Replace schedule with PDF viewer
-        scheduleContainer.innerHTML = '';
-        scheduleContainer.appendChild(pdfViewer);
-        scheduleContainer.style.padding = '0';
-        scheduleContainer.style.overflow = 'hidden';
-document.querySelector('a[href="#signin"]').addEventListener('click', (e) => {
-    tab.addEventListener('click', () => {
-document.getElementById('authModal').addEventListener('click', (e) => {
-    exportButton.addEventListener('click', function(e) {
-    document.addEventListener('click', function(e) {
-    input.addEventListener('input', function() {
-    list.addEventListener('click', function(e) {
-    document.addEventListener('click', function(e) {
-        searchBtn.addEventListener('click', () => {
-        courseInput.addEventListener('keypress', (e) => {
-    prereqTreeTab.addEventListener('click', function(e) {
-    coursesTab.addEventListener('click', function(e) {
-        recurringEventsTab.addEventListener('click', function(e) {
-// Function to export schedule to Google Calendar
-    // Collect schedule data to send to the server
-    const scheduleData = collectScheduleData();
-    if (!scheduleData.courses || scheduleData.courses.length === 0) {
-        alert('No courses found to export. Please add courses to your schedule first.');
-    console.log('Exporting schedule data:', scheduleData);
-        body: JSON.stringify(scheduleData)
-                if (confirm('Your schedule has been exported. Would you like to view it in Google Calendar?')) {
-        clientSideGoogleCalendarExport(scheduleData);
-function clientSideGoogleCalendarExport(scheduleData) {
-        const icsContent = generateICSContent(scheduleData);
-        link.download = 'schedule.ics';
-// Generate ICS file content from schedule data
-function generateICSContent(scheduleData) {
-    const semester = scheduleData.semester || 'Fall 2024';
-    scheduleData.courses.forEach(course => {
-// Helper function to collect schedule data from the UI
-    // Get all course blocks from the schedule
-document.addEventListener('DOMContentLoaded', function() {
-        newAddCourseBtn.addEventListener('click', function(e) {
-        item.addEventListener('click', function() {
-                    // Remove from schedule
-                            // Remove from schedule
-        sortSelect.addEventListener('change', function() {
-        resetButton.addEventListener('click', function() {
-// Function to add a section to the schedule
-    let cell = document.querySelector(`.schedule-grid tr:nth-child(${rowIndex}) td:nth-child(${dayIndex})`);
-// Function to clear the schedule
-document.addEventListener('DOMContentLoaded', function() {
-            .schedule-grid {
-document.addEventListener('DOMContentLoaded', function() {
-        newAddCourseBtn.addEventListener('click', function(e) {
-    document.querySelector('.export-ioscalendar').addEventListener('click', () => {
-    document.querySelector('.export-googlecalendar').addEventListener('click', () => {
-// Function to preview a section on the schedule
-    section.schedule.forEach(timeSlot => {
-            document.querySelector('.schedule-grid').appendChild(block);
-        const cell = document.querySelector(`.schedule-grid td[data-day="${timeSlot.day}"][data-hour="${Math.floor(startHour)}"]`);
-    sectionItem.addEventListener('mouseenter', () => {
-    sectionItem.addEventListener('mouseleave', () => {
-    // Add to schedule on click
-    sectionItem.addEventListener('click', () => {
-                <div>${section.schedule.map(slot => `${slot.day} ${slot.startTime}-${slot.endTime}`).join(', ')}</div>
-    header.querySelector('.close-btn').addEventListener('click', () => {
+
+            startCell.style.position = 'relative';
+            startCell.appendChild(eventBlock);
+        }
+    });
+}
+
+function exportToCalendar() {
+    // Current timestamp for DTSTAMP
+    const now = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+    // Start the calendar content
+    let icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Gonzaga University//Class Schedule//EN'
+    ].join('\r\n');
+
+    // Add each event
+    document.querySelectorAll('.event-block').forEach(eventBlock => {
+        const eventName = eventBlock.querySelector('.event-name').textContent;
+        const [startTime, endTime] = eventBlock.querySelector('.event-time').textContent.split(' - ');
+        
+        // Convert times to UTC format
+        const [startHour, startMinute] = startTime.split(':');
+        const [endHour, endMinute] = endTime.split(':');
+        
+        // Use next Monday as the start date
+        const nextMonday = getNextMonday();
+        const dtStart = formatDateForICS(nextMonday, startHour, startMinute);
+        const dtEnd = formatDateForICS(nextMonday, endHour, endMinute);
+
+        // Create RRULE based on selected days
+        const selectedDays = ['MO', 'TU', 'WE', 'TH', 'FR'];
+        const rrule = `RRULE:FREQ=WEEKLY;BYDAY=${selectedDays.join(',')};UNTIL=20251231T235959Z`;
+
+        // Add event to calendar
+        icsContent += '\r\n' + [
+            'BEGIN:VEVENT',
+            'UID:' + Date.now() + '@gonzaga.edu',
+            'DTSTAMP:' + now,
+            'SUMMARY:' + eventName,
+            'DTSTART:' + dtStart,
+            'DTEND:' + dtEnd,
+            rrule,
+            'END:VEVENT'
+        ].join('\r\n');
+    });
+
+    // Close the calendar
+    icsContent += '\r\nEND:VCALENDAR';
+
+    // Create and trigger download
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'class_schedule.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Helper functions
+function getNextMonday() {
+    const today = new Date();
+    const day = today.getDay();
+    const diff = day === 0 ? 1 : 8 - day;
+    return new Date(today.setDate(today.getDate() + diff));
+}
+
+function formatDateForICS(date, hours, minutes) {
+    return date.getFullYear() +
+           String(date.getMonth() + 1).padStart(2, '0') +
+           String(date.getDate()).padStart(2, '0') + 'T' +
+           String(hours).padStart(2, '0') +
+           String(minutes).padStart(2, '0') + '00';
+}

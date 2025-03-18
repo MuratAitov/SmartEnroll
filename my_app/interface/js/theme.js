@@ -1,8 +1,20 @@
 function toggleTheme() {
+    const body = document.body;
+    const logoImg = document.querySelector('.logo img');
+    const themeToggles = document.querySelectorAll('.theme-toggle');
+    
     body.classList.toggle('dark-mode');
     const isDarkMode = body.classList.contains('dark-mode');
-            toggleTheme();
-function toggleTheme() {
-    body.classList.toggle('dark-mode');
-    const isDarkMode = body.classList.contains('dark-mode');
-    button.addEventListener('click', toggleTheme);
+    
+    // Update theme toggle buttons text
+    themeToggles.forEach(button => {
+        button.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+    });
+    
+    // Update logo based on theme with new path
+    if (isDarkMode) {
+        logoImg.src = 'GU Logo/IMG_4570.jpg'; // Updated dark mode logo path
+    } else {
+        logoImg.src = 'GU Logo/IMG_4571.jpg'; // Light mode logo should also be in GU Logo folder
+    }
+}
