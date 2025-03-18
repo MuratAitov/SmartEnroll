@@ -13,8 +13,8 @@ function toggleTheme() {
     
     // Update logo based on theme with new path
     if (isDarkMode) {
-        logoImg.src = 'GU Logo/IMG_4570.jpg'; // Updated dark mode logo path
+        logoImg.src = 'my_app/interface/assets/GU Logo/IMG_4570.jpg'; // Updated dark mode logo path
     } else {
-        logoImg.src = 'GU Logo/IMG_4571.jpg'; // Light mode logo should also be in GU Logo folder
+        logoImg.src = 'my_app/interface/assets/GU Logo/IMG_4571.jpg'; // Light mode logo should also be in GU Logo folder
     }
 }
