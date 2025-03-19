@@ -1,82 +1,20 @@
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: fit-content;
-}
-
-.logo img {
-    background-color: transparent !important;
-    height: 40px;
-    width: auto;
-    margin-right: 10px;
-}
-.logo-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-    align-items: center;
-}
-.university-name {
-    color: #FFFFFF;
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-    width: fit-content;
-    display: block;
-    font-family: 'Goudy Trajan Pro', serif;
-    text-align: center;
-}
-.university-subtitle {
-    color: #FFFFFF;
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 8.2px;
-    margin-top: 2px;
-    font-family: 'Goudy Trajan Pro', serif;
-    text-align: center;
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    transform: none;
-}
-
-.division-btn {
-    flex: 1;  /* Make each button take up equal space */
-    padding: 8px 12px;
-    border: 1px solid #C4C8CE;
-    background-color: transparent;
-    color: #6c757d;
+/* General button styles */
+button {
+    background-color: #002467;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
     cursor: pointer;
-    border-radius: 4px;
-    font-size: clamp(12px, 0.9vw, 14px);
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    min-width: 0; /* Allow button to shrink if needed */
+    transition: all 0.2s;
+    font-weight: 500;
+}
+button:hover {
+    background-color: #003399;
+    transform: translateY(-1px);
 }
 
-.division-btn:hover {
-    background-color: rgba(108, 117, 125, 0.1);
-}
-
-/* Active state */
-.division-btn.selected {
-    background-color: #002467 !important;
-    color: #ffffff !important;
-    border: 1px solid #002467 !important;
-}
-
-.schedule-container {
-    flex: 1;          /* Take up remaining space */
-    background-color: white;
-    border-radius: 8px;  /* Match sidebar's border radius */
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    min-width: 600px; /* Ensure minimum width for schedule */
-    border-color: #e0e4e8;
-    overflow: hidden;  /* Ensure content doesn't overflow rounded corners */
-}
-
+/* Navigation tabs */
 .nav-tabs {
     display: flex;
     gap: 25px;
@@ -97,6 +35,129 @@
     color: #142A50;
 }
 
+/* Sidebar navigation */
+.sidebar-tabs a {
+    color: #C4C8CE;
+    text-decoration: none;
+    padding: 5px 0;
+    position: relative;
+    font-size: 0.9em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+.sidebar-tabs a.active {
+    color: #142A50; /* Blue color when active */
+    position: absolute;
+    bottom: -11px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #B41231; /* Red underline */
+}
+
+/* Weekday buttons */
+.weekday-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 10px 0;
+    justify-content: space-between;
+}
+.weekday-btn, .division-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #C4C8CE;
+    background-color: transparent;
+    color: #6c757d;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: clamp(12px, 0.9vw, 14px);
+    transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+    white-space: nowrap;
+    min-width: fit-content;
+}
+.weekday-btn:hover, .division-btn:hover {
+    background-color: rgba(108, 117, 125, 0.1);
+}
+.weekday-btn.selected, .division-btn.selected {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+/* Color picker */
+.color-picker {
+    position: absolute;
+    background: white;
+    border: 1px solid #e0e4e8;
+    border-radius: 4px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 1100;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+.color-option {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+/* Dropdown menus */
+.campus-dropdown, .dropdown-content {
+    position: relative;
+    width: 100%;
+}
+.dropdown-button {
+    width: 100%;
+    text-align: left;
+    padding: 8px 0;
+    background: none;
+    border: none;
+    color: #495057;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1em; /* Match the font size of other inputs */
+    transition: transform 0.2s ease;
+}
+.dropdown-button .arrow {
+    font-size: 0.8em;
+    margin-left: 8px; /* Add some space between text and arrow */
+    color: #495057; /* Match the text color */
+}
+.dropdown-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    margin-top: 4px;
+}
+.dropdown-list.show, .dropdown-item:hover {
+    display: block;
+    background-color: #B41231;
+    color: #ffffff;
+}
+.dropdown-item {
+    padding: 8px 16px;
+    color: #495057;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+/* Export button */
 .export-calendar-btn {
     margin-top: 10px;
     width: 100%;
@@ -108,73 +169,11 @@
     cursor: pointer;
     transition: background-color 0.2s;
 }
-
 .export-calendar-btn:hover {
     background-color: #357ABD;
 }
 
-/* Update sidebar tab styles */
-.sidebar-tabs a {
-    color: #C4C8CE;
-    text-decoration: none;
-    padding: 5px 0;
-    position: relative;
-    font-size: 0.9em;
-    white-space: nowrap;
-    flex-shrink: 0;
-    transition: color 0.2s;
-}
-
-.sidebar-tabs a.active {
-    color: #142A50;  /* Blue color when active */
-}
-
-.sidebar-tabs a.active::after {
-    content: '';
-    position: absolute;
-    bottom: -11px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #B41231;  /* Red underline */
-}
-
-/* Dark mode styles */
-
-
-
-
-/* Button hover state */
-.division-btn:hover {
-    background-color: #B41231 !important;
-    border-color: #B41231 !important;
-    color: #ffffff !important;
-}
-
-/* Button selected/clicked state - light mode */
-.division-btn.selected {
-    background-color: #023373 !important;
-    border-color: #023373 !important;
-    color: #ffffff !important;
-}
-
-
-
-/* Weekday button selected state in light mode */
-.weekday-btn.selected {
-    background-color: #023373 !important;
-    border-color: #023373 !important;
-    color: #ffffff !important;
-}
-
-/* Weekday button hover state */
-.weekday-btn:hover {
-    background-color: #B41231 !important;
-    border-color: #B41231 !important;
-    color: #ffffff !important;
-}
-
-/* Context menu styles */
+/* Context menu */
 .context-menu {
     position: fixed;
     background: white;
@@ -185,13 +184,11 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     z-index: 1000;
 }
-
 .menu-item {
     padding: 8px 12px;
     cursor: pointer;
     transition: background-color 0.2s;
 }
-
 .menu-item:hover {
     background-color: #f5f7fa;
 }

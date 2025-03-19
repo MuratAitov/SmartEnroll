@@ -1,12 +1,14 @@
+/* Sidebar Layout */
 .sidebar {
-    flex: 0 0 320px;  /* Fixed width of 320px, won't grow or shrink */
-    min-width: 320px; /* Ensure minimum width */
+    flex: 0 0 320px;
+    min-width: 320px;
     background-color: white;
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     height: fit-content;
 }
+
 .sidebar-tabs {
     display: flex;
     gap: 15px;
@@ -15,6 +17,7 @@
     padding-bottom: 10px;
     flex-wrap: nowrap;
 }
+
 .sidebar-tabs a {
     color: #C4C8CE;
     text-decoration: none;
@@ -25,9 +28,11 @@
     flex-shrink: 0;
     transition: color 0.2s;
 }
+
 .sidebar-tabs a.active {
     color: #142A50;
 }
+
 .sidebar-tabs a.active::after {
     content: '';
     position: absolute;
@@ -38,17 +43,123 @@
     background-color: #B41231;
 }
 
-.right-sidebar {
-    background-color: white;
-    padding: 20px;
+/* Schedule Grid Structure */
+.schedule-grid {
+    width: 100%;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    height: fit-content;
+    overflow: hidden;
 }
 
-.section-title {
-    color: #002467;
-    font-weight: 600;
-    margin-bottom: 15px;
-    font-size: 1.1em;
+.schedule-grid table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.schedule-grid th, .schedule-grid td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    height: 60px;
+    line-height: 60px;
+    border: 1px solid #e0e4e8;
+}
+
+.schedule-grid th {
+    background-color: #023373;
+    color: #ffffff;
+    border: none;
+}
+
+.schedule-grid td:first-child {
+    width: 80px;
+}
+
+.schedule-grid th:not(:first-child),
+.schedule-grid td:not(:first-child) {
+    width: calc((100% - 80px) / 5);
+}
+
+/* Event Block Styling */
+.event-block {
+    position: absolute;
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #808080;
+    color: white;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    box-sizing: border-box;
+}
+
+.event-block:hover {
+    opacity: 0.9;
+}
+
+/* Contextual Components (Dialogs, Dropdowns, etc.) */
+.edit-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.edit-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    min-width: 300px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.save-btn, .cancel-btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-btn {
+    background: #4A90E2;
+    color: white;
+}
+
+.cancel-btn {
+    background: #e0e4e8;
+    color: #495057;
+}
+
+/* Mobile Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    .sidebar, .schedule-container {
+        width: 100%;
+        min-width: unset;
+    }
+    .nav-sections, .user-controls {
+        flex-direction: column;
+        border: none;
+        padding-top: 10px;
+    }
+    .schedule-grid {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .schedule-grid table {
+        min-width: 600px;
+    }
 }

@@ -1,47 +1,13 @@
-.theme-toggle {
-    width: 100%;
-    padding: 8px 16px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: #142A50;
-    text-align: left;
-    font-family: inherit;
-    font-size: inherit;
-}
-
-.theme-toggle:hover {
-    background-color: #f5f7fa;
-}
-
-body, nav, .nav-links a, .nav-button, .dropdown-content,
-.theme-toggle, .sidebar, input, select {
-    transition: all 0.3s ease;
-}
-
+/* Base Styling */
 body {
     font-family: 'Inter', sans-serif;
     background-color: #f5f7fa;
+    color: #333;
     margin: 0;
     padding: 0;
-    color: #333;
     transition: all 0.3s ease;
 }
-header {
-    background-color: #142A50;
-    color: white;
-    padding: 15px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-main {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    max-width: 1400px;  /* Set a max-width for large screens */
-    margin: 0 auto;     /* Center the content */
-}
+
 input, select {
     background-color: white;
     border: 1px solid #e0e4e8;
@@ -52,31 +18,111 @@ input, select {
     margin-bottom: 12px;
     transition: border-color 0.2s;
 }
+
 input:focus, select:focus {
-    outline: none;
     border-color: #002467;
     box-shadow: 0 0 0 3px rgba(0, 36, 103, 0.1);
 }
+
+/* Navigation Styles */
+nav, .nav-links a, .nav-button, .dropdown-content, .theme-toggle, .sidebar {
+    transition: all 0.3s ease;
+}
+
 nav {
     height: 50px;
     padding: 0 clamp(10px, 2vw, 20px);
     background-color: #142A50;
     font-size: clamp(12px, 1vw, 16px);
-    position: static;
-    transition: all 0.3s ease;
 }
-body.is-authenticated .logged-in-content {
+
+.nav-sections {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(10px, 2vw, 20px);
+    max-width: 100%;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 2vw, 25px);
+    flex: 1;
+}
+
+/* Header and Main Content */
+header {
+    background-color: #142A50;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+main {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    width: 100%;
+    padding: 8px 16px;
+    background: none;
+    color: #142A50;
+    font-size: inherit;
+    cursor: pointer;
+    text-align: left;
+}
+
+.theme-toggle:hover {
+    background-color: #f5f7fa;
+}
+
+/* Dropdown Menus */
+.dropdown-content, .semester-content, .export-dropdown {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.dropdown-content.show, .semester-content.show, .export-dropdown.show {
     display: block;
 }
 
-body.is-authenticated .logged-out-content {
-    display: none;
+/* Mobile Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    main, .sidebar, .schedule-container {
+        flex-direction: column;
+        width: 100%;
+        min-width: unset;
+    }
+
+    .nav-sections, .user-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
-body:not(.is-authenticated) .logged-out-content {
-    display: block;
+@media screen and (max-width: 480px) {
+    .logo img {
+        height: 30px;
+    }
 }
 
-body:not(.is-authenticated) .logged-in-content {
-    display: none;
+/* iOS Specific Smooth Scrolling */
+@supports (-webkit-overflow-scrolling: touch) {
+    .nav-links, .schedule-grid, .sidebar {
+        -webkit-overflow-scrolling: touch;
+    }
 }

@@ -29,3 +29,72 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Export dropdown and button styles */
+.export-container {
+    position: relative;
+    display: inline-block;
+}
+
+.export-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    min-width: 180px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 8px 0;
+    z-index: 1000;
+    display: none;
+    margin-top: 5px;
+}
+
+.export-dropdown.show {
+    display: block;
+}
+
+.export-dropdown a {
+    display: block;
+    padding: 8px 16px;
+    color: #142A50;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.export-dropdown a:hover {
+    background-color: #B41231;
+    color: #ffffff;
+}
+
+.export-button .arrow {
+    display: inline-block;
+    margin-left: 5px;
+    color: #ffffff;
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+.export-button.active .arrow {
+    transform: rotate(180deg);
+}
+
+/* Pre-requisite tree view styles */
+.prereq-tree-view {
+    padding: 15px 0;
+}
+
+.prereq-tree-container {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.coming-soon {
+    color: #6c757d;
+    font-style: italic;
+    body.dark-mode & {
+        color: #C4C8CE;  /* Adjust for better visibility in dark mode */
+    }
+}

@@ -1,3 +1,4 @@
+/* Base Styles for Form Groups */
 .form-group {
     margin-bottom: 15px;
     border: 1px solid #e0e4e8;
@@ -5,16 +6,21 @@
     padding: 10px;
     position: relative;
 }
+
 .form-group input {
     width: 100%;
     border: none;
     padding: 8px 0;
     font-size: 1em;
     color: #495057;
+    background: transparent;
 }
+
 .form-group input:focus {
     outline: none;
 }
+
+/* Layout for Level Buttons in Forms */
 .level-buttons {
     display: flex;
     gap: 8px;
@@ -23,35 +29,8 @@
     position: relative;
 }
 
-.empty-space {
-    display: none;
-}
-
-/* Remove any pseudo elements that might be creating the arrow */
-.form-group .level-buttons,
-.form-group {
-    background-image: none !important;
-}
-
-/* Ensure no arrow on the container */
-.level-buttons {
-    position: relative;
-}
-
-.level-buttons::before,
 .level-buttons::after {
-    display: none !important;
-    content: none !important;
-}
-
-/* Remove justify-content if it exists */
-.form-group .level-buttons {
-    justify-content: stretch;
-}
-
-/* Add dropdown arrow */
-.level-buttons::after {
-    content: '▼';
+    content: '▼'; /* Dropdown arrow */
     position: absolute;
     right: -20px;
     top: 50%;
@@ -59,6 +38,11 @@
     color: #D0D4D9;
     font-size: 12px;
     pointer-events: none;
+}
+
+/* Style Modifications for Specific Form Use Cases */
+.edit-form {
+    /* Styles specific to forms intended for editing */
 }
 
 .edit-form input[type="time"] {
@@ -91,78 +75,29 @@
     border-color: #4A90E2;
 }
 
-/* Style for all inputs */
-.courses-view .form-group input,
-.recurring-events-view .form-group input {
+/* Styles for Recurring Events View */
+.recurring-events-view .form-group:has(.time-input) {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    height: 56px;
+}
+
+.recurring-events-view .time-input {
     width: 100%;
     border: none;
     padding: 0;
     font-size: 1em;
     color: #495057;
     background: transparent;
-    height: 36px;  /* Fixed height for inputs */
+    height: 36px;
     line-height: 36px;
 }
 
-/* Weekday buttons container */
 .recurring-events-view .form-group .weekday-buttons {
     width: 100%;
     display: flex;
     gap: 8px;
     justify-content: space-between;
     margin: 0;  /* Remove margin */
-}
-
-/* Time input container styles */
-.recurring-events-view .form-group:has(.time-input) {
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    height: 56px;
-    box-sizing: border-box;
-}
-
-/* Time input field styles */
-.recurring-events-view .time-input {
-    width: 100%;
-    border: none;
-    padding: 0;
-    font-size: 1em;
-    color: #495057;
-    background: transparent;
-    height: 36px;
-    line-height: 36px;
-}
-
-/* Remove flex display from inputs */
-.courses-view .form-group input,
-.recurring-events-view .form-group input {
-    width: 100%;
-    border: none;
-    padding: 0;
-    font-size: 1em;
-    color: #495057;
-    background: transparent;
-    height: 36px;
-    line-height: 36px;
-}
-
-/* Time input container styles */
-.recurring-events-view .form-group:has(.time-input) {
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    height: 56px;
-}
-
-/* Time input field styles */
-.recurring-events-view .time-input {
-    width: 100%;
-    border: none;
-    padding: 0;
-    font-size: 1em;
-    color: #495057;
-    background: transparent;
-    height: 36px;
-    line-height: 36px;
 }

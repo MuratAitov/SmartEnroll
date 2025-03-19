@@ -1,3 +1,4 @@
+/* Base Navigation Styles */
 .nav-sections {
     height: 100%;
     display: flex;
@@ -5,16 +6,6 @@
     justify-content: space-between;
     gap: clamp(10px, 2vw, 20px);
     max-width: 100%;
-}
-
-.semester-group {
-    display: flex;
-    align-items: center;
-    gap: clamp(8px, 1vw, 12px);
-    padding-right: clamp(10px, 2vw, 20px);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
-    position: relative;
 }
 
 .nav-links {
@@ -34,38 +25,6 @@
     transition: color 0.2s;
 }
 
-.user-controls {
-    display: flex;
-    align-items: center;
-    gap: clamp(10px, 1vw, 15px);
-    margin-left: auto;
-    padding-left: clamp(10px, 2vw, 20px);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
-}
-
-.credits-box {
-    padding: 5px clamp(8px, 1vw, 12px);
-    flex-shrink: 0;
-    color: #ffffff;
-}
-
-.nav-button, .semester-button {
-    padding: 5px clamp(5px, 0.5vw, 10px);
-    min-height: 30px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.logo-img {
-    height: clamp(16px, 1.5vw, 20px);
-    width: clamp(16px, 1.5vw, 20px);
-    object-fit: contain;
-}
-
 .nav-links a.active {
     color: #FFFFFF;
     position: relative;
@@ -81,14 +40,46 @@
     background-color: #B41231;
 }
 
-.arrow {
-    font-size: 0.8em;
+.nav-links a:hover {
+    color: #B41231 !important;
 }
 
-.user-dropdown {
-    position: relative;
+/* Button Styles */
+.nav-button, .semester-button {
+    padding: 5px clamp(5px, 0.5vw, 10px);
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
+.nav-button:hover {
+    color: #ffffff;
+}
+
+/* User Controls and Info */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1vw, 15px);
+    margin-left: auto;
+    padding-left: clamp(10px, 2vw, 20px);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.user-info {
+    padding: 8px 16px;
+}
+
+.user-info:hover {
+    background-color: transparent;
+    color: inherit;
+}
+
+/* Dropdowns */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -106,27 +97,6 @@
     display: block;
 }
 
-.user-info {
-    padding: 8px 16px;
-}
-
-.student-name {
-    color: #142A50;
-    font-weight: 500;
-    margin-bottom: 4px;
-}
-
-.student-id {
-    color: #666;
-    font-size: 0.9em;
-}
-
-.dropdown-divider {
-    height: 1px;
-    background-color: #e0e4e8;
-    margin: 8px 0;
-}
-
 .dropdown-content a {
     display: block;
     padding: 8px 16px;
@@ -138,58 +108,17 @@
     background-color: #f5f7fa;
 }
 
-/* Show/hide content based on auth state */
-.logged-in-content,
-.logged-out-content {
-    display: none;
-}
-
-.nav-right {
+/* Semester Specifics */
+.semester-group {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-left: auto;
+    gap: clamp(8px, 1vw, 12px);
+    padding-right: clamp(10px, 2vw, 20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    position: relative;
 }
 
-.nav-button {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: none;
-    border: none;
-    color: #C4C8CE;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: clamp(12px, 1vw, 16px);
-    height: 36px;
-}
-
-.nav-button:hover {
-    color: #ffffff;
-}
-
-.nav-button .logo-img {
-    height: 24px;
-    width: 24px;
-    object-fit: contain;
-}
-
-.nav-button .arrow {
-    font-size: 0.8em;
-    transition: transform 0.2s;
-}
-
-/* Ensure both buttons have the same height and vertical alignment */
-.user-dropdown {
-    display: flex;
-    align-items: center;
-    height: 36px;
-}
-
-/* Header styles in dark mode */
-
-
-/* Semester dropdown styles */
 .semester-dropdown {
     position: relative;
     display: inline-block;
@@ -224,92 +153,25 @@
     display: block;  /* Show only when .show class is present */
 }
 
-.semester-content a {
-    color: #142A50;
-    padding: 8px 16px;
-    text-decoration: none;
-    display: block;
-    transition: background-color 0.2s;
-}
-
 .semester-content a:hover {
     background-color: #B41231;
     color: #ffffff;
 }
 
-.nav-links a {
-    transition: all 0.2s ease !important;
-}
-
-.nav-links a:hover {
-    color: #B41231 !important;
-}
-
-/* Active state hover */
-.nav-links a.active:hover {
-    color: #B41231 !important;
-}
-
-/* Keep the red underline for active state */
-.nav-links a.active::after {
-    background-color: #B41231 !important;
-}
-
-.nav-links a {
-    position: relative !important;
-}
-
-/* Position the export button container relatively */
-.nav-button:not(.user-dropdown .nav-button) {
-    position: relative;
-}
-
-.credits-box {
-    padding: 5px clamp(8px, 1vw, 12px);
-    flex-shrink: 0;
-    color: #ffffff;
-}
-
-
-/* Add transition for smooth color change */
-.credits-box {
-    transition: color 0.3s ease;
-}
-
-
+/* Rotate and Color Adjustments */
 .arrow {
+    font-size: 0.8em;
     transition: transform 0.2s ease;
     color: #ffffff;
 }
 
-/* Update hover styles for user dropdown */
-.dropdown-content a:hover,
-.theme-toggle:hover {
-    background-color: #B41231;
-    color: #ffffff !important;
-}
-
-/* Ensure student info doesn't change color on hover */
-.user-info:hover {
-    background-color: transparent;
-    color: inherit;
-}
-
-/* Semester button arrow in light mode */
-.semester-button .arrow {
-    display: inline-block !important;
-    margin-left: 5px;
-    color: #ffffff !important;
-    font-size: 12px;
-    transition: transform 0.2s ease;
-}
-
-/* Rotate arrow when dropdown is open */
-.semester-button.active .arrow {
+.semester-button.active .arrow,
+.export-button.active .arrow {
     transform: rotate(180deg);
 }
 
-/* Original light mode styles remain unchanged */
-.semester-group {
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+/* Authentication Specific Styles */
+.logged-in-content,
+.logged-out-content {
+    display: none;
 }
