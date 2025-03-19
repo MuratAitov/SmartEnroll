@@ -89,7 +89,14 @@
                 <input type="text" placeholder="Instructor">
                 <select><option>Main Campus</option></select>
                 <select><option>In Person</option></select>
-            </div>
+                <h3>Courses</h3>
+                <ul id="courses-list"></ul> <!-- List where courses will be displayed -->
+                <h3>Sections</h3>
+                <ul id="sections-list"></ul> <!-- List where sections will be displayed -->
+                <h3>Professors</h3>
+                <select id="professors-dropdown">
+                    <option>Select a professor</option>
+                </select> <!-- Dropdown for selecting professors -->
          </aside>
          <section class="schedule-grid">
             <table>
@@ -120,13 +127,17 @@
          </section>
          <div class="empty-space"></div>
     </main>
-
-    <script src="./js/theme.js"></script>
     <script src="./js/autocomplete.js"></script>
+    <script src="./js/course.js"></script>
     <script src="./js/dropdowns.js"></script>
-    <script src="./js/pdfHandling.js"></script>
-    <script src="./js/calendar.js"></script>
-    <script src="./js/sidebar.js"></script>
     <script src="./js/initialization.js"></script>
+    <script src="./js/pdfHandling.js"></script>
+    <script src="./js/sidebar.js"></script>
+    <script src="./js/theme.js"></script>
+    <script src="./js/calendar/eventActions.js"></script>
+    <script src="./js/calendar/eventListeners.js"></script>
+    <script src="./js/calendar/eventManagement.js"></script>
+    <script src="./js/calendar/helperFunctions.js"></script>
+    <script src="./js/calendar/uiControls.js"></script>
 </body>
 </html> 
