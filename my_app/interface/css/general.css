@@ -26,13 +26,6 @@ a::after, a::before {
     display: none;
 }
 
-/* Exception for sidebar tabs and nav links active elements */
-.sidebar-tabs a.active::after,
-header .nav-links a.active::after {
-    content: '' !important;
-    display: block !important;
-}
-
 input, select {
     background-color: white;
     border: 1px solid #e0e4e8;
@@ -181,13 +174,6 @@ header .nav-links a.active::after {
     height: 3px !important;
     background-color: #B41231 !important;
     display: block !important;
-}
-
-/* Ensure all other underlines are hidden */
-.sidebar-tabs a::after,
-.nav-links a:not(.active)::after {
-    display: none !important;
-    content: none !important;
 }
 
 /* Right section with export and user controls */
@@ -493,22 +479,6 @@ table.schedule-grid tbody tr td:first-child,
 
 .division-btn:hover {
     background-color: #f8f9fa;
-}
-
-/* Footer Styles */
-footer {
-    background-color: #f5f7fa;
-    color: #6c757d;
-    padding: 15px 0;
-    text-align: center;
-    font-size: 14px;
-    border-top: 1px solid #e0e4e8;
-}
-
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
 }
 
 /* Mobile Responsive Adjustments */

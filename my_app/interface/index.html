@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Registration | Gonzaga University</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="icon" href="path/to/your/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./css/component.css">
     <link rel="stylesheet" href="./css/darkmode.css">
     <link rel="stylesheet" href="./css/events.css">
@@ -16,7 +17,6 @@
     <link rel="stylesheet" href="./css/navigation.css">
     <link rel="stylesheet" href="./css/tables.css">
     <link rel="stylesheet" href="./css/user.css">
-    <script src="./js/sidebar-tabs.js"></script>
 </head>
 <body>
     <header>
@@ -87,100 +87,93 @@
     </header>
 
     <main>
-        <aside class="sidebar">
-            <div class="sidebar-tabs">
-                <a href="#" class="active">Courses</a>
-                <a href="#">Recurring Events</a>
-                <a href="#">Pre-Req Tree</a>
+        <div class="sidebar">
+            <div class="tabs">
+                <button class="tab-button active" onclick="openTab('Courses', event)">Courses</button>
+                <button class="tab-button" onclick="openTab('RecurringEvents', event)">Recurring Events</button>
+                <button class="tab-button" onclick="openTab('PreReqTree', event)">Pre-Req Tree</button>
             </div>
-            
-            <!-- Courses Content (Default View) -->
-            <div id="courses-content" class="sidebar-content">
-                <input type="text" placeholder="Subject" class="search-input">
-                <input type="text" placeholder="Course code" class="search-input">
-                
-                <div class="division-buttons">
-                    <button class="division-btn">Lower Division</button>
-                    <button class="division-btn">Upper Division</button>
-                </div>
-                
-                <input type="text" placeholder="Attributes" class="search-input">
-                <input type="text" placeholder="Instructor" class="search-input">
-                <input type="text" placeholder="Campus" class="search-input">
-                <input type="text" placeholder="Instructional Methods" class="search-input">
-            </div>
-            
-            <!-- Recurring Events Content (Hidden Initially) -->
-            <div id="recurring-events-content" class="sidebar-content" style="display: none;">
-                <input type="text" placeholder="Event name" class="search-input">
-                <div class="form-group">
-                    <input type="date" placeholder="Date" class="date-input">
-                </div>
-                <div class="form-group">
-                    <input type="time" placeholder="Start Time" class="time-input">
-                </div>
-                <div class="form-group">
-                    <input type="time" placeholder="End Time" class="time-input">
-                </div>
-                <div class="weekday-buttons">
-                    <button class="weekday-btn">M</button>
-                    <button class="weekday-btn">T</button>
-                    <button class="weekday-btn">W</button>
-                    <button class="weekday-btn">R</button>
-                    <button class="weekday-btn">F</button>
-                </div>
-                <input type="text" placeholder="Location" class="search-input">
-                <button class="add-event-btn" style="background-color: #4A90E2; color: white; padding: 8px 0; border: none; border-radius: 4px; width: 100%; margin-top: 10px; cursor: pointer;">Add Event</button>
-            </div>
-            
-            <!-- Pre-Req Tree Content (Hidden Initially) -->
-            <div id="pre-req-tree-content" class="sidebar-content" style="display: none;">
-                <input type="text" placeholder="Course code" class="search-input">
-                <button class="search-prereq-btn" style="background-color: #4A90E2; color: white; padding: 8px 0; border: none; border-radius: 4px; width: 100%; margin-top: 10px; cursor: pointer;">Search Pre-requisites</button>
-                <div class="prereq-info" style="margin-top: 15px; font-size: 14px; color: #6c757d;">
-                    <p>Select a course to view its prerequisite tree and requirements.</p>
+            <div id="Courses" class="tab-content active">
+                <div class="search-form">
+                    <input type="text" placeholder="Subject">
+                    <input type="text" placeholder="Course code">
+                    <div class="button-group">
+                        <button type="button" class="filter-button">Lower Division</button>
+                        <button type="button" class="filter-button">Upper Division</button>
+                    </div>
+                    <input type="text" placeholder="Attributes">
+                    <input type="text" placeholder="Instructor">
+                    <input type="text" placeholder="Campus">
+                    <input type="text" placeholder="Instructional Methods">
+                    <button type="button" class="search-btn">Search Courses</button>
                 </div>
             </div>
-        </aside>
-
-        <section class="schedule-grid">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="time-header"></th>
-                        <th>M</th>
-                        <th>T</th>
-                        <th>W</th>
-                        <th>R</th>
-                        <th>F</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>8:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>9:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>10:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>11:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>12:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>1:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>2:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>3:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>4:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>5:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>6:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>7:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>8:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>9:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td>10:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                </tbody>
-            </table>
-        </section>
+            <div id="RecurringEvents" class="tab-content">
+                <div class="search-form">
+                    <input type="text" placeholder="Event Name">
+                    <div class="day-selector">
+                        <button type="button" class="day-button">M</button>
+                        <button type="button" class="day-button">T</button>
+                        <button type="button" class="day-button">W</button>
+                        <button type="button" class="day-button">R</button>
+                        <button type="button" class="day-button">F</button>
+                    </div>
+                    <input type="text" placeholder="Start Time">
+                    <input type="text" placeholder="End Time">
+                    <button type="button" class="search-btn">Add Event</button>
+                </div>
+            </div>
+            <div id="PreReqTree" class="tab-content">
+                <div class="search-form">
+                    <input type="text" placeholder="Enter Course Code (e.g. CPSC 325)">
+                    <button type="button" class="search-btn">Search Pre-requisites</button>
+                    <div class="prereq-info">
+                        <p>Enter a course code to see its pre-requisite tree and requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-container">
+            <div id="schedule-container" class="schedule-grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="time-header"></th>
+                            <th>M</th>
+                            <th>T</th>
+                            <th>W</th>
+                            <th>R</th>
+                            <th>F</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>8:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>9:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>10:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>11:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>12:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>1:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>2:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>3:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>4:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>5:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>6:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>7:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>8:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>9:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>10:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </main>
 
     <script src="./js/theme.js"></script>
-    <script src="./js/autocomplete.js"></script>
     <script src="./js/course.js"></script>
-    <script src="./js/dropdowns.js"></script>
+    <script src="./js/dropdown.js"></script>
     <script src="./js/initialization.js"></script>
+    <script src="./js/navigation.js"></script>
     <script src="./js/pdfHandling.js"></script>
     <script src="./js/sidebar.js"></script>
     <script src="./js/calendar/eventActions.js"></script>

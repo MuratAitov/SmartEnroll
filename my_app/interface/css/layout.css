@@ -1,51 +1,94 @@
 .sidebar {
-    flex: 0 0 320px;  /* Fixed width of 320px, won't grow or shrink */
-    min-width: 320px; /* Ensure minimum width */
+    width: 350px;
     background-color: white;
-    border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    height: fit-content;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    height: calc(100vh - 90px); /* Adjust if needed to fit your header */
+    overflow-y: auto;
+    border-radius: 8px;
+    margin: 15px;
+    display: block; /* Ensure display is block */
+    box-sizing: border-box;
 }
 
-.sidebar-tabs {
+.tabs {
     display: flex;
-    gap: 15px;
+    border-bottom: 1px solid #e0e0e0;
     margin-bottom: 20px;
-    border-bottom: 1px solid #e0e4e8;
-    padding-bottom: 10px;
-    flex-wrap: nowrap;
 }
 
-.sidebar-tabs a {
-    color: #C4C8CE;
-    text-decoration: none;
-    padding: 5px 0;
+.tab-button {
+    background: none;
+    border: none;
+    padding: 15px 5px;
+    font-weight: 500;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+    color: #999;
+    font-size: 15px;
     position: relative;
-    font-size: 0.9em;
-    white-space: nowrap;
-    flex-shrink: 0;
-    transition: color 0.2s;
 }
 
-.sidebar-tabs a.active {
-    color: #142A50;
+.tab-button.active {
+    color: #333;
+    font-weight: 500;
 }
 
-/* Remove the underline style */
-.sidebar-tabs a.active::after {
+.tab-button.active::after {
     content: '';
     position: absolute;
-    bottom: -11px;
+    bottom: -1px;
     left: 0;
     width: 100%;
     height: 2px;
-    background-color: #B41231;
+    background-color: #C8102E; /* Gonzaga red */
 }
 
-/* Add styling for search button in Pre-Req Tree tab */
-.search-prereq-btn {
-    background-color: #4a90e2;
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Form elements styling to match the image */
+.search-form input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 0 0 15px 0;
+    box-sizing: border-box;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 15px;
+    color: #555;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin: 0 0 15px 0;
+}
+
+.filter-button {
+    flex: 1;
+    padding: 12px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #555;
+}
+
+.filter-button:hover, 
+.filter-button.active {
+    background-color: #f5f5f5;
+}
+
+.search-btn {
+    background-color: #142A50;
     color: white;
     border: none;
     border-radius: 4px;
@@ -53,10 +96,14 @@
     width: 100%;
     font-size: 14px;
     cursor: pointer;
-    margin: 10px 0;
+    margin: 8px 0 0 0;
+    font-weight: 500;
 }
 
-/* Add styling for descriptive text */
+.search-btn:hover {
+    background-color: #0e1d38;
+}
+
 .prereq-info {
     color: #6c757d;
     font-size: 14px;
@@ -64,13 +111,49 @@
     line-height: 1.5;
 }
 
+/* Main content layout */
+main {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust based on your header height */
+}
+
+.content-container {
+    flex: 1;
+    position: relative;
+    padding: 15px;
+    display: flex;
+}
+
+.main-content-view {
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+
+.main-content-view.active {
+    display: block;
+}
+
+/* General button styles - these should come before specific button styles */
+button {
+    cursor: pointer;
+}
+
+/* Override default styles for regular inputs that aren't in search-form */
+input[type="text"]:not(.search-form input[type="text"]) {
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+
 /* Schedule Grid Structure */
 .schedule-grid {
     flex: 1;
-    border-radius: 4px;
+    border-radius: 8px;
     overflow: hidden;
     background-color: #FFFFFF;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 10px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
 }
@@ -79,7 +162,7 @@
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin-bottom: 0; /* Ensure no margin at bottom */
+    margin-bottom: 0;
     flex: 1;
 }
 

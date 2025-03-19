@@ -1,28 +1,108 @@
 /**
- * Creates the Map Sidebar structure.
- * @returns {string} - HTML structure for the map sidebar.
+ * This script consolidates functionality related to the sidebar's dynamic features
+ * including creating different views for maps, schedules, and registration processes.
  */
-function createMapSidebar() {
-    return `
-        <div class="sidebar-tabs">
-            <a href="#" class="schedule-tab active">Schedule</a>
-            <a href="#" class="floor-plan-tab">Floor Plan</a>
-        </div>
-
-        <div class="floor-tree" style="display: none;">
-            ${createBuildingTree()}
-        </div>
-
-        <div class="schedule-view" style="display: block;">
-            ${createWeekdayPanels()}
-        </div>
-    `;
-}
 
 /**
- * Generates the building tree structure for floor plans.
- * @returns {string} - HTML structure of building tree.
+ * This script handles sidebar tab functionality and related interactions
  */
+
+// Switch between sidebar tabs
+function openTab(tabName, event) {
+    console.log('Opening tab:', tabName);
+    
+    // Hide all tab contents
+    var tabContents = document.getElementsByClassName("tab-content");
+    for (var i = 0; i < tabContents.length; i++) {
+        tabContents[i].style.display = "none";
+        tabContents[i].classList.remove("active");
+    }
+    
+    // Remove active class from all tab buttons
+    var tabButtons = document.getElementsByClassName("tab-button");
+    for (var i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove("active");
+    }
+    
+    // Show the selected tab content
+    var selectedTab = document.getElementById(tabName);
+    if (selectedTab) {
+        selectedTab.style.display = "block";
+        selectedTab.classList.add("active");
+    }
+    
+    // Add active class to the clicked button
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add("active");
+    }
+}
+
+// Toggle filter buttons active state
+function toggleFilterButton(button) {
+    button.classList.toggle('active');
+}
+
+// Toggle day buttons selected state
+function toggleDayButton(button) {
+    button.classList.toggle('selected');
+}
+
+// Initialize the sidebar when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Initializing sidebar");
+    
+    // Set default active tab
+    var coursesTab = document.getElementById("Courses");
+    if (coursesTab) {
+        coursesTab.style.display = "block";
+        coursesTab.classList.add("active");
+    }
+    
+    var coursesButton = document.querySelector('.tab-button[onclick*="Courses"]');
+    if (coursesButton) {
+        coursesButton.classList.add("active");
+    }
+    
+    // Add click events to filter buttons
+    var filterButtons = document.querySelectorAll('.filter-button');
+    filterButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            toggleFilterButton(this);
+        });
+    });
+    
+    // Add click events to day buttons
+    var dayButtons = document.querySelectorAll('.day-button');
+    dayButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            toggleDayButton(this);
+        });
+    });
+});
+
+// Utility function for tree item toggle
+function toggleTreeItem(header) {
+    var content = header.nextElementSibling;
+    var arrow = header.querySelector('.arrow');
+    
+    if (content.style.display === "block") {
+        content.style.display = "none";
+        arrow.style.transform = "";
+    } else {
+        content.style.display = "block";
+        arrow.style.transform = "rotate(180deg)";
+    }
+}
+
+// Utility function for semester change
+function changeSemester(semester) {
+    var button = document.querySelector('.semester-button');
+    if (button) {
+        button.innerHTML = semester + ' <span class="arrow">▼</span>';
+    }
+}
+
+// Functions to generate various sidebar content
 function createBuildingTree() {
     return `
         <div class="tree-item">
@@ -30,26 +110,22 @@ function createBuildingTree() {
                 <span class="building-name">Jepson</span>
                 <span class="arrow">▼</span>
             </div>
-            <div class="tree-content">
-                <div class="tree-subitem" onclick="openJepsonBasementPDF()">Lower-level</div>
-                <div class="tree-subitem" onclick="openJepsonFirstFloorPDF()">First floor</div>
+            <div class="tree-content" style="display: none;">
+                <div class="tree-subitem">Lower-level</div>
+                <div class="tree-subitem">First floor</div>
                 <div class="tree-subitem">Second floor</div>
             </div>
         </div>
         <div class="tree-item">
-            <div class="tree-header" onclick="openHerakPDF()">
+            <div class="tree-header" onclick="toggleTreeItem(this)">
                 <span class="building-name">Herak</span>
                 <span class="arrow">▼</span>
             </div>
-            <div class="tree-content"></div>
+            <div class="tree-content" style="display: none;"></div>
         </div>
     `;
 }
 
-/**
- * Creates the weekday panels for the schedule view.
- * @returns {string} - HTML structure for weekday panels.
- */
 function createWeekdayPanels() {
     const days = {
         Monday: "No classes this day!",
@@ -73,163 +149,3 @@ function createWeekdayPanels() {
         </div>
     `;
 }
-
-/**
- * Updates the selected semester and closes the dropdown.
- * @param {string} semester - Selected semester name.
- */
-function changeSemester(semester) {
-    const button = document.querySelector('.semester-button');
-    const content = document.querySelector('.semester-content');
-
-    button.innerHTML = `${semester} <span class="arrow">▼</span>`;
-    content.classList.remove('show');
-    button.querySelector('.arrow').style.transform = 'rotate(0deg)';
-}
-
-/**
- * Toggles visibility of tree content and rotates the arrow.
- * @param {HTMLElement} header - The header element clicked.
- */
-function toggleTreeItem(header) {
-    const content = header.nextElementSibling;
-    const arrow = header.querySelector('.arrow');
-
-    content.classList.toggle('show');
-    arrow.style.transform = content.classList.contains('show') ? 'rotate(180deg)' : '';
-}
-
-/**
- * Creates the Recurring Events content for the sidebar.
- * @returns {string} - HTML structure for recurring events.
- */
-function createRecurringEventsContent() {
-    return `
-        <div class="recurring-events-view">
-            <div class="form-group"><input type="text" placeholder="Event Name" id="eventNameInput"></div>
-            <div class="form-group">${createWeekdayButtons()}</div>
-            <div class="form-group"><input type="text" placeholder="Start Time --:--" class="time-input" id="start-time" maxlength="5"></div>
-            <div class="form-group"><input type="text" placeholder="End Time --:--" class="time-input" id="end-time" maxlength="5"></div>
-            <button class="add-event-btn">Add</button>
-        </div>
-    `;
-}
-
-/**
- * Generates weekday selection buttons.
- * @returns {string} - HTML string for weekday buttons.
- */
-function createWeekdayButtons() {
-    const days = ['M', 'T', 'W', 'R', 'F'];
-    return `
-        <div class="weekday-buttons">
-            ${days.map(day => `<button class="weekday-btn">${day}</button>`).join('')}
-        </div>
-    `;
-}
-
-/**
- * Creates the Registration Sidebar structure.
- * @returns {string} - HTML structure for the registration sidebar.
- */
-function createRegistrationSidebar() {
-    return `
-        <div class="sidebar-tabs">
-            <a href="#" class="courses-tab active">Courses</a>
-            <a href="#" class="recurring-events-tab">Recurring Events</a>
-            <a href="#" class="prereq-tree-tab">Pre-Req Tree</a>
-        </div>
-
-        <div class="courses-view">${createCourseFilters()}</div>
-        <div class="recurring-events-view" style="display: none;">${createRecurringEventsContent()}</div>
-        <div class="prereq-tree-view" style="display: none;">${createPreReqTreeContent()}</div>
-    `;
-}
-
-/**
- * Generates the filters and inputs for course selection.
- * @returns {string} - HTML string for course filters.
- */
-function createCourseFilters() {
-    return `
-        <div class="form-group"><input type="text" placeholder="Subject" id="subjectInput" autocomplete="off"></div>
-        <div class="form-group"><input type="text" placeholder="Course code"></div>
-        <div class="form-group">${createDivisionButtons()}</div>
-        <div class="form-group"><input type="text" placeholder="Attributes" id="attributeInput" autocomplete="off"></div>
-        <div class="form-group"><input type="text" placeholder="Instructor"></div>
-        <div class="form-group"><input type="text" placeholder="Campus" id="campusInput" autocomplete="off"></div>
-        <div class="form-group"><input type="text" placeholder="Instructional Methods" id="methodsInput" autocomplete="off"></div>
-    `;
-}
-
-/**
- * Generates the division selection buttons.
- * @returns {string} - HTML string for division buttons.
- */
-function createDivisionButtons() {
-    return `
-        <div class="level-buttons">
-            <button class="division-btn" id="lower-division">Lower Division</button>
-            <button class="division-btn" id="upper-division">Upper Division</button>
-        </div>
-    `;
-}
-
-/**
- * Creates the placeholder content for the Pre-Req Tree.
- * @returns {string} - HTML structure for pre-req tree view.
- */
-function createPreReqTreeContent() {
-    return `
-        <div class="prereq-tree-container">
-            <div class="coming-soon">Pre-Requisite Tree View Coming Soon</div>
-        </div>
-    `;
-}
-
-/**
- * Handles the tab switching in the sidebar.
- * This function should be called after DOM is loaded.
- */
-function initializeSidebarTabs() {
-    console.log("Backup sidebar tab handler initialized");
-    
-    // Only initialize if the event handlers aren't already set up
-    if (window.sidebarTabsInitialized) {
-        return;
-    }
-    
-    // When the page loads, set up event listeners for tabs
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get all sidebar tabs
-        const tabs = document.querySelectorAll('.sidebar-tabs a');
-        const tabsContainer = document.querySelector('.sidebar-tabs');
-        
-        // Critical: Ensure the tabs container is always visible
-        if (tabsContainer) {
-            // Force display style to flex and preserve it
-            tabsContainer.style.display = 'flex';
-            
-            // Create a mutation observer to watch for display changes
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.attributeName === 'style') {
-                        if (tabsContainer.style.display === 'none') {
-                            console.warn("Tab container hidden! Restoring visibility...");
-                            tabsContainer.style.display = 'flex';
-                        }
-                    }
-                });
-            });
-            
-            // Start observing the tabs container
-            observer.observe(tabsContainer, { attributes: true });
-        }
-        
-        // Mark as initialized to prevent duplicate handlers
-        window.sidebarTabsInitialized = true;
-    });
-}
-
-// Add this function to be called from the index.html
-window.initializeSidebarTabs = initializeSidebarTabs;

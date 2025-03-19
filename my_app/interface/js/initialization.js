@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     applyThemeToggle();
     configureDivisionButtons();
     setupUserDropdown();
+    createRegistrationSidebar();
     initializeDefaultViews();
 });
 
@@ -78,6 +79,18 @@ function configureDivisionButtons() {
  */
 function setupUserDropdown() {
     setupDropdown('.user-dropdown .nav-button', '#userDropdown', ['.export-dropdown']);
+}
+
+function createRegistrationSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.innerHTML = `
+        <div class="registration-content">
+            <h1>Registration</h1>
+            <p>Content for registration...</p>
+        </div>
+    `;
+    // Initialize any specific behaviors needed for registration
+    initializeRegistrationFeatures();
 }
 
 /**
