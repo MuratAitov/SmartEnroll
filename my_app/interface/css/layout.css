@@ -1,43 +1,67 @@
 .sidebar {
-    width: 280px;
+    flex: 0 0 320px;  /* Fixed width of 320px, won't grow or shrink */
+    min-width: 320px; /* Ensure minimum width */
+    background-color: white;
+    border-radius: 8px;
     padding: 20px;
-    background-color: #FFFFFF;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: fit-content;
 }
 
 .sidebar-tabs {
     display: flex;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 8px;
-    justify-content: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e4e8;
+    padding-bottom: 10px;
+    flex-wrap: nowrap;
 }
 
 .sidebar-tabs a {
-    color: #6c757d;
+    color: #C4C8CE;
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
+    padding: 5px 0;
     position: relative;
-    margin-right: 30px;
+    font-size: 0.9em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.2s;
 }
 
 .sidebar-tabs a.active {
-    color: #333;
-    font-weight: 600;
+    color: #142A50;
 }
 
-/* Changed from ::after to ::before to avoid conflicts */
-.sidebar-tabs a.active::before {
+/* Remove the underline style */
+.sidebar-tabs a.active::after {
     content: '';
     position: absolute;
-    bottom: -9px;
+    bottom: -11px;
     left: 0;
     width: 100%;
     height: 2px;
     background-color: #B41231;
-    display: block;
+}
+
+/* Add styling for search button in Pre-Req Tree tab */
+.search-prereq-btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 0;
+    width: 100%;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+/* Add styling for descriptive text */
+.prereq-info {
+    color: #6c757d;
+    font-size: 14px;
+    margin-top: 15px;
+    line-height: 1.5;
 }
 
 /* Schedule Grid Structure */
@@ -47,12 +71,26 @@
     overflow: hidden;
     background-color: #FFFFFF;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
 }
 
 .schedule-grid table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+    margin-bottom: 0; /* Ensure no margin at bottom */
+    flex: 1;
+}
+
+/* Ensure the table fills the container completely */
+.schedule-grid table, .schedule-grid {
+    height: 100%;
+}
+
+/* This removes any default bottom margin on the last row */
+.schedule-grid tbody tr:last-child {
+    margin-bottom: 0;
 }
 
 .schedule-grid th, .schedule-grid td {
@@ -62,7 +100,7 @@
 }
 
 .schedule-grid th {
-    background-color: #00153B;
+    background-color: #142A50;
     color: #ffffff;
     padding: 10px;
     font-weight: 500;
@@ -85,7 +123,7 @@
 }
 
 .schedule-grid .time-header {
-    background-color: #00153B;
+    background-color: #142A50;
     color: #ffffff;
 }
 
@@ -176,28 +214,4 @@
     .schedule-grid table {
         min-width: 600px;
     }
-}
-
-/* Footer Styles */
-footer {
-    background-color: #f5f7fa;
-    color: #6c757d;
-    padding: 15px 0;
-    text-align: center;
-    font-size: 14px;
-    border-top: 1px solid #e0e4e8;
-}
-
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-footer p {
-    margin: 0;
-}
-
-body.dark-mode footer {
-    background-color: #001A49;
 }

@@ -186,3 +186,50 @@ function createPreReqTreeContent() {
         </div>
     `;
 }
+
+/**
+ * Handles the tab switching in the sidebar.
+ * This function should be called after DOM is loaded.
+ */
+function initializeSidebarTabs() {
+    console.log("Backup sidebar tab handler initialized");
+    
+    // Only initialize if the event handlers aren't already set up
+    if (window.sidebarTabsInitialized) {
+        return;
+    }
+    
+    // When the page loads, set up event listeners for tabs
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all sidebar tabs
+        const tabs = document.querySelectorAll('.sidebar-tabs a');
+        const tabsContainer = document.querySelector('.sidebar-tabs');
+        
+        // Critical: Ensure the tabs container is always visible
+        if (tabsContainer) {
+            // Force display style to flex and preserve it
+            tabsContainer.style.display = 'flex';
+            
+            // Create a mutation observer to watch for display changes
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.attributeName === 'style') {
+                        if (tabsContainer.style.display === 'none') {
+                            console.warn("Tab container hidden! Restoring visibility...");
+                            tabsContainer.style.display = 'flex';
+                        }
+                    }
+                });
+            });
+            
+            // Start observing the tabs container
+            observer.observe(tabsContainer, { attributes: true });
+        }
+        
+        // Mark as initialized to prevent duplicate handlers
+        window.sidebarTabsInitialized = true;
+    });
+}
+
+// Add this function to be called from the index.html
+window.initializeSidebarTabs = initializeSidebarTabs;

@@ -22,8 +22,15 @@ a {
 
 /* Reset any pseudo-elements on links */
 a::after, a::before {
-    content: none !important;
-    display: none !important;
+    content: none;
+    display: none;
+}
+
+/* Exception for sidebar tabs and nav links active elements */
+.sidebar-tabs a.active::after,
+header .nav-links a.active::after {
+    content: '' !important;
+    display: block !important;
 }
 
 input, select {
@@ -40,13 +47,13 @@ input, select {
 }
 
 input:focus, select:focus {
-    border-color: #00153B;
+    border-color: #142A50;
     outline: none;
 }
 
 /* Header and Navigation Styles */
 header {
-    background-color: #00153B; /* Changed from #00215D to #00153B */
+    background-color: #142A50; /* Changed from #00153B to #142A50 */
     display: flex;
     align-items: center;
     padding: 15px 40px; /* Reduced horizontal padding */
@@ -345,6 +352,8 @@ main.schedule-only .schedule-grid {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
 }
 
 .schedule-grid table {
@@ -352,10 +361,12 @@ main.schedule-only .schedule-grid {
     border-collapse: collapse;
     table-layout: fixed;
     border-spacing: 0;
+    margin-bottom: 0; /* Ensure no margin at bottom */
+    flex: 1;
 }
 
 .schedule-grid th {
-    background-color: #00153B; /* Changed from #00215D to #00153B */
+    background-color: #142A50; /* Changed from #00153B to #142A50 */
     color: white;
     padding: 0;
     font-weight: 500;
@@ -416,8 +427,9 @@ table.schedule-grid tbody tr td:first-child,
     border-left: none;
 }
 
-.schedule-grid tbody tr:last-child td {
-    border-bottom: none;
+/* This removes any default bottom margin on the last row */
+.schedule-grid tbody tr:last-child {
+    margin-bottom: 0;
 }
 
 /* Ensure the table doesn't have outer borders */
@@ -425,64 +437,30 @@ table.schedule-grid tbody tr td:first-child,
     border: none;
 }
 
-/* Sidebar Styles */
-.sidebar {
-    width: 330px;
-    background: white;
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    margin-right: 0;
-    height: fit-content;
+/* Ensure the table fills the container completely */
+.schedule-grid table, .schedule-grid {
+    height: 100%;
 }
 
-/* Update sidebar tabs to match the picture */
-.sidebar-tabs {
-    display: flex;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 0; /* Remove padding at bottom */
-    justify-content: flex-start;
+/* Specific styling for search button in Pre-Req Tree tab */
+.search-prereq-btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 0;
     width: 100%;
-    gap: 20px;
-}
-
-.sidebar-tabs a {
-    color: #9aa0a6;
-    text-decoration: none;
     font-size: 14px;
-    font-weight: 500;
-    position: relative;
-    padding: 0 0 10px 0; /* Add padding only at bottom */
-    transition: color 0.2s ease;
+    cursor: pointer;
+    margin: 10px 0;
 }
 
-.sidebar-tabs a.active {
-    color: #333;
-    font-weight: 600;
-}
-
-/* Sidebar active tab underline - matches the picture exactly */
-.sidebar-tabs a.active::before {
-    content: '';
-    position: absolute;
-    bottom: -1px; /* Position at the bottom border */
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #B41231; /* Red underline */
-    display: block;
-}
-
-/* Override any conflicting styles */
-.sidebar-tabs a::after {
-    display: none !important;
-}
-
-/* Make sure the inactive tabs don't have any underline or highlight */
-.sidebar-tabs a:not(.active)::before,
-.sidebar-tabs a:not(.active)::after {
-    display: none !important;
+/* Descriptive text styling */
+.prereq-info {
+    color: #6c757d;
+    font-size: 14px;
+    margin-top: 15px;
+    line-height: 1.5;
 }
 
 .search-input {
