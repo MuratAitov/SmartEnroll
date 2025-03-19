@@ -1,53 +1,52 @@
-/* Sidebar Layout */
 .sidebar {
-    flex: 0 0 320px;
-    min-width: 320px;
-    background-color: white;
-    border-radius: 8px;
+    width: 280px;
     padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    height: fit-content;
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .sidebar-tabs {
     display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #e0e4e8;
-    padding-bottom: 10px;
-    flex-wrap: nowrap;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 8px;
+    justify-content: flex-start;
 }
 
 .sidebar-tabs a {
-    color: #C4C8CE;
+    color: #6c757d;
     text-decoration: none;
-    padding: 5px 0;
+    font-size: 14px;
+    font-weight: 500;
     position: relative;
-    font-size: 0.9em;
-    white-space: nowrap;
-    flex-shrink: 0;
-    transition: color 0.2s;
+    margin-right: 30px;
 }
 
 .sidebar-tabs a.active {
-    color: #142A50;
+    color: #333;
+    font-weight: 600;
 }
 
-.sidebar-tabs a.active::after {
+/* Changed from ::after to ::before to avoid conflicts */
+.sidebar-tabs a.active::before {
     content: '';
     position: absolute;
-    bottom: -11px;
+    bottom: -9px;
     left: 0;
     width: 100%;
     height: 2px;
     background-color: #B41231;
+    display: block;
 }
 
 /* Schedule Grid Structure */
 .schedule-grid {
-    width: 100%;
-    border-radius: 8px;
+    flex: 1;
+    border-radius: 4px;
     overflow: hidden;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .schedule-grid table {
@@ -59,20 +58,35 @@
 .schedule-grid th, .schedule-grid td {
     text-align: center;
     vertical-align: middle;
-    padding: 0;
-    height: 60px;
-    line-height: 60px;
     border: 1px solid #e0e4e8;
 }
 
 .schedule-grid th {
-    background-color: #023373;
+    background-color: #00153B;
     color: #ffffff;
-    border: none;
+    padding: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    height: 36px;
+}
+
+.schedule-grid td {
+    height: 60px;
+    padding: 0;
 }
 
 .schedule-grid td:first-child {
     width: 80px;
+    text-align: right;
+    padding-right: 10px;
+    color: #495057;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.schedule-grid .time-header {
+    background-color: #00153B;
+    color: #ffffff;
 }
 
 .schedule-grid th:not(:first-child),
@@ -162,4 +176,28 @@
     .schedule-grid table {
         min-width: 600px;
     }
+}
+
+/* Footer Styles */
+footer {
+    background-color: #f5f7fa;
+    color: #6c757d;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 14px;
+    border-top: 1px solid #e0e4e8;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+footer p {
+    margin: 0;
+}
+
+body.dark-mode footer {
+    background-color: #001A49;
 }

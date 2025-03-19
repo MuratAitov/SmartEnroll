@@ -1,5 +1,5 @@
 body.dark-mode {
-    background-color: #001A49 !important;
+    background-color: #00153B !important;
     color: #ffffff !important;
 }
 
@@ -20,7 +20,7 @@ body.dark-mode .nav-button {
 }
 
 body.dark-mode .dropdown-content {
-    background-color: #142A50 !important;
+    background-color: #00153B !important;
     color: #ffffff !important;
 }
 
@@ -44,9 +44,9 @@ body.dark-mode .dropdown-divider {
 }
 
 body.dark-mode .sidebar {
-    background-color: #023373 !important;
+    background-color: #00153B !important;
     color: #ffffff !important;
-    border-color: #023373 !important;
+    border-color: #00153B !important;
 }
 
 body.dark-mode .sidebar-tabs a {
@@ -60,17 +60,17 @@ body.dark-mode .sidebar-tabs a.active {
 body.dark-mode select,
 body.dark-mode input {
     color: #ffffff !important;
-    background-color: #1e3a6d !important;
+    background-color: #00153B !important;
 }
 
 body.dark-mode select option {
-    background-color: #142A50 !important;
+    background-color: #00153B !important;
     color: #ffffff !important;
 }
 body.dark-mode .schedule-grid th {
-    background-color: #023373 !important;
+    background-color: #00153B !important;
     color: #ffffff !important;
-    border-color: #012454 !important;
+    border-color: #00153B !important;
 }
 body.dark-mode .schedule-container {
     background-color: #023373 !important;

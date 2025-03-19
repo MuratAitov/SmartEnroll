@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Registration</title>
+    <title>Course Registration | Gonzaga University</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="./css/component.css">
     <link rel="stylesheet" href="./css/darkmode.css">
     <link rel="stylesheet" href="./css/events.css">
@@ -18,126 +19,374 @@
 </head>
 <body>
     <header>
-        <div class="logo">
-            <img src="./assets/GU Logo/IMG_4571.jpg" alt="Gonzaga University Logo">
-            <div class="logo-text">
-                <span class="university-name">GONZAGA</span>
-                <span class="university-subtitle">UNIVERSITY</span>
+        <!-- Left section -->
+        <div class="header-left">
+            <div class="logo">
+                <img src="./assets/GU Logo/IMG_4571.jpg" alt="Gonzaga University Logo">
+                <div class="logo-text">
+                    <span class="university-name">GONZAGA</span>
+                    <span class="university-subtitle">UNIVERSITY</span>
+                </div>
+            </div>
+            
+            <div class="semester-dropdown">
+                <button class="semester-button">Spring 2025 <span class="arrow">▼</span></button>
+                <div class="semester-content">
+                    <a href="#" onclick="changeSemester('Summer 2025')">Summer 2025</a>
+                    <a href="#" onclick="changeSemester('Spring 2025')">Spring 2025</a>
+                    <a href="#" onclick="changeSemester('Fall 2024')">Fall 2024</a>
+                    <a href="#" onclick="changeSemester('Summer 2024')">Summer 2024</a>
+                    <a href="#" onclick="changeSemester('Spring 2024')">Spring 2024</a>
+                    <a href="#" onclick="changeSemester('Fall 2023')">Fall 2023</a>
+                </div>
+            </div>
+            
+            <div class="credits-display">0 Credits</div>
+        </div>
+        
+        <!-- Center navigation section -->
+        <nav class="nav-links">
+            <a href="#" data-view="registration" class="active">Registration</a>
+            <a href="#" data-view="map">Map</a>
+            <a href="#" data-view="finals">Finals</a>
+            <a href="#" data-view="rmp">Rate My Professor</a>
+            <a href="#" data-view="reflection">Reflection</a>
+        </nav>
+
+        <!-- Right section -->
+        <div class="header-right">
+            <div class="export-container">
+                <button class="export-button">
+                    Export <span class="arrow">▼</span>
+                </button>
+                <div class="export-dropdown">
+                    <a href="#">Export to PDF</a>
+                    <a href="#">Export to Calendar</a>
+                    <a href="#">Print Schedule</a>
+                </div>
+            </div>
+            <div class="user-dropdown">
+                <button class="nav-button">
+                    <img src="./assets/GU Logo/Gonzaga_Bulldogs_logo.svg.png" alt="Bulldog" class="logo-img">
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="dropdown-content" id="userDropdown">
+                    <div class="user-info">
+                        <div class="student-name">John Doe</div>
+                        <div class="student-id">ID: 123456789</div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <button id="themeToggle" class="theme-toggle">Dark Mode</button>
+                    <div class="dropdown-divider"></div>
+                    <a href="#help">Help</a>
+                    <a href="#signout">Sign Out</a>
+                </div>
             </div>
         </div>
-        <nav>
-            <div class="nav-sections">
-                <div class="semester-group">
-                    <button class="semester-button">Fall 2024 <span class="arrow">▼</span></button>
-                    <div class="semester-content">
-                        <a href="#" onclick="changeSemester('Fall 2024')">Fall 2024</a>
-                        <a href="#" onclick="changeSemester('Summer 2025')">Summer 2025</a>
-                        <a href="#" onclick="changeSemester('Spring 2025')">Spring 2025</a>
-                        <a href="#" onclick="changeSemester('Fall 2024')">Fall 2024</a>
-                        <a href="#" onclick="changeSemester('Summer 2024')">Summer 2024</a>
-                        <a href="#" onclick="changeSemester('Spring 2024')">Spring 2024</a>
-                        <a href="#" onclick="changeSemester('Fall 2023')">Fall 2023</a>
-                    </div>
-                    <div class="credits-box">0 Credits</div>
-                </div>
-                <div class="nav-links">
-                    <a href="#registration" class="active">Registration</a>
-                    <a href="#map">Map</a>
-                    <a href="#finals">Finals</a>
-                    <a href="#rmp">Rate My Professor</a>
-                    <a href="#reflection">Reflection</a>
-                </div>
-                <div class="user-controls">
-                    <div class="nav-right">
-                        <div class="export-container">
-                            <button class="nav-button export-button">
-                                Export <span class="arrow">▼</span></button>
-                        </div>
-                        <div class="user-dropdown">
-                            <button class="nav-button">
-                                <img src="./assets/GU Logo/Gonzaga_Bulldogs_logo.svg.png" alt="Bulldog" class="logo-img">
-                                <span class="arrow">▼</span>
-                            </button>
-                            <div class="dropdown-content" id="userDropdown">
-                                <div class="user-info">
-                                    <div class="student-name">John Doe</div>
-                                    <div class="student-id">ID: 123456789</div>
-                                </div>
-                                <div class="dropdown-divider"></div>
-                                <button id="themeToggle" class="theme-toggle">Dark Mode</button>
-                                <div class="dropdown-divider"></div>
-                                <a href="#help">Help</a>
-                                <a href="#signout">Sign Out</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
     </header>
 
     <main>
         <aside class="sidebar">
             <div class="sidebar-tabs">
                 <a href="#" class="active">Courses</a>
-                <a href="#">Plan Ahead</a>
+                <a href="#">Recurring Events</a>
+                <a href="#">Pre-Req Tree</a>
             </div>
-            <div class="form-group">
-                <input type="text" placeholder="Subject">
-                <input type="text" placeholder="Course code">
-                <input type="text" placeholder="Attributes">
-                <input type="text" placeholder="Instructor">
-                <select><option>Main Campus</option></select>
-                <select><option>In Person</option></select>
-                <h3>Courses</h3>
-                <ul id="courses-list"></ul> <!-- List where courses will be displayed -->
-                <h3>Sections</h3>
-                <ul id="sections-list"></ul> <!-- List where sections will be displayed -->
-                <h3>Professors</h3>
-                <select id="professors-dropdown">
-                    <option>Select a professor</option>
-                </select> <!-- Dropdown for selecting professors -->
-         </aside>
-         <section class="schedule-grid">
+            
+            <!-- Courses Content (Default View) -->
+            <div id="courses-content" class="sidebar-content">
+                <input type="text" placeholder="Subject" class="search-input">
+                <input type="text" placeholder="Course code" class="search-input">
+                
+                <div class="division-buttons">
+                    <button class="division-btn">Lower Division</button>
+                    <button class="division-btn">Upper Division</button>
+                </div>
+                
+                <input type="text" placeholder="Attributes" class="search-input">
+                <input type="text" placeholder="Instructor" class="search-input">
+                <input type="text" placeholder="Campus" class="search-input">
+                <input type="text" placeholder="Instructional Methods" class="search-input">
+            </div>
+            
+            <!-- Recurring Events Content (Hidden Initially) -->
+            <div id="recurring-events-content" class="sidebar-content" style="display: none;">
+                <input type="text" placeholder="Event name" class="search-input">
+                <div class="form-group">
+                    <input type="date" placeholder="Date" class="date-input">
+                </div>
+                <div class="form-group">
+                    <input type="time" placeholder="Start Time" class="time-input">
+                </div>
+                <div class="form-group">
+                    <input type="time" placeholder="End Time" class="time-input">
+                </div>
+                <div class="weekday-buttons">
+                    <button class="weekday-btn">M</button>
+                    <button class="weekday-btn">T</button>
+                    <button class="weekday-btn">W</button>
+                    <button class="weekday-btn">R</button>
+                    <button class="weekday-btn">F</button>
+                </div>
+                <input type="text" placeholder="Location" class="search-input">
+                <button class="add-event-btn" style="background-color: #4A90E2; color: white; padding: 8px 0; border: none; border-radius: 4px; width: 100%; margin-top: 10px; cursor: pointer;">Add Event</button>
+            </div>
+            
+            <!-- Pre-Req Tree Content (Hidden Initially) -->
+            <div id="pre-req-tree-content" class="sidebar-content" style="display: none;">
+                <input type="text" placeholder="Course code" class="search-input">
+                <button class="search-prereq-btn" style="background-color: #4A90E2; color: white; padding: 8px 0; border: none; border-radius: 4px; width: 100%; margin-top: 10px; cursor: pointer;">Search Pre-requisites</button>
+                <div class="prereq-info" style="margin-top: 15px; font-size: 14px; color: #6c757d;">
+                    <p>Select a course to view its prerequisite tree and requirements.</p>
+                </div>
+            </div>
+        </aside>
+
+        <section class="schedule-grid">
             <table>
-                <tr>
-                    <th></th>
-                    <th>M</th>
-                    <th>T</th>
-                    <th>W</th>
-                    <th>R</th>
-                    <th>F</th>
-                </tr>
-                <tr><td>8:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>9:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>10:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>11:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>12:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>1:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>2:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>3:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>4:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>5:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>6:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>7:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>8:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>9:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>10:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                <thead>
+                    <tr>
+                        <th class="time-header"></th>
+                        <th>M</th>
+                        <th>T</th>
+                        <th>W</th>
+                        <th>R</th>
+                        <th>F</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>8:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>9:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>10:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>11:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>12:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>1:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>2:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>3:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>4:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>5:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>6:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>7:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>8:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>9:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td>10:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
+                </tbody>
             </table>
-         </section>
-         <div class="empty-space"></div>
+        </section>
     </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Gonzaga University. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="./js/theme.js"></script>
     <script src="./js/autocomplete.js"></script>
     <script src="./js/course.js"></script>
     <script src="./js/dropdowns.js"></script>
     <script src="./js/initialization.js"></script>
     <script src="./js/pdfHandling.js"></script>
     <script src="./js/sidebar.js"></script>
-    <script src="./js/theme.js"></script>
     <script src="./js/calendar/eventActions.js"></script>
     <script src="./js/calendar/eventListeners.js"></script>
     <script src="./js/calendar/eventManagement.js"></script>
     <script src="./js/calendar/helperFunctions.js"></script>
     <script src="./js/calendar/uiControls.js"></script>
+
+    <script>
+        // Add JavaScript to ensure only one tab is active at a time
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded");
+            
+            // Log all sidebar content divs to verify IDs
+            const sidebarContents = document.querySelectorAll('.sidebar-content');
+            console.log("Found sidebar contents:", sidebarContents.length);
+            sidebarContents.forEach(content => {
+                console.log("Content ID:", content.id);
+            });
+
+            // First, ensure only one element is active initially
+            function initializeActiveStates() {
+                // For nav links
+                const allNavLinks = document.querySelectorAll('.nav-links a');
+                let activeNavFound = false;
+                allNavLinks.forEach(link => {
+                    if (link.classList.contains('active')) {
+                        if (activeNavFound) {
+                            link.classList.remove('active');
+                        } else {
+                            activeNavFound = true;
+                        }
+                    }
+                });
+                if (!activeNavFound && allNavLinks.length > 0) {
+                    allNavLinks[0].classList.add('active');
+                }
+                
+                // For sidebar tabs
+                const allSidebarTabs = document.querySelectorAll('.sidebar-tabs a');
+                console.log("Found sidebar tabs:", allSidebarTabs.length);
+                
+                let activeSidebarFound = false;
+                allSidebarTabs.forEach(tab => {
+                    console.log("Tab text:", tab.textContent.trim());
+                    
+                    if (tab.classList.contains('active')) {
+                        if (activeSidebarFound) {
+                            tab.classList.remove('active');
+                        } else {
+                            activeSidebarFound = true;
+                        }
+                    }
+                });
+                
+                if (!activeSidebarFound && allSidebarTabs.length > 0) {
+                    allSidebarTabs[0].classList.add('active');
+                    console.log("Set first tab as active:", allSidebarTabs[0].textContent.trim());
+                }
+                
+                // Make sure the correct content is shown initially
+                const activeTab = document.querySelector('.sidebar-tabs a.active');
+                if (activeTab) {
+                    console.log("Active tab at initialization:", activeTab.textContent.trim());
+                    showSidebarContent(activeTab.textContent.trim());
+                }
+            }
+            
+            // Function to show the proper sidebar content
+            function showSidebarContent(tabName) {
+                console.log("Showing content for tab:", tabName);
+                
+                // Direct mapping to ensure correct ID matching
+                let contentId;
+                if (tabName === "Courses") {
+                    contentId = "courses-content";
+                } else if (tabName === "Recurring Events") {
+                    contentId = "recurring-events-content";
+                } else if (tabName === "Pre-Req Tree") {
+                    contentId = "pre-req-tree-content";
+                } else {
+                    // Fallback to the dynamic generation
+                    contentId = tabName.toLowerCase().replace(/ /g, '-').replace(/-tree/, '-tree') + '-content';
+                }
+                
+                console.log("Looking for content with ID:", contentId);
+                
+                // Hide all content sections first
+                document.querySelectorAll('.sidebar-content').forEach(content => {
+                    content.style.display = 'none';
+                    console.log("Hiding content:", content.id);
+                });
+                
+                // Show the selected content section
+                const contentToShow = document.getElementById(contentId);
+                if (contentToShow) {
+                    contentToShow.style.display = 'block';
+                    console.log("Showing content:", contentId);
+                } else {
+                    console.warn(`Content with id ${contentId} not found!`);
+                    
+                    // FAILSAFE: If content not found, show the first content section
+                    const firstContent = document.querySelector('.sidebar-content');
+                    if (firstContent) {
+                        firstContent.style.display = 'block';
+                        console.log("FAILSAFE: Showing first content:", firstContent.id);
+                    }
+                }
+                
+                // DOUBLE CHECK: Ensure at least one content section is visible
+                setTimeout(() => {
+                    const anyVisible = Array.from(document.querySelectorAll('.sidebar-content'))
+                        .some(content => content.style.display === 'block');
+                    
+                    if (!anyVisible) {
+                        console.warn("No content visible after tab change! Showing first content as fallback.");
+                        const firstContent = document.querySelector('.sidebar-content');
+                        if (firstContent) {
+                            firstContent.style.display = 'block';
+                        }
+                    }
+                }, 50);
+            }
+            
+            // Run initialization
+            initializeActiveStates();
+            
+            // Handle navigation tabs
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log("Nav link clicked:", this.textContent.trim());
+                    
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Check if we're viewing just the schedule
+                    const isScheduleOnly = this.dataset.view === 'schedule-only';
+                    document.querySelector('main').classList.toggle('schedule-only', isScheduleOnly);
+                });
+            });
+
+            // Handle sidebar tabs with extra safety checks
+            const sidebarTabs = document.querySelectorAll('.sidebar-tabs a');
+            sidebarTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log("Sidebar tab clicked:", this.textContent.trim());
+                    
+                    // Store the tab name before doing anything
+                    const tabName = this.textContent.trim();
+                    
+                    // If this tab is already active, just ensure its content is visible
+                    if (this.classList.contains('active')) {
+                        console.log("Tab already active, ensuring content is visible");
+                        showSidebarContent(tabName);
+                        return;
+                    }
+                    
+                    // Remove active class from all tabs
+                    sidebarTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Show the proper content section using the stored name
+                    showSidebarContent(tabName);
+                    
+                    // Extra check to ensure the UI is updated
+                    setTimeout(() => {
+                        if (!this.classList.contains('active')) {
+                            console.warn("Tab lost active state! Restoring.");
+                            sidebarTabs.forEach(t => t.classList.remove('active'));
+                            this.classList.add('active');
+                        }
+                    }, 100);
+                });
+            });
+            
+            // Function to toggle the schedule-only view (can be called from UI controls)
+            window.toggleScheduleOnly = function(showScheduleOnly) {
+                document.querySelector('main').classList.toggle('schedule-only', showScheduleOnly);
+            };
+            
+            // Extra safety check to ensure content is visible on page load
+            setTimeout(() => {
+                const anyVisible = Array.from(document.querySelectorAll('.sidebar-content'))
+                    .some(content => content.style.display === 'block');
+                
+                if (!anyVisible) {
+                    console.warn("No content visible on page load! Showing first content as fallback.");
+                    const firstContent = document.querySelector('.sidebar-content');
+                    if (firstContent) {
+                        firstContent.style.display = 'block';
+                    }
+                }
+            }, 300);
+        });
+    </script>
 </body>
 </html> 

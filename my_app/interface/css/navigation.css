@@ -4,79 +4,132 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: clamp(10px, 2vw, 20px);
+    gap: clamp(15px, 2vw, 25px); /* Reduced gap */
     max-width: 100%;
+    width: 100%;
+}
+
+/* Header sections */
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* Reduced gap to match general.css */
+}
+
+/* Individual element spacing within sections */
+.semester-dropdown,
+.credits-display,
+.export-container,
+.user-dropdown {
+    margin: 0;
 }
 
 .nav-links {
     display: flex;
-    align-items: center;
-    gap: clamp(10px, 2vw, 25px);
-    flex: 1;
-    white-space: nowrap;
-    position: static;
-    transform: none;
+    gap: 30px; /* Reduced gap between items */
+    margin: 0 40px; /* Reduced margin */
+    justify-content: center;
+    width: 100%;
+    max-width: 800px; /* Constrained to ensure fit */
 }
 
 .nav-links a {
-    padding: 5px clamp(5px, 0.5vw, 10px);
-    color: #C4C8CE;
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    transition: color 0.2s;
+    padding: 10px 0; /* Slightly reduced vertical padding */
+    position: relative;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-size: 15px;
 }
 
 .nav-links a.active {
     color: #FFFFFF;
-    position: relative;
 }
 
 .nav-links a.active::after {
     content: '';
     position: absolute;
-    bottom: -12px;
+    bottom: 0; /* Adjusted position for increased padding */
     left: 0;
     width: 100%;
-    height: 2px;
+    height: 3px;
     background-color: #B41231;
 }
 
 .nav-links a:hover {
-    color: #B41231 !important;
+    color: white;
+    opacity: 1;
 }
 
-/* Button Styles */
-.nav-button, .semester-button {
-    padding: 5px clamp(5px, 0.5vw, 10px);
-    min-height: 30px;
+/* Button Styles - slightly more compact */
+.nav-button, .semester-button, .export-button {
+    padding: 10px 0; /* Reduced padding */
+    min-height: 34px; /* Slightly smaller height */
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px; /* Reduced gap */
     white-space: nowrap;
     flex-shrink: 0;
+    font-size: 15px;
 }
 
-.nav-button:hover {
+.nav-button:hover, .export-button:hover {
+    opacity: 1;
     color: #ffffff;
 }
 
-/* User Controls and Info */
-.user-controls {
+/* Export specific */
+.export-button {
+    background: none;
+    border: none;
+    color: white;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+/* Nav button specific */
+.nav-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Logo Styling - keep large logo but adjust text proportions */
+.logo {
     display: flex;
     align-items: center;
-    gap: clamp(10px, 1vw, 15px);
-    margin-left: auto;
-    padding-left: clamp(10px, 2vw, 20px);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
+    gap: 10px; /* Reduced gap */
 }
 
-.user-info {
-    padding: 8px 16px;
+.logo img {
+    height: 55px; /* Keep the large logo */
+    width: auto;
 }
 
-.user-info:hover {
-    background-color: transparent;
-    color: inherit;
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    color: white;
+    line-height: 1.1;
+}
+
+.university-name {
+    font-size: 1.5em; /* Increased from 1.3em */
+    text-transform: uppercase;
+}
+
+.university-subtitle {
+    font-size: 0.95em; /* Increased from 0.85em */
+    letter-spacing: 1px;
+}
+
+/* Dropdown Containers */
+.export-container,
+.user-dropdown {
+    position: relative;
 }
 
 /* Dropdowns */
@@ -100,7 +153,7 @@
 .dropdown-content a {
     display: block;
     padding: 8px 16px;
-    color: #142A50;
+    color: #00153B;
     text-decoration: none;
 }
 
@@ -109,31 +162,14 @@
 }
 
 /* Semester Specifics */
-.semester-group {
-    display: flex;
-    align-items: center;
-    gap: clamp(8px, 1vw, 12px);
-    padding-right: clamp(10px, 2vw, 20px);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
-    position: relative;
-}
-
 .semester-dropdown {
     position: relative;
     display: inline-block;
 }
 
 .semester-button {
-    background: none;
-    color: #ffffff;
-    padding: 8px 16px;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: inherit;
+    padding: 6px 0;
+    gap: 6px;
 }
 
 .semester-content {
@@ -170,8 +206,82 @@
     transform: rotate(180deg);
 }
 
-/* Authentication Specific Styles */
-.logged-in-content,
-.logged-out-content {
-    display: none;
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+    header {
+        padding: 12px 30px;
+    }
+    
+    .nav-links {
+        margin: 0 25px;
+        gap: 20px;
+    }
+    
+    .header-left,
+    .header-right {
+        gap: 20px;
+    }
+    
+    .logo img {
+        height: 50px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    header {
+        padding: 10px 20px;
+    }
+    
+    .nav-links {
+        margin: 0 15px;
+        gap: 15px;
+    }
+    
+    .header-left,
+    .header-right {
+        gap: 15px;
+    }
+    
+    .logo img {
+        height: 45px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+    }
+    
+    .header-left,
+    .nav-links,
+    .header-right {
+        margin: 5px 0;
+        gap: 15px;
+    }
+    
+    .nav-links {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 5px;
+    }
+    
+    .header-right {
+        justify-content: flex-end;
+    }
+}
+
+body.dark-mode .nav-links a {
+    color: #00153B;
+}
+
+.sidebar-tabs a.active {
+    color: #00153B;
+    position: absolute;
+    bottom: -11px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #B41231;
 }
