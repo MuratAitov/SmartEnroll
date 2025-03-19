@@ -1,0 +1,197 @@
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: fit-content;
+}
+
+.logo img {
+    background-color: transparent !important;
+    height: 40px;
+    width: auto;
+    margin-right: 10px;
+}
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    align-items: center;
+}
+.university-name {
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    width: fit-content;
+    display: block;
+    font-family: 'Goudy Trajan Pro', serif;
+    text-align: center;
+}
+.university-subtitle {
+    color: #FFFFFF;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 8.2px;
+    margin-top: 2px;
+    font-family: 'Goudy Trajan Pro', serif;
+    text-align: center;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    transform: none;
+}
+
+.division-btn {
+    flex: 1;  /* Make each button take up equal space */
+    padding: 8px 12px;
+    border: 1px solid #C4C8CE;
+    background-color: transparent;
+    color: #6c757d;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: clamp(12px, 0.9vw, 14px);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-width: 0; /* Allow button to shrink if needed */
+}
+
+.division-btn:hover {
+    background-color: rgba(108, 117, 125, 0.1);
+}
+
+/* Active state */
+.division-btn.selected {
+    background-color: #002467 !important;
+    color: #ffffff !important;
+    border: 1px solid #002467 !important;
+}
+
+.schedule-container {
+    flex: 1;          /* Take up remaining space */
+    background-color: white;
+    border-radius: 8px;  /* Match sidebar's border radius */
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-width: 600px; /* Ensure minimum width for schedule */
+    border-color: #e0e4e8;
+    overflow: hidden;  /* Ensure content doesn't overflow rounded corners */
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+.nav-tabs a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 8px 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+.nav-tabs a.active {
+    color: white;
+    border-bottom: 2px solid #B41231;
+}
+.nav-tabs a:hover {
+    color: #142A50;
+}
+
+.export-calendar-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.export-calendar-btn:hover {
+    background-color: #357ABD;
+}
+
+/* Update sidebar tab styles */
+.sidebar-tabs a {
+    color: #C4C8CE;
+    text-decoration: none;
+    padding: 5px 0;
+    position: relative;
+    font-size: 0.9em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.sidebar-tabs a.active {
+    color: #142A50;  /* Blue color when active */
+}
+
+.sidebar-tabs a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #B41231;  /* Red underline */
+}
+
+/* Dark mode styles */
+
+
+
+
+/* Button hover state */
+.division-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Button selected/clicked state - light mode */
+.division-btn.selected {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+
+
+/* Weekday button selected state in light mode */
+.weekday-btn.selected {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+/* Weekday button hover state */
+.weekday-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Context menu styles */
+.context-menu {
+    position: fixed;
+    background: white;
+    border: 1px solid #e0e4e8;
+    border-radius: 4px;
+    padding: 4px 0;
+    min-width: 150px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.menu-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #f5f7fa;
+}

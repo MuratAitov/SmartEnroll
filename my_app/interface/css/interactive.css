@@ -1,0 +1,9 @@
+/* Event block hover effect */
+.event-block {
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.event-block:hover {
+    opacity: 0.9;
+}

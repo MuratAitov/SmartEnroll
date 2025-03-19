@@ -1,0 +1,80 @@
+.floor-tree {
+    padding: 20px;
+}
+
+.tree-item {
+    margin-bottom: 15px;
+}
+
+.tree-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 8px 16px;
+    transition: background-color 0.2s ease;
+}
+
+.building-name {
+    font-size: 16px;
+    color: #142A50;
+}
+
+.arrow {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+.tree-content {
+    display: none;
+    margin-top: 4px;
+}
+
+.tree-content.show {
+    display: block;
+}
+
+.tree-subitem {
+    padding: 8px 32px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.tree-subitem:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Map Sidebar Styles */
+.day-panel {
+    margin-bottom: 10px;
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+.day-panel:nth-child(1) .day-header { background-color: #c3415a; }
+.day-panel:nth-child(2) .day-header { background-color: #bc2a46; }
+.day-panel:nth-child(3) .day-header { background-color: #b41231; }
+.day-panel:nth-child(4) .day-header { background-color: #a2102c; }
+.day-panel:nth-child(5) .day-header { background-color: #900e27; }
+
+.day-content {
+    display: none;
+    padding: 10px;
+    color: #666;
+    border: 1px solid #e0e4e8;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    margin-top: -4px;
+}
+
+.day-content.show {
+    display: block;
+}

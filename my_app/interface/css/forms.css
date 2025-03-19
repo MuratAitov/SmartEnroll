@@ -1,0 +1,168 @@
+.form-group {
+    margin-bottom: 15px;
+    border: 1px solid #e0e4e8;
+    border-radius: 4px;
+    padding: 10px;
+    position: relative;
+}
+.form-group input {
+    width: 100%;
+    border: none;
+    padding: 8px 0;
+    font-size: 1em;
+    color: #495057;
+}
+.form-group input:focus {
+    outline: none;
+}
+.level-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 10px 0;
+    width: 100%;
+    position: relative;
+}
+
+.empty-space {
+    display: none;
+}
+
+/* Remove any pseudo elements that might be creating the arrow */
+.form-group .level-buttons,
+.form-group {
+    background-image: none !important;
+}
+
+/* Ensure no arrow on the container */
+.level-buttons {
+    position: relative;
+}
+
+.level-buttons::before,
+.level-buttons::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Remove justify-content if it exists */
+.form-group .level-buttons {
+    justify-content: stretch;
+}
+
+/* Add dropdown arrow */
+.level-buttons::after {
+    content: '▼';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #D0D4D9;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.edit-form input[type="time"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #e0e4e8;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.edit-form .weekday-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.edit-form .weekday-btn {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #e0e4e8;
+    background: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.edit-form .weekday-btn.selected {
+    background-color: #4A90E2;
+    color: white;
+    border-color: #4A90E2;
+}
+
+/* Style for all inputs */
+.courses-view .form-group input,
+.recurring-events-view .form-group input {
+    width: 100%;
+    border: none;
+    padding: 0;
+    font-size: 1em;
+    color: #495057;
+    background: transparent;
+    height: 36px;  /* Fixed height for inputs */
+    line-height: 36px;
+}
+
+/* Weekday buttons container */
+.recurring-events-view .form-group .weekday-buttons {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    margin: 0;  /* Remove margin */
+}
+
+/* Time input container styles */
+.recurring-events-view .form-group:has(.time-input) {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    height: 56px;
+    box-sizing: border-box;
+}
+
+/* Time input field styles */
+.recurring-events-view .time-input {
+    width: 100%;
+    border: none;
+    padding: 0;
+    font-size: 1em;
+    color: #495057;
+    background: transparent;
+    height: 36px;
+    line-height: 36px;
+}
+
+/* Remove flex display from inputs */
+.courses-view .form-group input,
+.recurring-events-view .form-group input {
+    width: 100%;
+    border: none;
+    padding: 0;
+    font-size: 1em;
+    color: #495057;
+    background: transparent;
+    height: 36px;
+    line-height: 36px;
+}
+
+/* Time input container styles */
+.recurring-events-view .form-group:has(.time-input) {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    height: 56px;
+}
+
+/* Time input field styles */
+.recurring-events-view .time-input {
+    width: 100%;
+    border: none;
+    padding: 0;
+    font-size: 1em;
+    color: #495057;
+    background: transparent;
+    height: 36px;
+    line-height: 36px;
+}

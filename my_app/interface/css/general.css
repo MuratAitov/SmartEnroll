@@ -1,0 +1,82 @@
+.theme-toggle {
+    width: 100%;
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #142A50;
+    text-align: left;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.theme-toggle:hover {
+    background-color: #f5f7fa;
+}
+
+body, nav, .nav-links a, .nav-button, .dropdown-content,
+.theme-toggle, .sidebar, input, select {
+    transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    transition: all 0.3s ease;
+}
+header {
+    background-color: #142A50;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+main {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1400px;  /* Set a max-width for large screens */
+    margin: 0 auto;     /* Center the content */
+}
+input, select {
+    background-color: white;
+    border: 1px solid #e0e4e8;
+    color: #495057;
+    padding: 10px 12px;
+    border-radius: 6px;
+    width: 100%;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+}
+input:focus, select:focus {
+    outline: none;
+    border-color: #002467;
+    box-shadow: 0 0 0 3px rgba(0, 36, 103, 0.1);
+}
+nav {
+    height: 50px;
+    padding: 0 clamp(10px, 2vw, 20px);
+    background-color: #142A50;
+    font-size: clamp(12px, 1vw, 16px);
+    position: static;
+    transition: all 0.3s ease;
+}
+body.is-authenticated .logged-in-content {
+    display: block;
+}
+
+body.is-authenticated .logged-out-content {
+    display: none;
+}
+
+body:not(.is-authenticated) .logged-out-content {
+    display: block;
+}
+
+body:not(.is-authenticated) .logged-in-content {
+    display: none;
+}

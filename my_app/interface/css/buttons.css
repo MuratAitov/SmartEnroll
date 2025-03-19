@@ -1,0 +1,60 @@
+button {
+    background-color: #002467;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+button:hover {
+    background-color: #003399;
+    transform: translateY(-1px);
+}
+/* Weekday buttons styles */
+.weekday-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 10px 0;
+    justify-content: space-between;
+}
+
+.weekday-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #C4C8CE;
+    background-color: transparent;
+    color: #6c757d;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: clamp(12px, 0.9vw, 14px);
+    transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+    white-space: nowrap;
+    min-width: fit-content;
+}
+
+.weekday-btn:hover {
+    background-color: rgba(108, 117, 125, 0.1);
+}
+
+.weekday-btn.selected {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+.weekday-btn:hover,
+.division-btn:hover {
+    background-color: #B41231;
+    color: #ffffff;
+    border-color: #B41231;
+}
+
+/* Keep the selected state styles */
+.weekday-btn.selected,
+.division-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;
+}

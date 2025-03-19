@@ -1,0 +1,31 @@
+/* Event block styles */
+.event-block {
+    position: absolute;
+    width: 100%;  /* Take full width of cell */
+    left: 0;      /* Align to left edge of cell */
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #808080;
+    color: white;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    box-sizing: border-box;  /* Include padding in width calculation */
+}
+
+.event-name {
+    font-weight: 500;
+    font-size: 0.9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-time {
+    font-size: 0.8em;
+    opacity: 0.9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

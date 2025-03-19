@@ -1,0 +1,705 @@
+body.dark-mode {
+    background-color: #001A49 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode nav {
+    background-color: #ffffff !important;
+}
+
+body.dark-mode .nav-links a {
+    color: #142A50 !important;
+}
+
+body.dark-mode .nav-links a.active {
+    color: #142A50 !important;
+}
+
+body.dark-mode .nav-button {
+    color: #142A50 !important;
+}
+
+body.dark-mode .dropdown-content {
+    background-color: #142A50 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .dropdown-content a,
+body.dark-mode .theme-toggle,
+body.dark-mode .student-name {
+    color: #ffffff !important;
+}
+
+body.dark-mode .student-id {
+    color: #C4C8CE !important;
+}
+
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover {
+    background-color: #1e3a6d !important;
+}
+
+body.dark-mode .dropdown-divider {
+    background-color: #2a4573 !important;
+}
+
+body.dark-mode .sidebar {
+    background-color: #023373 !important;
+    color: #ffffff !important;
+    border-color: #023373 !important;
+}
+
+body.dark-mode .sidebar-tabs a {
+    color: #C4C8CE !important;
+}
+
+body.dark-mode .sidebar-tabs a.active {
+    color: #ffffff !important;
+}
+
+body.dark-mode select,
+body.dark-mode input {
+    color: #ffffff !important;
+    background-color: #1e3a6d !important;
+}
+
+body.dark-mode select option {
+    background-color: #142A50 !important;
+    color: #ffffff !important;
+}
+body.dark-mode .schedule-grid th {
+    background-color: #023373 !important;
+    color: #ffffff !important;
+    border-color: #012454 !important;
+}
+body.dark-mode .schedule-container {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    border-radius: 8px;
+}
+
+body.dark-mode .schedule-grid {
+    background-color: #023373 !important;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+body.dark-mode .schedule-grid th, 
+body.dark-mode .schedule-grid td:first-child {
+    background-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .schedule-grid td {
+    background-color: #023373 !important;
+    border-color: #012454 !important;
+}
+
+body.dark-mode .schedule-grid tr:nth-child(even) td {
+    background-color: #023373 !important;
+}
+
+/* Schedule grid borders in dark mode */
+body.dark-mode .schedule-grid td,
+body.dark-mode .schedule-grid th,
+body.dark-mode .schedule-grid thead tr,
+body.dark-mode .schedule-grid thead {
+    border-color: #012454 !important;
+}
+
+body.dark-mode .nav-links a {
+    color: #142A50;
+}
+
+body.dark-mode .nav-button {
+    color: #142A50;
+}
+
+/* Dropdown styles */
+body.dark-mode .dropdown-content {
+    background-color: #142A50;
+    color: #ffffff;
+}
+
+body.dark-mode .dropdown-content a,
+body.dark-mode .theme-toggle,
+body.dark-mode .student-name {
+    color: #ffffff;
+}
+
+body.dark-mode .student-id {
+    color: #C4C8CE;
+}
+
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover {
+    background-color: #1e3a6d;
+}
+
+body.dark-mode .dropdown-divider {
+    background-color: #2a4573;
+}
+
+/* Main content area */
+body.dark-mode .sidebar {
+    background-color: #023373;
+    color: #ffffff;
+}
+
+body.dark-mode .sidebar-tabs a {
+    color: #C4C8CE;
+}
+
+body.dark-mode .sidebar-tabs a.active {
+    color: #ffffff;
+}
+
+/* Form elements */
+body.dark-mode select,
+body.dark-mode input {
+    color: #ffffff;
+    background-color: #1e3a6d;
+}
+
+body.dark-mode select option {
+    background-color: #142A50;
+    color: #ffffff;
+}
+
+body.dark-mode header {
+    background-color: #ffffff !important;
+}
+
+body.dark-mode .university-name,
+body.dark-mode .university-subtitle {
+    color: #142A50 !important;
+}
+
+/* Schedule grid styles in dark mode */
+body.dark-mode .schedule-grid {
+    background-color: #023373 !important;
+    border-radius: 8px;  /* Ensure border radius in dark mode */
+    overflow: hidden;
+}
+
+body.dark-mode .schedule-grid th, 
+body.dark-mode .schedule-grid td:first-child {
+    background-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .schedule-grid td {
+    border-color: #022859 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .schedule-grid tr:nth-child(even) {
+    background-color: #023373 !important;
+}
+
+/* Top border of header row */
+body.dark-mode .schedule-grid thead tr {
+    border-color: #022859 !important;
+}
+
+/* Horizontal divider line below header */
+body.dark-mode .schedule-grid thead {
+    border-bottom-color: #022859 !important;
+}
+
+/* Navigation styles in dark mode */
+body.dark-mode nav {
+    background-color: #ffffff !important;
+}
+
+body.dark-mode .nav-links a {
+    color: #142A50 !important;
+}
+
+body.dark-mode .nav-button {
+    color: #142A50 !important;
+}
+
+/* Navigation hover styles */
+body.dark-mode .nav-links a:hover {
+    color: #B41231 !important;
+}
+
+/* Dropdown hover styles */
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover {
+    background-color: #B41231;
+    color: #ffffff !important;
+}
+
+/* Sidebar tab hover styles */
+body.dark-mode .sidebar-tabs a:hover {
+    color: #B41231 !important;
+}
+
+/* Level button hover styles */
+body.dark-mode .division-btn:hover {
+    background-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Export button hover styles */
+body.dark-mode .nav-button:hover {
+    color: #B41231 !important;
+}
+
+/* User dropdown button hover styles */
+body.dark-mode .user-dropdown .nav-button:hover {
+    color: #B41231 !important;
+}
+
+body.dark-mode nav {
+    background-color: #ffffff !important;
+}
+
+body.dark-mode .semester-content {
+    background-color: #142A50;
+}
+
+body.dark-mode .semester-content a {
+    color: #ffffff;
+}
+
+body.dark-mode .semester-content a:hover {
+    background-color: #B41231;
+    color: #ffffff;
+}
+
+/* Dark mode styles */
+body.dark-mode .semester-button {
+    color: #142A50;
+}
+
+body.dark-mode .nav-links a:hover {
+    color: #B41231 !important;
+}
+
+body.dark-mode .nav-links a.active:hover {
+    color: #B41231 !important;
+}
+
+body.dark-mode .credits-box {
+    color: #142A50 !important;
+}
+
+body.dark-mode .export-dropdown {
+    background-color: #142A50;
+}
+
+body.dark-mode .export-dropdown a {
+    color: #ffffff;
+}
+
+body.dark-mode .export-dropdown a:hover {
+    background-color: #B41231;
+    color: #ffffff;
+}
+
+body.dark-mode .dropdown-content a:hover,
+body.dark-mode .theme-toggle:hover {
+    background-color: #B41231;
+    color: #ffffff !important;
+}
+
+body.dark-mode .dropdown-button .arrow {
+    color: #ffffff;
+}
+
+body.dark-mode .dropdown-button {
+    color: #ffffff;
+}
+
+body.dark-mode .dropdown-list {
+    background-color: #1e3a6d;
+}
+
+body.dark-mode .dropdown-item {
+    color: #ffffff;
+}
+
+body.dark-mode .dropdown-item:hover {
+    background-color: #B41231;
+}
+
+body.dark-mode .recurring-events-view .form-group {
+    border-color: #495057;
+    background-color: #142A50;  /* Dark background */
+}
+
+body.dark-mode .recurring-events-view input {
+    color: #ffffff;  /* White text */
+    background: transparent;
+}
+
+body.dark-mode .recurring-events-view input::placeholder {
+    color: #C4C8CE;  /* Lighter color for placeholder text */
+}
+
+body.dark-mode .weekday-btn {
+    color: #ffffff;
+    border-color: #495057;
+    background-color: transparent;
+}
+
+body.dark-mode .weekday-btn:hover {
+    background-color: #B41231;
+    color: #ffffff;
+    border-color: #B41231;
+}
+
+body.dark-mode .weekday-btn.selected {
+    background-color: #002467 !important;
+    color: #ffffff !important;
+    border-color: #002467 !important;
+}
+
+body.dark-mode .add-event-btn {
+    background-color: #4A90E2;
+    color: #ffffff;
+}
+
+body.dark-mode .add-event-btn:hover {
+    background-color: #357ABD;
+}
+
+body.dark-mode .weekday-btn {
+    color: #6c757d;
+    border-color: #C4C8CE;
+}
+
+body.dark-mode .weekday-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;
+}
+
+body.dark-mode .weekday-btn:hover,
+body.dark-mode .division-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+    cursor: pointer;
+}
+
+body.dark-mode .recurring-events-view .form-group:has(.time-input) label {
+    color: #ffffff;
+}
+
+body.dark-mode .autocomplete-list {
+    background-color: #1e3a6d;
+    border-color: #495057;
+}
+
+body.dark-mode .autocomplete-item {
+    color: #ffffff;
+}
+
+body.dark-mode .autocomplete-item:hover {
+    background-color: #142A50;
+}
+
+body.dark-mode .event-block {
+    background-color: #808080;  /* Keep gray background in dark mode */
+}
+
+body.dark-mode .context-menu {
+    background-color: #1e3a6d;
+    border-color: #495057;
+}
+
+body.dark-mode .menu-item {
+    color: white;
+}
+
+body.dark-mode .menu-item:hover {
+    background-color: #142A50;
+}
+
+body.dark-mode .edit-form {
+    background: #1e3a6d;
+    color: white;
+}
+
+body.dark-mode .edit-form input {
+    color: white;
+    background: #142A50;
+}
+
+body.dark-mode .edit-form input[type="time"] {
+    background: #142A50;
+    border-color: #495057;
+    color: white;
+}
+
+body.dark-mode .export-calendar-btn {
+    background-color: #357ABD;
+}
+
+body.dark-mode .export-calendar-btn:hover {
+    background-color: #2868A6;
+}
+
+body.dark-mode .schedule-grid td:first-child {
+    color: #C4C8CE;
+    background-color: #1e3a6d;
+}
+
+body.dark-mode .sidebar-tabs a.active {
+    color: #4A90E2;  /* Lighter blue for dark mode */
+}
+
+/* Dark mode schedule styles - only applied when dark mode is active */
+body.dark-mode .schedule-container {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    border-radius: 8px;  /* Ensure border radius in dark mode */
+}
+
+body.dark-mode .schedule-grid td {
+    background-color: #023373 !important;
+    border-color: #012454 !important;  /* Darker blue divider lines */
+}
+
+body.dark-mode .schedule-grid tr:nth-child(even) td {
+    background-color: #023373 !important;
+}
+
+body.dark-mode .schedule-grid td:first-child {
+    background-color: #023373 !important;
+}
+
+/* Schedule grid lines in dark mode */
+body.dark-mode .schedule-grid td,
+body.dark-mode .schedule-grid th {
+    border-color: #012454 !important;  /* Darker blue divider lines */
+}
+
+/* Top border of header row */
+body.dark-mode .schedule-grid thead tr {
+    border-color: #012454 !important;  /* Darker blue divider lines */
+}
+
+/* Horizontal divider line below header */
+body.dark-mode .schedule-grid thead {
+    border-bottom-color: #012454 !important;  /* Darker blue divider lines */
+}
+
+/* Background color remains #023373 */
+body.dark-mode .schedule-grid {
+    background-color: #023373 !important;
+    border-radius: 8px;  /* Ensure border radius in dark mode */
+    overflow: hidden;
+}
+
+body.dark-mode .schedule-grid td {
+    background-color: #023373 !important;
+}
+
+body.dark-mode .schedule-grid tr:nth-child(even) td {
+    background-color: #023373 !important;
+}
+
+/* Form inputs in dark mode */
+body.dark-mode .form-group,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode .dropdown-btn {
+    background-color: #023373 !important;
+    border-color: #D0D4D9 !important;
+    color: #D0D4D9 !important;
+}
+
+/* Remove any hover effects that might show lighter backgrounds */
+body.dark-mode .form-group:hover,
+body.dark-mode input:hover,
+body.dark-mode select:hover {
+    background-color: #023373 !important;
+}
+
+/* Placeholder text color */
+body.dark-mode input::placeholder,
+body.dark-mode select::placeholder {
+    color: #D0D4D9 !important;
+}
+
+/* Keep dropdown arrow visible */
+body.dark-mode select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23023373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
+    background-size: 16px !important;
+    padding-right: 30px !important;
+}
+
+/* Button selected state in dark mode */
+body.dark-mode .division-btn.selected,
+body.dark-mode .weekday-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;  /* Changed from white to blue */
+}
+
+/* Button hover state */
+body.dark-mode .division-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Button normal state */
+body.dark-mode .division-btn,
+body.dark-mode .weekday-btn {
+    background-color: #023373 !important;
+    border-color: #D0D4D9 !important;
+    color: #D0D4D9 !important;
+}
+
+/* Form group arrow in dark mode */
+body.dark-mode .form-group .arrow {
+    color: #023373 !important;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* Keep background color consistent */
+body.dark-mode .form-group {
+    position: relative;
+    background-color: #023373 !important;
+}
+
+/* Dropdown styling in dark mode */
+body.dark-mode .form-group {
+    position: relative;
+}
+
+/* Add visible arrow using pseudo-element */
+body.dark-mode .form-group::after {
+    content: '▼';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #D0D4D9;  /* Changed to light gray for visibility */
+    pointer-events: none;
+    font-size: 12px;
+}
+
+/* Style for select elements */
+body.dark-mode select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 30px !important;
+    background-color: #023373 !important;
+    border-color: #D0D4D9 !important;
+    color: #D0D4D9 !important;
+    cursor: pointer;
+}
+
+/* Change arrow color on hover */
+body.dark-mode .form-group:hover::after {
+    color: #ffffff;  /* Change to white on hover */
+}
+
+/* Navigation dropdown arrows in dark mode */
+body.dark-mode .nav-link .arrow,
+body.dark-mode .semester-button .arrow,
+body.dark-mode .export-button .arrow {
+    color: #023373 !important;
+    display: inline-block !important;
+    margin-left: 5px !important;
+}
+
+/* Hover state for nav dropdown arrows */
+body.dark-mode .nav-link:hover .arrow,
+body.dark-mode .semester-button:hover .arrow,
+body.dark-mode .export-button:hover .arrow {
+    color: #023373 !important;
+}
+
+/* Ensure arrow is visible when dropdown is open */
+body.dark-mode .show .arrow {
+    color: #023373 !important;
+}
+
+/* Rotate arrow when dropdown is open */
+body.dark-mode .show .arrow {
+    transform: rotate(180deg) !important;
+    transition: transform 0.2s ease;
+}
+
+/* Dark mode hover state - same as light mode */
+body.dark-mode .division-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode selected state - white background, blue text */
+body.dark-mode .division-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;
+}
+
+/* Dark mode weekday button selected state */
+body.dark-mode .weekday-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;
+}
+
+/* Dark mode weekday button hover state */
+body.dark-mode .weekday-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode export button arrow */
+body.dark-mode .export-button .arrow {
+    color: #023373 !important;
+}
+/* Navigation divider lines in dark mode */
+body.dark-mode .semester-group {
+    border-right-color: #0557c5 !important;
+}
+
+body.dark-mode .user-controls {
+    border-left-color: #0557c5 !important;
+}
+
+body.dark-mode .color-picker {
+    background-color: #1e3a6d;
+    border-color: #495057;
+}
+
+/* Dark mode styles for PDF container */
+body.dark-mode embed[type="application/pdf"] {
+    background-color: #023373;
+}
+
+/* Dark mode semester button arrow */
+body.dark-mode .semester-button .arrow {
+    color: #023373 !important;
+}
+
+/* Dark mode arrow color */
+body.dark-mode .level-buttons::after {
+    color: #023373;
+}
+
+body.dark-mode .coming-soon {
+    color: #C4C8CE;
+}
