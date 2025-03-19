@@ -1,4 +1,7 @@
-// Update the createExportDropdown function
+/**
+ * Generates the HTML content for the export dropdown menu.
+ * @returns {string} - The export dropdown HTML string.
+ */
 function createExportDropdown() {
     return `
         <div class="export-dropdown">
@@ -8,18 +11,20 @@ function createExportDropdown() {
     `;
 }
 
-// Update the semester dropdown content
+/**
+ * Generates the HTML content for the semester dropdown menu.
+ * @returns {string} - The semester dropdown HTML string.
+ */
 function createSemesterDropdown() {
+    const semesters = [
+        'Summer 2025', 'Spring 2025', 'Fall 2024', 
+        'Summer 2024', 'Spring 2024', 'Fall 2023', 
+        'Summer 2023', 'Spring 2023'
+    ];
+
     return `
         <div class="semester-content">
-            <a href="#">Summer 2025</a>
-            <a href="#">Spring 2025</a>
-            <a href="#">Fall 2024</a>
-            <a href="#">Summer 2024</a>
-            <a href="#">Spring 2024</a>
-            <a href="#">Fall 2023</a>
-            <a href="#">Summer 2023</a>
-            <a href="#">Spring 2023</a>
+            ${semesters.map(semester => `<a href="#">${semester}</a>`).join('')}
         </div>
     `;
 }
