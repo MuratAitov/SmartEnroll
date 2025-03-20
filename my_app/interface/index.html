@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Registration | Gonzaga University</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-    <link rel="icon" href="path/to/your/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./assets/GU Logo/Gonzaga_Bulldogs_logo.svg.png" type="image/png">
     <link rel="stylesheet" href="./css/component.css">
     <link rel="stylesheet" href="./css/darkmode.css">
     <link rel="stylesheet" href="./css/events.css">
@@ -61,9 +61,9 @@
                     Export <span class="arrow">▼</span>
                 </button>
                 <div class="export-dropdown">
-                    <a href="#">Export to PDF</a>
-                    <a href="#">Export to Calendar</a>
-                    <a href="#">Print Schedule</a>
+                    <a href="#" onclick="exportToAppleCalendar(); return false;">Export to Apple Calendar</a>
+                    <a href="#" onclick="exportToPDF(); return false;">Export to PDF</a>
+                    <a href="#" onclick="exportToGoogleCalendar(); return false;">Export to Google Calendar</a>
                 </div>
             </div>
             <div class="user-dropdown">
@@ -86,100 +86,528 @@
         </div>
     </header>
 
-    <main>
-        <div class="sidebar">
-            <div class="tabs">
-                <button class="tab-button active" onclick="openTab('Courses', event)">Courses</button>
-                <button class="tab-button" onclick="openTab('RecurringEvents', event)">Recurring Events</button>
-                <button class="tab-button" onclick="openTab('PreReqTree', event)">Pre-Req Tree</button>
-            </div>
-            <div id="Courses" class="tab-content active">
-                <div class="search-form">
-                    <input type="text" placeholder="Subject">
-                    <input type="text" placeholder="Course code">
-                    <div class="button-group">
-                        <button type="button" class="filter-button">Lower Division</button>
-                        <button type="button" class="filter-button">Upper Division</button>
+    <main style="display: flex; height: calc(100vh - 60px);">
+        <!-- View containers - each will be shown/hidden based on navigation -->
+        <div id="registration-view" class="view-container" style="display: flex; width: 100%;">
+            <!-- Sidebar - simplified with inline styles for reliability -->
+            <div class="sidebar" style="width: 350px; background-color: white; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: calc(100% - 30px); overflow-y: auto; border-radius: 8px; margin: 15px; display: block !important; min-width: 350px;">
+                <div class="tabs" style="display: flex; justify-content: space-between; border-bottom: 1px solid #e0e0e0; margin-bottom: 20px; width: 100%; padding: 0;">
+                    <button class="tab-button active" onclick="openTab('Courses', event)" style="background: none; border: none; padding: 15px 0; font-weight: 500; cursor: pointer; width: 33.333%; text-align: center; color: #142A50; font-size: 15px; position: relative; margin: 0; box-sizing: border-box;">Courses</button>
+                    <button class="tab-button" onclick="openTab('RecurringEvents', event)" style="background: none; border: none; padding: 15px 0; font-weight: 500; cursor: pointer; width: 33.333%; text-align: center; color: #333; font-size: 15px; position: relative; margin: 0; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">Events</button>
+                    <button class="tab-button" onclick="openTab('PreReqTree', event)" style="background: none; border: none; padding: 15px 0; font-weight: 500; cursor: pointer; width: 33.333%; text-align: center; color: #333; font-size: 15px; position: relative; margin: 0; box-sizing: border-box;">Pre-Req</button>
+                </div>
+                
+                <div id="Courses" class="tab-content active" style="display: block; width: 100%;">
+                    <!-- API Connection Status Indicator -->
+                    <div id="connection-status" style="margin-bottom: 15px; padding: 8px 12px; border-radius: 4px; background-color: #f8f9fa; display: flex; align-items: center; justify-content: space-between;">
+                        <span>Backend Connection:</span>
+                        <span id="connection-indicator" style="padding: 4px 8px; border-radius: 3px; background-color: #f0f0f0; color: #666; font-size: 13px;">Checking...</span>
                     </div>
-                    <input type="text" placeholder="Attributes">
-                    <input type="text" placeholder="Instructor">
-                    <input type="text" placeholder="Campus">
-                    <input type="text" placeholder="Instructional Methods">
-                    <button type="button" class="search-btn">Search Courses</button>
+                    
+                    <div class="search-form" style="width: 100%;">
+                        <input type="text" placeholder="Subject" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                        <input type="text" placeholder="Course code" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                        
+                        <div class="button-group" style="display: flex; gap: 10px; margin-bottom: 15px; width: 100%;">
+                            <button type="button" class="filter-button" onclick="toggleFilterButton(this)" style="flex: 1; padding: 12px; background-color: white; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 14px; color: #333;">Lower Division</button>
+                            <button type="button" class="filter-button" onclick="toggleFilterButton(this)" style="flex: 1; padding: 12px; background-color: white; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 14px; color: #333;">Upper Division</button>
+                        </div>
+                        
+                        <input type="text" placeholder="Attributes" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                        
+                        <!-- Professor dropdown populated from the backend -->
+                        <select id="professors-dropdown" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                            <option value="">Select Instructor</option>
+                        </select>
+                        
+                        <input type="text" placeholder="Campus" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                        <input type="text" placeholder="Instructional Methods" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                        
+                        <button type="button" class="search-btn" onclick="fetchData()" style="width: 100%; background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 12px 0; font-size: 14px; cursor: pointer; font-weight: 500;">Search Courses</button>
+                    </div>
+                    
+                    <!-- Area to display search results -->
+                    <div style="margin-top: 20px; width: 100%;">
+                        <h3 style="font-size: 16px; color: #142A50; margin-bottom: 10px;">Available Courses</h3>
+                        <ul id="courses-list" style="list-style: none; padding: 0; margin: 0;">
+                            <!-- Courses will be populated here -->
+                        </ul>
+                    </div>
+                    
+                    <!-- Area to display selected course sections -->
+                    <div style="margin-top: 20px; width: 100%;">
+                        <h3 style="font-size: 16px; color: #142A50; margin-bottom: 10px;">Course Sections</h3>
+                        <ul id="sections-list" style="list-style: none; padding: 0; margin: 0;">
+                            <!-- Sections will be populated here -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="RecurringEvents" class="tab-content" style="display: none; width: 100%;">
+                    <div class="search-form" style="width: 100%;">
+                        <input type="text" placeholder="Event Name" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                        
+                        <div class="day-selector" style="display: flex; gap: 8px; margin-bottom: 15px; width: 100%;">
+                            <button type="button" class="day-button" onclick="toggleDayButton(this)" style="flex: 1; padding: 12px 8px; background-color: white; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 14px; color: #333; text-align: center;">M</button>
+                            <button type="button" class="day-button" onclick="toggleDayButton(this)" style="flex: 1; padding: 12px 8px; background-color: white; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 14px; color: #333; text-align: center;">T</button>
+                            <button type="button" class="day-button" onclick="toggleDayButton(this)" style="flex: 1; padding: 12px 8px; background-color: white; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 14px; color: #333; text-align: center;">W</button>
+                            <button type="button" class="day-button" onclick="toggleDayButton(this)" style="flex: 1; padding: 12px 8px; background-color: white; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 14px; color: #333; text-align: center;">R</button>
+                            <button type="button" class="day-button" onclick="toggleDayButton(this)" style="flex: 1; padding: 12px 8px; background-color: white; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 14px; color: #333; text-align: center;">F</button>
+                        </div>
+                        
+                        <input type="text" placeholder="Start Time" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                        <input type="text" placeholder="End Time" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                        
+                        <button type="button" class="search-btn" style="width: 100%; background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 12px 0; font-size: 14px; cursor: pointer; font-weight: 500;">Add Event</button>
+                    </div>
+                </div>
+                
+                <div id="PreReqTree" class="tab-content" style="display: none; width: 100%;">
+                    <div class="search-form" style="width: 100%;">
+                        <input type="text" placeholder="Enter Course Code (e.g. CPSC 325)" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                        
+                        <button type="button" class="search-btn" onclick="searchPrerequisites()" style="width: 100%; background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 12px 0; font-size: 14px; cursor: pointer; font-weight: 500;">Search Pre-requisites</button>
+                        
+                        <div class="sample-courses" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;">
+                            <span style="width: 100%; font-size: 14px; color: #666; margin-bottom: 5px;">Try these example courses:</span>
+                            <button onclick="document.querySelector('#PreReqTree input').value='CPSC 325'; searchPrerequisites()" style="padding: 8px 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 14px; cursor: pointer; color: #333; font-weight: 500; min-width: 90px; text-align: center;">CPSC 325</button>
+                            <button onclick="document.querySelector('#PreReqTree input').value='CPSC 321'; searchPrerequisites()" style="padding: 8px 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 14px; cursor: pointer; color: #333; font-weight: 500; min-width: 90px; text-align: center;">CPSC 321</button>
+                            <button onclick="document.querySelector('#PreReqTree input').value='MATH 231'; searchPrerequisites()" style="padding: 8px 12px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 14px; cursor: pointer; color: #333; font-weight: 500; min-width: 90px; text-align: center;">MATH 231</button>
+                        </div>
+                        
+                        <div class="view-options" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                            <label style="font-size: 14px; color: #666;">View Options:</label>
+                            <button onclick="displayInMainArea()" style="padding: 10px; background-color: #f8f8f8; border: 1px solid #d8d8d8; border-radius: 4px; font-size: 14px; color: #333; cursor: pointer; font-weight: 500; display: flex; align-items: center; justify-content: center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
+                                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                    <path d="M6 11.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                                </svg>
+                                Show Full Tree in Main Area
+                            </button>
+                        </div>
+                        
+                        <div class="prereq-info" style="color: #333; font-size: 14px; margin-top: 20px; line-height: 1.5; width: 100%; border: 1px solid #e0e0e0; border-radius: 6px; padding: 15px; background-color: #f9f9f9;">
+                            <p style="display: block; margin: 0 0 10px 0; font-weight: 500;">Enter a course code above to see its pre-requisite tree.</p>
+                            <p style="font-size: 13px; color: #666; margin: 0;">The prerequisite tree will show you all courses required before taking your selected course, helping you plan your academic path.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="RecurringEvents" class="tab-content">
-                <div class="search-form">
-                    <input type="text" placeholder="Event Name">
-                    <div class="day-selector">
-                        <button type="button" class="day-button">M</button>
-                        <button type="button" class="day-button">T</button>
-                        <button type="button" class="day-button">W</button>
-                        <button type="button" class="day-button">R</button>
-                        <button type="button" class="day-button">F</button>
-                    </div>
-                    <input type="text" placeholder="Start Time">
-                    <input type="text" placeholder="End Time">
-                    <button type="button" class="search-btn">Add Event</button>
+            
+            <!-- Content container -->
+            <div class="content-container" style="flex: 1; padding: 15px; display: flex;">
+                <div id="schedule-container" class="schedule-grid" style="flex: 1; border-radius: 8px; overflow: hidden; background-color: #FFFFFF; box-shadow: 0 1px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+                    <table style="width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 0; flex: 1; height: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="time-header" style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></th>
+                                <th style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;">M</th>
+                                <th style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;">T</th>
+                                <th style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;">W</th>
+                                <th style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;">R</th>
+                                <th style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;">F</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">8:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">9:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">10:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">11:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">12:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">1:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">2:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">3:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">4:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">5:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div id="PreReqTree" class="tab-content">
-                <div class="search-form">
-                    <input type="text" placeholder="Enter Course Code (e.g. CPSC 325)">
-                    <button type="button" class="search-btn">Search Pre-requisites</button>
-                    <div class="prereq-info">
-                        <p>Enter a course code to see its pre-requisite tree and requirements.</p>
+        </div>
+
+        <!-- Map View -->
+        <div id="map-view" class="view-container" style="display: none; width: 100%;">
+            <div style="width: 100%; padding: 15px; display: flex; height: 100%;">
+                <!-- Building blueprints container - LEFT SIDEBAR STYLE -->
+                <div style="width: 350px; background-color: white; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: calc(100% - 30px); overflow-y: auto; border-radius: 8px; margin-right: 15px; min-width: 350px;">
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #e0e0e0; margin-bottom: 20px; width: 100%; padding: 0;">
+                        <button class="map-tab-button active" onclick="openMapTab('WeekdayTab', event)" style="background: none; border: none; padding: 15px 0; font-weight: 500; cursor: pointer; width: 50%; text-align: center; color: #142A50; font-size: 15px; position: relative; margin: 0; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">Schedule</button>
+                        <button class="map-tab-button" onclick="openMapTab('BlueprintsTab', event)" style="background: none; border: none; padding: 15px 0; font-weight: 500; cursor: pointer; width: 50%; text-align: center; color: #333; font-size: 15px; position: relative; margin: 0; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">Building Blueprints</button>
+                    </div>
+                    
+                    <!-- Weekday Schedule Tab Content -->
+                    <div id="WeekdayTab" class="map-tab-content active" style="display: block; width: 100%;">
+                        <div class="weekday-panels" style="display: flex; flex-direction: column; gap: 5px; width: 100%;">
+                            <div class="day-panel" style="border-radius: 4px; overflow: hidden;">
+                                <div class="day-header" onclick="toggleDayPanel(this)" style="background-color: #C3415A; color: white; padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-weight: 500;">Monday</span>
+                                    <span class="arrow" style="transition: transform 0.3s;">▼</span>
+                                </div>
+                                <div class="day-content" style="background-color: #f5f5f5; padding: 15px; display: none;">
+                                    <p style="margin: 0;">No classes this day!</p>
+                                </div>
+                            </div>
+                            
+                            <div class="day-panel" style="border-radius: 4px; overflow: hidden;">
+                                <div class="day-header" onclick="toggleDayPanel(this)" style="background-color: #BC2A46; color: white; padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-weight: 500;">Tuesday</span>
+                                    <span class="arrow" style="transition: transform 0.3s;">▼</span>
+                                </div>
+                                <div class="day-content" style="background-color: #f5f5f5; padding: 15px; display: none;">
+                                    <p style="margin: 0;">MATH 231 - Calculus (2)</p>
+                                </div>
+                            </div>
+                            
+                            <div class="day-panel" style="border-radius: 4px; overflow: hidden;">
+                                <div class="day-header" onclick="toggleDayPanel(this)" style="background-color: #B41330; color: white; padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-weight: 500;">Wednesday</span>
+                                    <span class="arrow" style="transition: transform 0.3s;">▼</span>
+                                </div>
+                                <div class="day-content" style="background-color: #f5f5f5; padding: 15px; display: none;">
+                                    <p style="margin: 0;">No classes this day!</p>
+                                </div>
+                            </div>
+                            
+                            <div class="day-panel" style="border-radius: 4px; overflow: hidden;">
+                                <div class="day-header" onclick="toggleDayPanel(this)" style="background-color: #A2102C; color: white; padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-weight: 500;">Thursday</span>
+                                    <span class="arrow" style="transition: transform 0.3s;">▼</span>
+                                </div>
+                                <div class="day-content" style="background-color: #f5f5f5; padding: 15px; display: none;">
+                                    <p style="margin: 0;">MATH 231 - Calculus (2)</p>
+                                </div>
+                            </div>
+                            
+                            <div class="day-panel" style="border-radius: 4px; overflow: hidden;">
+                                <div class="day-header" onclick="toggleDayPanel(this)" style="background-color: #900F26; color: white; padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-weight: 500;">Friday</span>
+                                    <span class="arrow" style="transition: transform 0.3s;">▼</span>
+                                </div>
+                                <div class="day-content" style="background-color: #f5f5f5; padding: 15px; display: none;">
+                                    <p style="margin: 0;">No classes this day!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Building Blueprints Tab Content -->
+                    <div id="BlueprintsTab" class="map-tab-content" style="display: none; width: 100%;">
+                        <!-- Building selection buttons -->
+                        <div style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 15px;">
+                            <button id="Herak" class="building-button" onclick="openHerakPDF()" style="width: 100%; padding: 12px 15px; text-align: left; background-color: white; color: #333; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.2s;">Herak Center</button>
+                            <button id="JepsonFirst" class="building-button" onclick="openJepsonFirstFloorPDF()" style="width: 100%; padding: 12px 15px; text-align: left; background-color: white; color: #333; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.2s;">Jepson - First Floor</button>
+                            <button id="JepsonBasement" class="building-button" onclick="openJepsonBasementPDF()" style="width: 100%; padding: 12px 15px; text-align: left; background-color: white; color: #333; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.2s;">Jepson - Basement</button>
+                        </div>
+                        
+                        <!-- Blueprint viewer -->
+                        <div id="blueprint-viewer" style="width: 100%; height: calc(100% - 180px); background-color: white; border: 1px solid #e0e0e0; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            <p style="color: #666; font-size: 14px;">Select a building to view its blueprint</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Google Map container - CONTENT CONTAINER STYLE -->
+                <div style="flex: 1; border-radius: 8px; overflow: hidden; background-color: #FFFFFF; box-shadow: 0 1px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+                    <div style="flex: 1; padding: 0;">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.418973710349!2d-117.40477662402845!3d47.66729508951068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x549e185c5df3f945%3A0xaf7c8489928f20!2sGonzaga%20University!5e0!3m2!1sen!2sus!4v1716416889721!5m2!1sen!2sus" 
+                            width="100%" 
+                            height="100%" 
+                            style="border: 0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="content-container">
-            <div id="schedule-container" class="schedule-grid">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="time-header"></th>
-                            <th>M</th>
-                            <th>T</th>
-                            <th>W</th>
-                            <th>R</th>
-                            <th>F</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>8:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>9:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>10:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>11:00 AM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>12:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>1:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>2:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>3:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>4:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>5:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>6:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>7:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>8:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>9:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td>10:00 PM</td><td></td><td></td><td></td><td></td><td></td></tr>
-                    </tbody>
-                </table>
+        <!-- Finals View -->
+        <div id="finals-view" class="view-container" style="display: none; width: 100%;">
+            <div style="width: 100%; padding: 20px; text-align: center;">
+                <h2>Finals Schedule</h2>
+                <div style="max-width: 900px; margin: 0 auto; background-color: #f5f5f5; padding: 20px; border-radius: 8px;">
+                    <p>Finals schedule will be displayed here.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rate My Professor View -->
+        <div id="rmp-view" class="view-container" style="display: none; width: 100%;">
+            <div style="width: 100%; padding: 20px; text-align: center;">
+                <h2>Rate My Professor</h2>
+                <div style="max-width: 900px; margin: 0 auto; background-color: #f5f5f5; padding: 20px; border-radius: 8px;">
+                    <p>Professor ratings and information will be displayed here.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reflection View -->
+        <div id="reflection-view" class="view-container" style="display: none; width: 100%;">
+            <div style="width: 100%; padding: 20px; text-align: center;">
+                <h2>Reflection Tool</h2>
+                <div style="max-width: 900px; margin: 0 auto; background-color: #f5f5f5; padding: 20px; border-radius: 8px;">
+                    <p>Reflection tools and content will be displayed here.</p>
+                </div>
             </div>
         </div>
     </main>
 
-    <script src="./js/theme.js"></script>
-    <script src="./js/course.js"></script>
-    <script src="./js/dropdown.js"></script>
-    <script src="./js/initialization.js"></script>
+    <script>
+    // Simple implementation of the sidebar functions
+    function openTab(tabName, event) {
+        console.log('Opening tab:', tabName);
+        
+        // Hide all tab contents
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].style.display = "none";
+            tabContents[i].classList.remove("active");
+        }
+        
+        // Remove active class from all tab buttons
+        const tabButtons = document.getElementsByClassName("tab-button");
+        for (let i = 0; i < tabButtons.length; i++) {
+            tabButtons[i].classList.remove("active");
+            tabButtons[i].style.color = "#333";
+        }
+        
+        // Show the selected tab content
+        const selectedTab = document.getElementById(tabName);
+        if (selectedTab) {
+            selectedTab.style.display = "block";
+            selectedTab.classList.add("active");
+        }
+        
+        // Add active class to the clicked button
+        if (event && event.currentTarget) {
+            event.currentTarget.classList.add("active");
+            event.currentTarget.style.color = "#142A50";
+        }
+    }
+    
+    function toggleFilterButton(button) {
+        console.log('Toggling filter button:', button.textContent);
+        button.classList.toggle('active');
+        
+        if (button.classList.contains('active')) {
+            button.style.backgroundColor = '#f5f5f5';
+            button.style.borderColor = '#142A50';
+            button.style.color = '#142A50';
+        } else {
+            button.style.backgroundColor = 'white';
+            button.style.borderColor = '#e0e0e0';
+            button.style.color = '#333';
+        }
+    }
+    
+    function toggleDayButton(button) {
+        console.log('Toggling day button:', button.textContent);
+        button.classList.toggle('selected');
+        
+        if (button.classList.contains('selected')) {
+            button.style.backgroundColor = '#142A50';
+            button.style.color = 'white';
+            button.style.borderColor = '#142A50';
+        } else {
+            button.style.backgroundColor = 'white';
+            button.style.color = '#333';
+            button.style.borderColor = '#e0e0e0';
+        }
+    }
+    </script>
+    
+    <!-- Include the navigation.js file -->
     <script src="./js/navigation.js"></script>
+    <!-- Include the PDF handling functionality -->
     <script src="./js/pdfHandling.js"></script>
-    <script src="./js/sidebar.js"></script>
-    <script src="./js/calendar/eventActions.js"></script>
-    <script src="./js/calendar/eventListeners.js"></script>
-    <script src="./js/calendar/eventManagement.js"></script>
-    <script src="./js/calendar/helperFunctions.js"></script>
-    <script src="./js/calendar/uiControls.js"></script>
+    <!-- Include the course.js file for course data functionality -->
+    <script src="./js/course.js"></script>
+    <!-- Include the export service functionality -->
+    <script src="./js/exportService.js"></script>
+    <!-- Include the prerequisite service functionality -->
+    <script src="./js/prereqService.js"></script>
+    
+    <script>
+    // Update PDF handling functions to work with blueprint viewer
+    function openPDF(pdfPath) {
+        // Get the map container instead of the blueprint viewer
+        const mapContainer = document.querySelector('#map-view .content-container, #map-view div[style*="flex: 1; border-radius: 8px"]');
+        
+        if (mapContainer) {
+            // Create and configure PDF embed element
+            const pdfViewer = document.createElement('embed');
+            pdfViewer.src = pdfPath;
+            pdfViewer.type = 'application/pdf';
+            pdfViewer.style.width = '100%';
+            pdfViewer.style.height = '100%';
+
+            // Replace the current content with the PDF viewer
+            mapContainer.innerHTML = '';
+            
+            // Create a container for the PDF
+            const pdfContainer = document.createElement('div');
+            pdfContainer.style.flex = '1';
+            pdfContainer.style.padding = '0';
+            pdfContainer.style.height = '100%';
+            pdfContainer.appendChild(pdfViewer);
+            
+            mapContainer.appendChild(pdfContainer);
+            mapContainer.style.display = 'flex';
+            mapContainer.style.flexDirection = 'column';
+        }
+    }
+    
+    // Override the PDF functions with correct paths and highlight selected building
+    function openHerakPDF() {
+        openPDF('./assets/Floor Plans/Herak Center.pdf');
+        highlightSelectedBuilding('Herak');
+    }
+
+    function openJepsonFirstFloorPDF() {
+        openPDF('./assets/Floor Plans/Jepson1stFloor.pdf');
+        highlightSelectedBuilding('JepsonFirst');
+    }
+
+    function openJepsonBasementPDF() {
+        openPDF('./assets/Floor Plans/JepsonBasementpdf.pdf');
+        highlightSelectedBuilding('JepsonBasement');
+    }
+    
+    // Function to highlight the selected building button
+    function highlightSelectedBuilding(buildingId) {
+        // Reset all building buttons to default style
+        const buildingButtons = document.querySelectorAll('.building-button');
+        buildingButtons.forEach(button => {
+            button.style.backgroundColor = 'white';
+            button.style.borderColor = '#e0e0e0';
+            button.style.color = '#333';
+        });
+        
+        // Highlight the selected building button
+        const selectedButton = document.getElementById(buildingId);
+        if (selectedButton) {
+            selectedButton.style.backgroundColor = '#f5f5f5';
+            selectedButton.style.borderColor = '#142A50';
+            selectedButton.style.color = '#142A50';
+        }
+    }
+    
+    // Function to switch between map tabs (Building Blueprints and Schedule)
+    function openMapTab(tabName, event) {
+        // Hide all tab contents
+        const tabContents = document.getElementsByClassName("map-tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].style.display = "none";
+        }
+        
+        // Remove active class from all tab buttons
+        const tabButtons = document.getElementsByClassName("map-tab-button");
+        for (let i = 0; i < tabButtons.length; i++) {
+            tabButtons[i].classList.remove("active");
+            tabButtons[i].style.color = "#333";
+            // Remove the underline styling
+            if (tabButtons[i].querySelector(".tab-underline")) {
+                tabButtons[i].removeChild(tabButtons[i].querySelector(".tab-underline"));
+            }
+        }
+        
+        // Show the selected tab content
+        const selectedTab = document.getElementById(tabName);
+        if (selectedTab) {
+            selectedTab.style.display = "block";
+        }
+        
+        // Add active class to the clicked button
+        if (event && event.currentTarget) {
+            event.currentTarget.classList.add("active");
+            event.currentTarget.style.color = "#142A50";
+            
+            // Add the red underline to active tab using the same style as registration tabs
+            const underline = document.createElement("div");
+            underline.className = "tab-underline";
+            underline.style.position = "absolute";
+            underline.style.bottom = "-1px";
+            underline.style.left = "0";
+            underline.style.width = "100%";
+            underline.style.height = "3px";
+            underline.style.backgroundColor = "#C8102E";
+            event.currentTarget.appendChild(underline);
+        }
+        
+        // Get the map container
+        const mapContainer = document.querySelector('#map-view .content-container, #map-view div[style*="flex: 1; border-radius: 8px"]');
+        
+        // If Schedule tab is clicked, restore the Google Map
+        if (tabName === 'WeekdayTab' && mapContainer) {
+            restoreGoogleMap(mapContainer);
+        }
+    }
+    
+    // Function to restore the Google Map
+    function restoreGoogleMap(container) {
+        container.innerHTML = '';
+        
+        // Create map container
+        const mapDiv = document.createElement('div');
+        mapDiv.style.flex = '1';
+        mapDiv.style.padding = '0';
+        mapDiv.style.height = '100%';
+        
+        // Create and configure iframe for Google Maps
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.418973710349!2d-117.40477662402845!3d47.66729508951068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x549e185c5df3f945%3A0xaf7c8489928f20!2sGonzaga%20University!5e0!3m2!1sen!2sus!4v1716416889721!5m2!1sen!2sus';
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.style.border = '0';
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('loading', 'lazy');
+        iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+        
+        mapDiv.appendChild(iframe);
+        container.appendChild(mapDiv);
+        container.style.display = 'flex';
+        container.style.flexDirection = 'column';
+    }
+    
+    // Function to toggle the day panels accordion
+    function toggleDayPanel(header) {
+        const panel = header.nextElementSibling;
+        const arrow = header.querySelector('.arrow');
+        
+        // Toggle the panel display
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+            arrow.style.transform = "rotate(0deg)";
+        } else {
+            panel.style.display = "block";
+            arrow.style.transform = "rotate(180deg)";
+        }
+    }
+    
+    // Apply the red underline to the initially active tab on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const activeMapTab = document.querySelector('.map-tab-button.active');
+        if (activeMapTab) {
+            // Create and add the underline element
+            const underline = document.createElement("div");
+            underline.className = "tab-underline";
+            underline.style.position = "absolute";
+            underline.style.bottom = "-1px";
+            underline.style.left = "0";
+            underline.style.width = "100%";
+            underline.style.height = "3px";
+            underline.style.backgroundColor = "#C8102E";
+            activeMapTab.appendChild(underline);
+        }
+        
+        // Check backend connection first
+        checkBackendConnection();
+        
+        // Initialize professor dropdown
+        fetchProfessors();
+    });
+    </script>
 </body>
 </html> 
