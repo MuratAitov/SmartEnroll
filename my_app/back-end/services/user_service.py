@@ -69,64 +69,80 @@ def check_login(user_name: str, password: str) -> dict:
 #result = create_user("Aa", "aa@gmail.com", "Aa", "Aa")
 #print (result)
 ##add class (course_id, term = default , section (table = sections - column -> section) , )
-def add_class(user_id: int, course_id: str, section_id: int) -> dict:
+def add_class_by_crn(user_id: int, crn: str, in_process: bool) -> dict:
     """
-    Adds a class for a user in the 'enrollments' table, ensuring that the user is not already enrolled in the same course.
+    Добавляет класс (секцию) для пользователя по CRN,
+    проверяя, что пользователь не записан на тот же курс в другой секции.
+    Также записывает флаг in_process в таблицу enrollments.
 
-    :param user_id: ID of the user
-    :param course_id: ID of the course
-    :param section_id: ID of the course section
-    :return: Dictionary with success message or error
+    :param user_id: ID пользователя
+    :param crn: CRN секции (строка или число, в зависимости от структуры вашей БД)
+    :param in_process: Флаг, указывающий, находится ли курс в процессе (True/False)
+    :return: Словарь с результатом операции {"success": "..."} или {"error": "..."}
     """
 
-    # Step 1: Check if the user exists
-    user_check = supabase.from_("users").select("user_id").eq("user_id", user_id).execute()
+    # 1) Проверяем, что пользователь существует
+    user_check = supabase.table("users").select("user_id").eq("user_id", user_id).execute()
     if not user_check.data:
-        return {"error": f"User with ID {user_id} does not exist."}
+        return {"error": f"Пользователь с ID {user_id} не найден."}
 
-    # Step 2: Check if the section exists and get its course_id
-    section_check = supabase.from_("sections").select("section_id, course_id").eq("section_id", section_id).execute()
+    # 2) Ищем секцию по CRN
+    section_check = (
+        supabase.table("sections")
+        .select("section_id, course_id")
+        .eq("crn", crn)
+        .execute()
+    )
     if not section_check.data:
-        return {"error": f"Section with ID {section_id} does not exist."}
+        return {"error": f"Секция с CRN {crn} не найдена."}
 
-    # Ensure the provided course_id matches the section's course_id
-    section_course_id = section_check.data[0]["course_id"]
-    if section_course_id != course_id:
-        return {"error": f"Section {section_id} does not belong to course {course_id}."}
+    # Извлекаем нужные данные
+    section_id = section_check.data[0]["section_id"]
+    course_id = section_check.data[0]["course_id"]
 
-    # Step 3: Check if the user is already enrolled in this course in any section
+    # 3) Проверяем, не записан ли пользователь уже на этот курс (в любой секции)
     enrollment_check = (
-        supabase.from_("enrollments")
+        supabase.table("enrollments")
         .select("section_id")
         .eq("user_id", user_id)
         .execute()
     )
-    
+
     if enrollment_check.data:
-        # Get all section IDs where the user is enrolled
+        # Собираем все секции, на которые пользователь записан
         enrolled_section_ids = {record["section_id"] for record in enrollment_check.data}
 
-        # Check if the user is already enrolled in a section of the same course
-        existing_course_check = supabase.from_("sections").select("section_id").eq("course_id", course_id).in_("section_id", list(enrolled_section_ids)).execute()
+        # Проверяем, нет ли среди этих секций таких, что принадлежат тому же курсу
+        existing_course_check = (
+            supabase.table("sections")
+            .select("section_id")
+            .eq("course_id", course_id)
+            .in_("section_id", list(enrolled_section_ids))
+            .execute()
+        )
 
         if existing_course_check.data:
-            return {"error": f"User {user_id} is already enrolled in a section of course {course_id}."}
+            return {
+                "error": (
+                    f"Пользователь {user_id} уже записан на курс {course_id} "
+                    f"в секции {existing_course_check.data[0]['section_id']}."
+                )
+            }
 
-    # Step 4: Insert into enrollments
+    # 4) Добавляем запись в 'enrollments', включая поле in_process
     insert_data = {
         "user_id": user_id,
         "section_id": section_id,
+        "in_process": in_process
     }
-    response = supabase.from_("enrollments").insert(insert_data).execute()
+    response = supabase.table("enrollments").insert(insert_data).execute()
 
-    # Step 5: Check for errors
+    # 5) Проверяем, успешно ли записали
     if not response.data:
-        return {"error": "Failed to enroll in class. Supabase response: " + str(response)}
+        return {"error": "Не удалось добавить запись в enrollments. Ответ Supabase: " + str(response)}
 
-    return {"success": f"User {user_id} enrolled in Section {section_id} for Course {course_id}."}
+    return {"success": f"Пользователь {user_id} успешно записан в секцию {section_id} (CRN {crn}) курса {course_id}. in_process={in_process}"}
 
-# Example Usage
-#result = add_class(user_id=1, course_id="ACCT 260", section_id=493)
-
-# Print the result
-#print(result)
+# Пример использования
+result = add_class_by_crn(user_id=1, crn="11288", in_process=True)
+print(result)

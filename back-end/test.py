@@ -229,6 +229,8 @@ taken_classes = [
     {"course_id": "VART 230", "term": "Fall 2023", "section": "01"},
     {"course_id": "ENGL 193", "term": "Spring 2023", "section": "10"},
     {"course_id": "RELI 228", "term": "Spring 2023", "section": "01"},
+    {"course_id": "MUSC 328", "term": "Fall 2024", "section": "01"},
+    {"course_id": "COMM 100", "term": "Fall 2023", "section": "01"},
 ]
 
 program_name = "University Core Requirements"
@@ -237,7 +239,7 @@ get_remaining_core_courses(
     program_name,
     taken_classes,
     full_view=True,
-    debug=True
+    debug=False
 )
 
 #брут форс пруннинг
