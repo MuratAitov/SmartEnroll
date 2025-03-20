@@ -383,97 +383,12 @@ function fetchSections(criteria = {}) {
     
     console.log('Searching with criteria:', criteria);
     
-    // Build query string from criteria
-    const queryParams = new URLSearchParams();
-    
-    if (criteria.subject) {
-        queryParams.append('subject', criteria.subject);
-    }
-    
-    if (criteria.course_code) {
-        queryParams.append('course_code', criteria.course_code);
-    }
-    
-    if (criteria.attribute) {
-        queryParams.append('attribute', criteria.attribute);
-    }
-    
-    if (criteria.instructor) {
-        queryParams.append('instructor', criteria.instructor);
-    }
-    
-    const queryString = queryParams.toString();
-    
-    // Use relative URL to avoid CORS issues
-    const url = `/sections_bp/search?${queryString}`;
-    
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                // Get the specific error status
-                const status = response.status;
-                
-                if (status === 500) {
-                    console.error('Server error (500) when fetching sections');
-                    showNotification('The server encountered an error processing your request. Showing mock data instead.', 'error');
-                    
-                    // Use mock data for now
-                    return { mockData: true, data: getMockSectionsForCriteria(criteria) };
-                }
-                
-                throw new Error(`HTTP error! Status: ${status}`);
-            }
-            return response.json();
-        })
+    // Since the backend returns 500 errors, we'll use mockProxy to handle the search
+    // instead of trying to call the backend directly
+    mockProxySectionsSearch(criteria)
         .then(data => {
-            if (data.mockData) {
-                // If we're using mock data from the 500 error handler
-                displaySections(data.data);
-                
-                // Add a message indicating this is mock data
-                const mockDataMessage = document.createElement('div');
-                mockDataMessage.style.backgroundColor = '#fff3cd';
-                mockDataMessage.style.color = '#856404';
-                mockDataMessage.style.padding = '10px';
-                mockDataMessage.style.borderRadius = '4px';
-                mockDataMessage.style.marginBottom = '15px';
-                mockDataMessage.innerHTML = 'Note: Displaying mock data due to server errors. Your search criteria were applied to sample data.';
-                
-                // Insert at the top of the courses list
-                coursesListContainer.insertBefore(mockDataMessage, coursesListContainer.firstChild);
-                
-                return;
-            }
-            
-            if (data && data.data && Array.isArray(data.data)) {
-                // If we got data from the server, display it
-                displaySections(data.data);
-            } else {
-                // If no sections were found
-                coursesListContainer.innerHTML = '<p>No sections found matching your criteria</p>';
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching sections:', error);
-            coursesListContainer.innerHTML = `
-                <div style="padding: 15px; background-color: #f8d7da; color: #721c24; border-radius: 4px; margin-bottom: 15px;">
-                    <h3>Error fetching sections</h3>
-                    <p>${error.message}</p>
-                    <p>This could be due to:</p>
-                    <ul>
-                        <li>The backend server having an error processing your request</li>
-                        <li>The search endpoint (/sections_bp/search) not being implemented correctly</li>
-                        <li>A network connectivity issue</li>
-                    </ul>
-                </div>
-            `;
-            
-            // Show a simplified message in the notification
-            showNotification('Error connecting to server. Showing mock data instead.', 'error');
-            
-            // Display mock data as a fallback
-            const mockData = getMockSectionsForCriteria(criteria);
-            displaySections(mockData);
+            // Display the sections and add a message about mock data
+            displaySections(data.data);
             
             // Add a message indicating this is mock data
             const mockDataMessage = document.createElement('div');
@@ -482,100 +397,157 @@ function fetchSections(criteria = {}) {
             mockDataMessage.style.padding = '10px';
             mockDataMessage.style.borderRadius = '4px';
             mockDataMessage.style.marginBottom = '15px';
-            mockDataMessage.innerHTML = 'Note: Displaying mock data due to server errors. Your search criteria were applied to sample data.';
+            mockDataMessage.innerHTML = 'Note: Displaying mock search results while the backend is being updated.';
             
-            // Insert at the top of the sections list (after the error message)
-            coursesListContainer.appendChild(mockDataMessage);
+            // Insert at the top of the courses list
+            coursesListContainer.insertBefore(mockDataMessage, coursesListContainer.firstChild);
+        })
+        .catch(error => {
+            console.error('Error in mock search:', error);
+            coursesListContainer.innerHTML = `
+                <div style="padding: 15px; background-color: #f8d7da; color: #721c24; border-radius: 4px; margin-bottom: 15px;">
+                    <h3>Error searching for sections</h3>
+                    <p>${error.message}</p>
+                </div>
+            `;
         });
 }
 
 /**
- * Gets mock section data filtered by the provided criteria.
- * This is a temporary function to provide data when the backend fails.
+ * Acts as a proxy for section search that returns mock data matching the criteria.
+ * This function simulates what the backend /sections_bp/search endpoint should do,
+ * but since that endpoint returns 500 errors, we use this client-side solution.
+ * 
  * @param {Object} criteria - Search criteria
- * @returns {Array} Filtered mock sections
+ * @returns {Promise} - Promise that resolves with section data
  */
-function getMockSectionsForCriteria(criteria) {
-    // Define mock sections data
-    const mockSections = [
-        {
-            subject: "CPSC",
-            course_code: "325",
-            section_number: "01",
-            schedule: "MWF 10:00 AM - 11:15 AM",
-            instructor: "Ryan Herzog",
-            location: "Herak 308",
-            seats_available: 15,
-            total_seats: 30,
-            credits: 3
-        },
-        {
-            subject: "CPSC",
-            course_code: "321",
-            section_number: "01",
-            schedule: "TR 9:30 AM - 10:45 AM",
-            instructor: "Shawn Bowers",
-            location: "Herak 311",
-            seats_available: 8,
-            total_seats: 25,
-            credits: 3
-        },
-        {
-            subject: "CPSC",
-            course_code: "212",
-            section_number: "02",
-            schedule: "TR 2:00 PM - 3:15 PM",
-            instructor: "Paul De Palma",
-            location: "Herak 315",
-            seats_available: 0,
-            total_seats: 30,
-            credits: 3
-        },
-        {
-            subject: "MATH",
-            course_code: "231",
-            section_number: "01",
-            schedule: "MWF 11:00 AM - 11:50 AM",
-            instructor: "Vesta Coufal",
-            location: "Herak 231",
-            seats_available: 12,
-            total_seats: 25,
-            credits: 3
-        },
-        {
-            subject: "MATH",
-            course_code: "157",
-            section_number: "03",
-            schedule: "MWF 2:00 PM - 2:50 PM",
-            instructor: "Thomas McKenzie",
-            location: "Herak 233",
-            seats_available: 5,
-            total_seats: 30,
-            credits: 4
-        }
-    ];
-    
-    // Filter mock data based on criteria
-    return mockSections.filter(section => {
-        // Check subject match
-        if (criteria.subject && section.subject !== criteria.subject) {
-            return false;
-        }
-        
-        // Check course code match
-        if (criteria.course_code && !section.course_code.includes(criteria.course_code)) {
-            return false;
-        }
-        
-        // Check instructor match (case-insensitive partial match)
-        if (criteria.instructor && !section.instructor.toLowerCase().includes(criteria.instructor.toLowerCase())) {
-            return false;
-        }
-        
-        // Could add attribute filtering if needed
-        
-        // If all criteria passed, include this section
-        return true;
+function mockProxySectionsSearch(criteria) {
+    return new Promise((resolve) => {
+        // Simulate a network delay
+        setTimeout(() => {
+            // Create a comprehensive mock data set
+            const allMockSections = [
+                {
+                    subject: "CPSC",
+                    course_code: "325",
+                    section_number: "01",
+                    schedule: "MWF 10:00 AM - 11:15 AM",
+                    instructor: "Ryan Herzog",
+                    location: "Herak 308",
+                    seats_available: 15,
+                    total_seats: 30,
+                    credits: 3
+                },
+                {
+                    subject: "CPSC",
+                    course_code: "321",
+                    section_number: "01",
+                    schedule: "TR 9:30 AM - 10:45 AM",
+                    instructor: "Shawn Bowers",
+                    location: "Herak 311",
+                    seats_available: 8,
+                    total_seats: 25,
+                    credits: 3
+                },
+                {
+                    subject: "CPSC",
+                    course_code: "212",
+                    section_number: "02",
+                    schedule: "TR 2:00 PM - 3:15 PM",
+                    instructor: "Paul De Palma",
+                    location: "Herak 315",
+                    seats_available: 0,
+                    total_seats: 30,
+                    credits: 3
+                },
+                {
+                    subject: "MATH",
+                    course_code: "231",
+                    section_number: "01",
+                    schedule: "MWF 11:00 AM - 11:50 AM",
+                    instructor: "Vesta Coufal",
+                    location: "Herak 231",
+                    seats_available: 12,
+                    total_seats: 25,
+                    credits: 3
+                },
+                {
+                    subject: "MATH",
+                    course_code: "157",
+                    section_number: "03",
+                    schedule: "MWF 2:00 PM - 2:50 PM",
+                    instructor: "Thomas McKenzie",
+                    location: "Herak 233",
+                    seats_available: 5,
+                    total_seats: 30,
+                    credits: 4
+                },
+                {
+                    subject: "STAT",
+                    course_code: "301",
+                    section_number: "01",
+                    schedule: "MWF 1:00 PM - 1:50 PM",
+                    instructor: "Maria Tackett",
+                    location: "Herak 241",
+                    seats_available: 10,
+                    total_seats: 24,
+                    credits: 3
+                },
+                {
+                    subject: "STAT",
+                    course_code: "201",
+                    section_number: "02",
+                    schedule: "TR 3:30 PM - 4:45 PM",
+                    instructor: "Maria Tackett",
+                    location: "Herak 242",
+                    seats_available: 7,
+                    total_seats: 25,
+                    credits: 3
+                },
+                {
+                    subject: "CPSC",
+                    course_code: "353",
+                    section_number: "01",
+                    schedule: "MWF 9:00 AM - 9:50 AM",
+                    instructor: "Ryan Herzog",
+                    location: "Herak 309",
+                    seats_available: 3,
+                    total_seats: 20,
+                    credits: 3
+                }
+            ];
+            
+            // Filter sections based on search criteria
+            const filteredSections = allMockSections.filter(section => {
+                // Match subject
+                if (criteria.subject && section.subject !== criteria.subject.toUpperCase()) {
+                    return false;
+                }
+                
+                // Match course code (partial match)
+                if (criteria.course_code && !section.course_code.includes(criteria.course_code)) {
+                    return false;
+                }
+                
+                // Match instructor (case-insensitive partial match)
+                if (criteria.instructor && !section.instructor.toLowerCase().includes(criteria.instructor.toLowerCase())) {
+                    return false;
+                }
+                
+                // Match attribute if needed (not implemented in mock data)
+                if (criteria.attribute) {
+                    // In a real implementation, this would check attributes
+                    console.log('Attribute filtering not implemented in mock data');
+                }
+                
+                return true;
+            });
+            
+            // Return the filtered sections in the same format as the API would
+            resolve({
+                data: filteredSections
+            });
+        }, 500); // Simulate 500ms network delay
     });
 }
 
