@@ -73,14 +73,16 @@
                 </button>
                 <div class="dropdown-content" id="userDropdown">
                     <div class="user-info">
-                        <div class="student-name">John Doe</div>
-                        <div class="student-id">ID: 123456789</div>
+                        <div class="student-name">Guest User</div>
+                        <div class="student-id">Please log in</div>
                     </div>
                     <div class="dropdown-divider"></div>
                     <button id="themeToggle" class="theme-toggle">Dark Mode</button>
                     <div class="dropdown-divider"></div>
+                    <a href="#" class="login-btn" onclick="showLoginModal()">Log In</a>
+                    <a href="#" class="register-btn" onclick="showRegisterModal()">Register</a>
+                    <a href="#" class="logout-btn" onclick="logout()" style="display: none;">Sign Out</a>
                     <a href="#help">Help</a>
-                    <a href="#signout">Sign Out</a>
                 </div>
             </div>
         </div>
@@ -219,6 +221,11 @@
                             <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">3:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
                             <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">4:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
                             <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">5:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">6:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">7:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">8:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">9:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">10:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -608,6 +615,118 @@
         // Initialize professor dropdown
         fetchProfessors();
     });
+    </script>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('login-modal').style.display='none'">&times;</span>
+            <h2>Log In</h2>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary-btn">Log In</button>
+                    <button type="button" class="btn secondary-btn" onclick="document.getElementById('login-modal').style.display='none'">Cancel</button>
+                </div>
+                <div class="form-footer">
+                    <p>Don't have an account? <a href="#" onclick="showRegisterModal()">Register here</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('register-modal').style.display='none'">&times;</span>
+            <h2>Create Account</h2>
+            <form id="register-form" onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" name="password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary-btn">Register</button>
+                    <button type="button" class="btn secondary-btn" onclick="document.getElementById('register-modal').style.display='none'">Cancel</button>
+                </div>
+                <div class="form-footer">
+                    <p>Already have an account? <a href="#" onclick="showLoginModal()">Log in here</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add this before the closing body tag to include the auth service -->
+    <script src="./js/authService.js"></script>
+
+    <!-- Add handlers for the login and registration forms -->
+    <script>
+        // Modal control functions
+        function showLoginModal() {
+            document.getElementById('register-modal').style.display = 'none';
+            document.getElementById('login-modal').style.display = 'flex';
+        }
+        
+        function showRegisterModal() {
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('register-modal').style.display = 'flex';
+        }
+        
+        // Handle login form submission
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            login(username, password)
+                .then(user => {
+                    console.log('Login successful:', user);
+                    document.getElementById('login-modal').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Login error:', error);
+                });
+        }
+        
+        // Handle registration form submission
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('register-name').value;
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            
+            register(username, email, password, name)
+                .then(result => {
+                    console.log('Registration successful:', result);
+                    // Clear the form
+                    document.getElementById('register-form').reset();
+                })
+                .catch(error => {
+                    console.error('Registration error:', error);
+                });
+        }
     </script>
 </body>
 </html> 

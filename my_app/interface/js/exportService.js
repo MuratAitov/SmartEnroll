@@ -27,38 +27,130 @@ function exportToGoogleCalendar(eventData = null) {
 }
 
 /**
- * Collects all scheduled events from the schedule grid.
- * @returns {Array} Array of event objects with course details
+ * Collects and formats schedule data for export.
+ * @returns {Array} Array of event objects with course data
  */
 function collectScheduleData() {
-    const events = [];
-    const courseBlocks = document.querySelectorAll('#schedule-container .event-block');
+    // DEBUG: Log that we're collecting schedule data
+    console.log('Collecting schedule data for export...');
     
+    // Find all course blocks in the schedule grid
+    const courseBlocks = document.querySelectorAll('.course-block');
+    console.log('Found course blocks:', courseBlocks.length);
+    
+    // If no courses are found, check if we need to look in a different way
     if (courseBlocks.length === 0) {
-        alert('No courses added to schedule yet. Add courses before exporting.');
-        return [];
+        // Try alternative selectors that might be used for course blocks
+        const altCourseBlocks = document.querySelectorAll('.schedule-grid td div[style*="background-color"]');
+        console.log('Alternative course blocks found:', altCourseBlocks.length);
+        
+        if (altCourseBlocks.length > 0) {
+            // Return data from alternative blocks
+            return Array.from(altCourseBlocks).map(block => {
+                // Extract course info from the block
+                const courseInfo = block.textContent.trim();
+                const titleMatch = courseInfo.match(/^([A-Z]+ \d+)/);
+                const title = titleMatch ? titleMatch[1] : 'Course';
+                
+                // Get day from parent cell
+                const cell = block.closest('td');
+                const row = cell.parentElement;
+                const dayIndex = Array.from(row.cells).indexOf(cell) - 1; // Subtract 1 for time column
+                
+                // Get time from row
+                const timeCell = row.cells[0];
+                const timeText = timeCell.textContent.trim();
+                
+                return {
+                    title: title,
+                    location: 'Gonzaga University',
+                    description: courseInfo,
+                    day: getDayFromIndex(dayIndex),
+                    startTime: timeText,
+                    endTime: incrementHour(timeText),
+                    instructor: 'Instructor'
+                };
+            });
+        }
     }
     
-    courseBlocks.forEach(block => {
-        // Extract the course data from the event block
-        const courseName = block.querySelector('.event-name')?.textContent || 'Unnamed Course';
-        const timeText = block.querySelector('.event-time')?.textContent || '';
-        const [startTime, endTime] = timeText.split(' - ');
-        
-        const dayEl = block.closest('td');
-        const dayIndex = Array.from(dayEl.parentNode.children).indexOf(dayEl);
-        const day = getDayFromIndex(dayIndex);
-        
-        events.push({
-            name: courseName,
-            day: day,
-            start_time: startTime,
-            end_time: endTime,
-            location: 'Gonzaga University'
+    // If we found course blocks with the expected selector, process them
+    if (courseBlocks.length > 0) {
+        return Array.from(courseBlocks).map(block => {
+            const title = block.querySelector('.course-title')?.textContent || 'Course';
+            const location = block.querySelector('.course-location')?.textContent || 'Gonzaga University';
+            const description = block.textContent.trim();
+            
+            // Get day from the column position
+            const cell = block.closest('td');
+            const row = cell.parentElement;
+            const dayIndex = Array.from(row.cells).indexOf(cell) - 1; // Subtract 1 for time column
+            
+            // Get start time from row
+            const timeCell = row.cells[0];
+            const startTime = timeCell.textContent.trim();
+            
+            // Calculate end time based on block height or rowspan
+            let endTime;
+            if (block.dataset.endTime) {
+                endTime = block.dataset.endTime;
+            } else {
+                // Estimate based on height/rowspan
+                const rowspan = parseInt(cell.getAttribute('rowspan')) || 1;
+                endTime = incrementHoursByCount(startTime, rowspan);
+            }
+            
+            return {
+                title: title,
+                location: location,
+                description: description,
+                day: getDayFromIndex(dayIndex),
+                startTime: startTime,
+                endTime: endTime,
+                instructor: block.querySelector('.course-instructor')?.textContent || 'Instructor'
+            };
         });
-    });
+    }
     
-    return events;
+    return [];
+}
+
+/**
+ * Helper function to increment time by 1 hour
+ * @param {string} timeStr - Time string like "10:00 AM"
+ * @returns {string} - Time string incremented by 1 hour
+ */
+function incrementHour(timeStr) {
+    const [time, period] = timeStr.split(' ');
+    let [hour] = time.split(':');
+    hour = parseInt(hour);
+    
+    if (hour === 12) {
+        return `1:00 ${period}`;
+    }
+    
+    hour += 1;
+    
+    if (hour === 12) {
+        const newPeriod = period === 'AM' ? 'PM' : 'AM';
+        return `${hour}:00 ${newPeriod}`;
+    }
+    
+    return `${hour}:00 ${period}`;
+}
+
+/**
+ * Helper function to increment time by a specified number of hours
+ * @param {string} timeStr - Time string like "10:00 AM"
+ * @param {number} count - Number of hours to add
+ * @returns {string} - Time string incremented by count hours
+ */
+function incrementHoursByCount(timeStr, count) {
+    let result = timeStr;
+    for (let i = 0; i < count; i++) {
+        result = incrementHour(result);
+    }
+    return result;
 }
 
 /**
@@ -82,21 +174,44 @@ function exportToCalendar(eventData, endpoint) {
     
     // Check if we have events to export
     if (!eventData || eventData.length === 0) {
-        alert('No courses to export.');
+        showErrorMessage('No courses added to schedule yet. Add courses before exporting.');
         return;
     }
     
     // Get the current semester from the UI
     const currentSemester = document.querySelector('.semester-button').textContent.trim();
     
-    // Prepare the request data
+    // For Apple Calendar, we'll handle it directly in the browser
+    if (endpoint === 'apple-calendar') {
+        // Generate iCalendar file directly in the browser
+        generateAndDownloadICS(eventData, currentSemester);
+        return;
+    }
+    
+    // Get current user information if available
+    let userData = { name: 'Guest User', id: '000000' };
+    
+    // Check if we have a logged-in user
+    if (window.loggedInUser) {
+        userData = {
+            name: window.loggedInUser.name || 'User',
+            id: window.loggedInUser.user_id || '000000'
+        };
+    } else if (typeof getCurrentUser === 'function') {
+        const currentUser = getCurrentUser();
+        if (currentUser) {
+            userData = {
+                name: currentUser.name || 'User',
+                id: currentUser.user_id || '000000'
+            };
+        }
+    }
+    
+    // For Google Calendar, we'll continue to use the backend API
     const exportData = {
         events: eventData,
         semester: currentSemester,
-        user: {
-            name: 'John Doe', // This would be the actual user name in a real app
-            id: '123456789'   // This would be the actual user ID in a real app
-        }
+        user: userData
     };
     
     // Show loading indicator
@@ -122,9 +237,11 @@ function exportToCalendar(eventData, endpoint) {
         if (data.success) {
             showSuccessMessage(`Successfully exported to ${formatEndpointName(endpoint)}`);
             
-            // If there's a download URL, open it
-            if (data.download_url) {
-                window.open(data.download_url, '_blank');
+            // For Google Calendar, open a new tab with the Google Calendar interface
+            if (endpoint === 'google-calendar') {
+                // Open Google Calendar in a new tab with a new event form
+                const url = 'https://calendar.google.com/calendar/r/eventedit';
+                window.open(url, '_blank');
             }
         } else {
             showErrorMessage(`Failed to export: ${data.error || 'Unknown error'}`);
@@ -138,6 +255,62 @@ function exportToCalendar(eventData, endpoint) {
         // Remove loading indicator
         hideLoadingIndicator(loadingIndicator);
     });
+}
+
+/**
+ * Generates and downloads an iCalendar file directly in the browser.
+ * @param {Array} events - The course events to include in the calendar
+ * @param {string} semester - The current semester
+ */
+function generateAndDownloadICS(events, semester) {
+    console.log('Generating iCalendar file client-side...');
+    showNotification('Generating Apple Calendar file...', 'info');
+    
+    try {
+        // Generate the iCalendar content
+        const now = getCurrentTimestamp();
+        let icsContent = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//Gonzaga University//Course Schedule//EN',
+            'CALSCALE:GREGORIAN',
+            'METHOD:PUBLISH'
+        ].join('\r\n');
+        
+        // Add each event to the calendar
+        events.forEach(event => {
+            // Convert from the collectScheduleData format to the event format needed for iCal
+            const icalEvent = {
+                name: event.title,
+                day: event.day,
+                start_time: event.startTime,
+                end_time: event.endTime,
+                location: event.location,
+                instructor: event.instructor
+            };
+            
+            icsContent += generateEventICS(icalEvent, now, semester);
+        });
+        
+        // Finalize and download the file
+        icsContent += '\r\nEND:VCALENDAR';
+        
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `GU_Schedule_${semester.replace(/\s+/g, '_')}.ics`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showSuccessMessage('Schedule exported to Apple Calendar file');
+    } catch (error) {
+        console.error('Error generating iCalendar file:', error);
+        showErrorMessage('Failed to generate Apple Calendar file: ' + error.message);
+    }
 }
 
 /**
@@ -670,6 +843,21 @@ function generatePDF(container) {
     // Get the current semester for the filename
     const currentSemester = document.querySelector('.semester-button').textContent.trim();
     
+    // Get user information if available
+    let userName = 'Guest User';
+    let userId = '';
+    
+    if (window.loggedInUser) {
+        userName = window.loggedInUser.name || 'User';
+        userId = window.loggedInUser.user_id;
+    } else if (typeof getCurrentUser === 'function') {
+        const currentUser = getCurrentUser();
+        if (currentUser) {
+            userName = currentUser.name || 'User';
+            userId = currentUser.user_id;
+        }
+    }
+    
     // Create a notification that we're generating the PDF
     showNotification('Generating PDF...', 'info');
     
@@ -699,7 +887,13 @@ function generatePDF(container) {
         // Add title and metadata
         pdf.setFontSize(10);
         const today = new Date().toLocaleDateString();
-        pdf.text(`Gonzaga University Schedule - ${currentSemester} (Generated on ${today})`, 10, pdfHeight + 10);
+        pdf.text(`Gonzaga University Schedule - ${currentSemester} (Generated by: ${userName})`, 10, pdfHeight + 10);
+        pdf.text(`Generated on ${today}`, 10, pdfHeight + 15);
+        
+        // If we have a user ID, add it to the footer
+        if (userId) {
+            pdf.text(`User ID: ${userId}`, pdf.internal.pageSize.getWidth() - 50, pdfHeight + 15, { align: 'right' });
+        }
         
         // Save the PDF
         pdf.save(`GU_Schedule_${currentSemester.replace(/\s+/g, '_')}.pdf`);
@@ -712,4 +906,7 @@ function generatePDF(container) {
         hideLoadingIndicator(document.querySelector('.loading-indicator'));
         showErrorMessage('Failed to generate PDF: ' + error.message);
     });
-} 
+}
+
+// Make showNotification globally available for use in other scripts
+window.showNotification = showNotification; 
