@@ -6,7 +6,7 @@ function fetchData() {
     const subjectInput = document.querySelector('#Courses input[placeholder="Subject"]');
     const courseCodeInput = document.querySelector('#Courses input[placeholder="Course code"]');
     const attributeInput = document.querySelector('#Courses input[placeholder="Attributes"]');
-    const instructorSelect = document.querySelector('#professors-dropdown');
+    const instructorInput = document.querySelector('#instructor-input');
     
     // Create search criteria object
     const criteria = {};
@@ -23,8 +23,8 @@ function fetchData() {
         criteria.attribute = attributeInput.value.trim();
     }
     
-    if (instructorSelect && instructorSelect.value) {
-        criteria.instructor = instructorSelect.value;
+    if (instructorInput && instructorInput.value.trim()) {
+        criteria.instructor = instructorInput.value.trim();
     }
     
     // Clear the courses list before fetching new data
@@ -44,71 +44,208 @@ function fetchData() {
 
 /**
  * Checks if the backend is connected and updates the connection indicator.
- * Call this function when the page loads.
  */
 function checkBackendConnection() {
-    const connectionIndicator = document.getElementById('connection-indicator');
-    if (!connectionIndicator) return;
+    try {
+        const statusElement = document.getElementById('connection-status');
+        
+        // Use relative URL to avoid CORS issues
+        fetch('/courses_bp')
+            .then(response => {
+                if (response.ok) {
+                    console.log('Backend connection successful');
+                    statusElement.innerHTML = '<span style="color: green;">Connected</span>';
+                    
+                    // Fetch instructors (no mock data fallback)
+                    setupInstructorAutocomplete();
+                } else {
+                    console.error('Backend connection failed with status:', response.status);
+                    statusElement.innerHTML = '<span style="color: red;">Disconnected</span>';
+                    showNotification('Error connecting to server. Some features may be unavailable.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error checking backend connection:', error);
+                statusElement.innerHTML = '<span style="color: red;">Disconnected</span>';
+                showNotification('Cannot connect to server. Please check your connection.', 'error');
+            });
+    } catch (error) {
+        console.error('Error in checkBackendConnection:', error);
+    }
+}
+
+/**
+ * Sets up the instructor autocomplete with either real or mock data.
+ * @param {boolean} useMockData - Whether to use mock data
+ */
+function setupInstructorAutocomplete() {
+    console.log('Setting up instructor autocomplete...');
+    const instructorInput = document.getElementById('instructor-input');
     
-    connectionIndicator.textContent = 'Checking...';
-    connectionIndicator.style.backgroundColor = '#f0f0f0';
-    connectionIndicator.style.color = '#666';
+    if (!instructorInput) {
+        console.error('Instructor input field not found');
+        return;
+    }
     
-    // Use sections_bp/search endpoint for connection test which we know works
-    fetch('http://localhost:5001/sections_bp/search', { method: 'GET' })
+    // Use relative URL to avoid CORS issues
+    fetch('/courses_bp/professors')
         .then(response => {
-            if (response.ok) {
-                connectionIndicator.textContent = 'Connected';
-                connectionIndicator.style.backgroundColor = '#d4edda';
-                connectionIndicator.style.color = '#155724';
-                console.log('Successfully connected to backend');
-                
-                // Use mock data for professors since that endpoint has issues
-                setupMockProfessors();
-                return true;
-            } else {
+            if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.data && Array.isArray(data.data)) {
+                const instructors = data.data.map(prof => {
+                    // Handle different data structures
+                    if (prof.name) return prof.name;
+                    if (prof.instructor) return prof.instructor;
+                    return prof; // If it's already a string
+                });
+                
+                console.log('Fetched instructors:', instructors);
+                
+                // Store the instructors list for later use
+                window.instructors = instructors;
+                
+                // Create custom autocomplete
+                setupCustomAutocomplete(instructorInput, instructors);
             }
         })
         .catch(error => {
-            connectionIndicator.textContent = 'Disconnected';
-            connectionIndicator.style.backgroundColor = '#f8d7da';
-            connectionIndicator.style.color = '#721c24';
-            console.error('Failed to connect to backend:', error);
-            displayConnectionError();
-            return false;
+            console.error('Error fetching instructors:', error);
+            showNotification('Error loading instructors. Please try again later.', 'error');
+            // No fallback to mock data
+            instructorInput.placeholder = "Error loading instructors";
         });
 }
 
 /**
- * Sets up mock professor data instead of fetching from the API.
+ * Sets up a custom autocomplete feature for an input element
+ * @param {HTMLInputElement} inputElement - The input element to apply autocomplete to
+ * @param {Array} items - The array of items for autocomplete suggestions
  */
-function setupMockProfessors() {
-    const professorSelect = document.getElementById('professors-dropdown');
-    if (!professorSelect) return;
+function setupCustomAutocomplete(inputElement, items) {
+    // Create autocomplete container
+    const container = document.createElement('div');
+    container.className = 'autocomplete-container';
     
-    // Add default option
-    let options = '<option value="">Select Instructor</option>';
+    // Insert container after input
+    inputElement.parentNode.insertBefore(container, inputElement.nextSibling);
     
-    // Define mock professors data
-    const professors = [
-        "Smith, John",
-        "Johnson, Lisa",
-        "Williams, Robert",
-        "Brown, Patricia",
-        "Jones, Michael",
-        "Miller, Barbara",
-        "Davis, James",
-        "Wilson, Linda"
-    ];
+    // Move input inside container
+    container.appendChild(inputElement);
     
-    // Add professors to dropdown
-    professors.forEach(professor => {
-        options += `<option value="${professor}">${professor}</option>`;
+    // Create dropdown list
+    const dropdownList = document.createElement('div');
+    dropdownList.className = 'autocomplete-list';
+    container.appendChild(dropdownList);
+    
+    // Event handlers
+    inputElement.addEventListener('input', function() {
+        const value = this.value.toLowerCase();
+        
+        // Hide dropdown if input is empty
+        if (!value) {
+            dropdownList.style.display = 'none';
+            return;
+        }
+        
+        // Filter items based on input
+        const filteredItems = items.filter(item => 
+            item.toLowerCase().includes(value)
+        ).slice(0, 10); // Limit to 10 suggestions
+        
+        // Populate dropdown
+        if (filteredItems.length > 0) {
+            dropdownList.innerHTML = '';
+            
+            filteredItems.forEach(item => {
+                const element = document.createElement('div');
+                element.className = 'autocomplete-item';
+                element.innerHTML = highlightMatches(item, value);
+                
+                element.addEventListener('click', function() {
+                    inputElement.value = item;
+                    dropdownList.style.display = 'none';
+                });
+                
+                dropdownList.appendChild(element);
+            });
+            
+            dropdownList.style.display = 'block';
+        } else {
+            dropdownList.style.display = 'none';
+        }
     });
     
-    professorSelect.innerHTML = options;
-    console.log('Mock professors data loaded successfully');
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!container.contains(e.target)) {
+            dropdownList.style.display = 'none';
+        }
+    });
+    
+    // Show dropdown when focusing on input
+    inputElement.addEventListener('focus', function() {
+        const value = this.value.toLowerCase();
+        if (value) {
+            // Trigger input event to show matching items
+            this.dispatchEvent(new Event('input'));
+        }
+    });
+    
+    // Add keyboard navigation
+    inputElement.addEventListener('keydown', function(e) {
+        const items = dropdownList.querySelectorAll('.autocomplete-item');
+        if (!items.length) return;
+        
+        const currentSelected = dropdownList.querySelector('.selected');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (!currentSelected) {
+                items[0].classList.add('selected');
+            } else {
+                const nextSibling = currentSelected.nextElementSibling;
+                if (nextSibling) {
+                    currentSelected.classList.remove('selected');
+                    nextSibling.classList.add('selected');
+                }
+            }
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (currentSelected) {
+                const prevSibling = currentSelected.previousElementSibling;
+                if (prevSibling) {
+                    currentSelected.classList.remove('selected');
+                    prevSibling.classList.add('selected');
+                }
+            }
+        } else if (e.key === 'Enter') {
+            if (currentSelected) {
+                e.preventDefault();
+                inputElement.value = currentSelected.textContent;
+                dropdownList.style.display = 'none';
+            }
+        } else if (e.key === 'Escape') {
+            dropdownList.style.display = 'none';
+        }
+    });
+}
+
+/**
+ * Highlights matched text in autocomplete suggestions
+ * @param {string} text - The full text
+ * @param {string} query - The search query to highlight
+ * @returns {string} HTML with matched parts wrapped in <strong> tags
+ */
+function highlightMatches(text, query) {
+    if (!query) return text;
+    
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<strong>$1</strong>');
 }
 
 /**
@@ -230,233 +367,216 @@ function updateCoursesListWithMockData() {
 }
 
 /**
- * Fetches sections for a specific course.
- * @param {string} courseId - The ID of the course to fetch sections for.
- */
-function fetchSections(courseId) {
-    fetchAPI(`http://localhost:5001/courses_bp/sections/${courseId}`)  // Updated port and path
-        .then(data => updateSectionsList(data))
-        .catch(error => console.error(`Error fetching sections for course ${courseId}:`, error));
-}
-
-/**
- * Updates the sections list in the UI.
- * @param {Object} data - API response data containing section details.
- */
-function updateSectionsList(data) {
-    const sectionsList = document.getElementById('sections-list');
-    if (!sectionsList) return;
-
-    sectionsList.innerHTML = '';  // Clear previous entries
-    
-    if (!data || !data.data || data.data.length === 0) {
-        const li = document.createElement('div');
-        li.textContent = 'No sections available for this course';
-        li.style.padding = '10px';
-        li.style.color = '#666';
-        sectionsList.appendChild(li);
-        return;
-    }
-    
-    // Create a table for sections
-    const table = document.createElement('table');
-    table.style.width = '100%';
-    table.style.borderCollapse = 'collapse';
-    table.style.border = '1px solid #e0e0e0';
-    table.style.borderRadius = '4px';
-    table.style.overflow = 'hidden';
-    
-    // Create header row
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    headerRow.style.backgroundColor = '#f8f9fa';
-    
-    ['Section', 'Instructor', 'Time', 'Location', 'Status'].forEach(headerText => {
-        const th = document.createElement('th');
-        th.textContent = headerText;
-        th.style.padding = '10px';
-        th.style.textAlign = 'left';
-        th.style.fontWeight = '500';
-        th.style.fontSize = '14px';
-        th.style.color = '#495057';
-        headerRow.appendChild(th);
-    });
-    
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-    
-    // Create table body
-    const tbody = document.createElement('tbody');
-    
-    data.data.forEach((section, index) => {
-        const row = document.createElement('tr');
-        row.style.borderBottom = index < data.data.length - 1 ? '1px solid #eee' : 'none';
-        row.style.backgroundColor = 'white';
-        row.style.transition = 'background-color 0.2s';
-        
-        // Add hover effect
-        row.onmouseover = function() { 
-            this.style.backgroundColor = '#f8f9fa'; 
-        };
-        row.onmouseout = function() { 
-            this.style.backgroundColor = 'white'; 
-        };
-        
-        // Section number
-        const sectionCell = document.createElement('td');
-        sectionCell.textContent = section.number || 'N/A';
-        sectionCell.style.padding = '10px';
-        row.appendChild(sectionCell);
-        
-        // Instructor
-        const instructorCell = document.createElement('td');
-        instructorCell.textContent = section.instructor || 'TBA';
-        instructorCell.style.padding = '10px';
-        row.appendChild(instructorCell);
-        
-        // Time
-        const timeCell = document.createElement('td');
-        timeCell.textContent = section.time || 'TBA';
-        timeCell.style.padding = '10px';
-        row.appendChild(timeCell);
-        
-        // Location
-        const locationCell = document.createElement('td');
-        locationCell.textContent = section.location || 'TBA';
-        locationCell.style.padding = '10px';
-        row.appendChild(locationCell);
-        
-        // Status
-        const statusCell = document.createElement('td');
-        const status = section.status || 'Unknown';
-        statusCell.textContent = status;
-        statusCell.style.padding = '10px';
-        
-        // Color code the status
-        if (status.toLowerCase() === 'open') {
-            statusCell.style.color = '#28a745';
-        } else if (status.toLowerCase() === 'closed') {
-            statusCell.style.color = '#dc3545';
-        } else if (status.toLowerCase() === 'waitlist') {
-            statusCell.style.color = '#fd7e14';
-        }
-        
-        row.appendChild(statusCell);
-        tbody.appendChild(row);
-    });
-    
-    table.appendChild(tbody);
-    sectionsList.appendChild(table);
-}
-
-/**
- * Fetches a list of professors from the backend.
- * Now uses mock data directly since the API endpoint has issues.
- */
-function fetchProfessors() {
-    setupMockProfessors();
-}
-
-/**
- * Fetches course sections based on search criteria.
+ * Fetches sections based on search criteria.
  * @param {Object} criteria - The search criteria for sections (subject, course_code, attribute, instructor)
  */
 function fetchSections(criteria = {}) {
     // Show loading state
-    const sectionsList = document.getElementById('sections-list');
-    if (sectionsList) {
-        sectionsList.innerHTML = `
-            <div style="text-align: center; padding: 20px;">
-                <p style="margin: 0; color: #666;">Loading sections...</p>
-                <div style="display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #142A50; border-radius: 50%; margin-top: 10px; animation: spin 1s linear infinite;"></div>
-            </div>
-            <style>
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            </style>
-        `;
-    }
-
-    // Build the query string from the criteria
-    const params = new URLSearchParams();
-    if (criteria.subject) params.append('subject', criteria.subject);
-    if (criteria.course_code) params.append('course_code', criteria.course_code);
-    if (criteria.attribute) params.append('attribute', criteria.attribute);
-    if (criteria.instructor) params.append('instructor', criteria.instructor);
+    const coursesListContainer = document.getElementById('courses-list');
+    coursesListContainer.innerHTML = '<p>Loading sections...</p>';
     
-    // Add error handling for empty criteria
-    if (params.toString() === '') {
-        // If no criteria provided, use mock data
-        displayMockSections();
+    // Check if any criteria were provided
+    if (Object.keys(criteria).length === 0) {
+        coursesListContainer.innerHTML = '<p>Please enter at least one search criterion</p>';
         return;
     }
     
-    // Make API request to the backend
-    fetch(`http://localhost:5001/sections_bp/search?${params.toString()}`)
+    console.log('Searching with criteria:', criteria);
+    
+    // Build query string from criteria
+    const queryParams = new URLSearchParams();
+    
+    if (criteria.subject) {
+        queryParams.append('subject', criteria.subject);
+    }
+    
+    if (criteria.course_code) {
+        queryParams.append('course_code', criteria.course_code);
+    }
+    
+    if (criteria.attribute) {
+        queryParams.append('attribute', criteria.attribute);
+    }
+    
+    if (criteria.instructor) {
+        queryParams.append('instructor', criteria.instructor);
+    }
+    
+    const queryString = queryParams.toString();
+    
+    // Use relative URL to avoid CORS issues
+    const url = `/sections_bp/search?${queryString}`;
+    
+    fetch(url)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                // Get the specific error status
+                const status = response.status;
+                
+                if (status === 500) {
+                    console.error('Server error (500) when fetching sections');
+                    showNotification('The server encountered an error processing your request. Showing mock data instead.', 'error');
+                    
+                    // Use mock data for now
+                    return { mockData: true, data: getMockSectionsForCriteria(criteria) };
+                }
+                
+                throw new Error(`HTTP error! Status: ${status}`);
             }
             return response.json();
         })
         .then(data => {
-            console.log('Received section data:', data);
-            displaySections(data.data || []);
+            if (data.mockData) {
+                // If we're using mock data from the 500 error handler
+                displaySections(data.data);
+                
+                // Add a message indicating this is mock data
+                const mockDataMessage = document.createElement('div');
+                mockDataMessage.style.backgroundColor = '#fff3cd';
+                mockDataMessage.style.color = '#856404';
+                mockDataMessage.style.padding = '10px';
+                mockDataMessage.style.borderRadius = '4px';
+                mockDataMessage.style.marginBottom = '15px';
+                mockDataMessage.innerHTML = 'Note: Displaying mock data due to server errors. Your search criteria were applied to sample data.';
+                
+                // Insert at the top of the courses list
+                coursesListContainer.insertBefore(mockDataMessage, coursesListContainer.firstChild);
+                
+                return;
+            }
+            
+            if (data && data.data && Array.isArray(data.data)) {
+                // If we got data from the server, display it
+                displaySections(data.data);
+            } else {
+                // If no sections were found
+                coursesListContainer.innerHTML = '<p>No sections found matching your criteria</p>';
+            }
         })
         .catch(error => {
             console.error('Error fetching sections:', error);
-            // On error, display mock data instead
-            displayMockSections();
+            coursesListContainer.innerHTML = `
+                <div style="padding: 15px; background-color: #f8d7da; color: #721c24; border-radius: 4px; margin-bottom: 15px;">
+                    <h3>Error fetching sections</h3>
+                    <p>${error.message}</p>
+                    <p>This could be due to:</p>
+                    <ul>
+                        <li>The backend server having an error processing your request</li>
+                        <li>The search endpoint (/sections_bp/search) not being implemented correctly</li>
+                        <li>A network connectivity issue</li>
+                    </ul>
+                </div>
+            `;
+            
+            // Show a simplified message in the notification
+            showNotification('Error connecting to server. Showing mock data instead.', 'error');
+            
+            // Display mock data as a fallback
+            const mockData = getMockSectionsForCriteria(criteria);
+            displaySections(mockData);
+            
+            // Add a message indicating this is mock data
+            const mockDataMessage = document.createElement('div');
+            mockDataMessage.style.backgroundColor = '#fff3cd';
+            mockDataMessage.style.color = '#856404';
+            mockDataMessage.style.padding = '10px';
+            mockDataMessage.style.borderRadius = '4px';
+            mockDataMessage.style.marginBottom = '15px';
+            mockDataMessage.innerHTML = 'Note: Displaying mock data due to server errors. Your search criteria were applied to sample data.';
+            
+            // Insert at the top of the sections list (after the error message)
+            coursesListContainer.appendChild(mockDataMessage);
         });
 }
 
 /**
- * Displays mock section data when the API fails.
+ * Gets mock section data filtered by the provided criteria.
+ * This is a temporary function to provide data when the backend fails.
+ * @param {Object} criteria - Search criteria
+ * @returns {Array} Filtered mock sections
  */
-function displayMockSections() {
-    console.log('Using mock section data due to API error');
-    
-    // Mock section data
+function getMockSectionsForCriteria(criteria) {
+    // Define mock sections data
     const mockSections = [
         {
-            subject: 'CPSC',
-            course_code: '325',
-            section_number: '01',
-            schedule: 'MWF 10:00 AM - 11:15 AM',
-            instructor: 'Smith, John',
-            location: 'Herak 315',
+            subject: "CPSC",
+            course_code: "325",
+            section_number: "01",
+            schedule: "MWF 10:00 AM - 11:15 AM",
+            instructor: "Ryan Herzog",
+            location: "Herak 308",
             seats_available: 15,
             total_seats: 30,
             credits: 3
         },
         {
-            subject: 'CPSC',
-            course_code: '325',
-            section_number: '02',
-            schedule: 'TR 1:00 PM - 2:15 PM',
-            instructor: 'Johnson, Lisa',
-            location: 'Herak 302',
-            seats_available: 5,
+            subject: "CPSC",
+            course_code: "321",
+            section_number: "01",
+            schedule: "TR 9:30 AM - 10:45 AM",
+            instructor: "Shawn Bowers",
+            location: "Herak 311",
+            seats_available: 8,
+            total_seats: 25,
+            credits: 3
+        },
+        {
+            subject: "CPSC",
+            course_code: "212",
+            section_number: "02",
+            schedule: "TR 2:00 PM - 3:15 PM",
+            instructor: "Paul De Palma",
+            location: "Herak 315",
+            seats_available: 0,
             total_seats: 30,
             credits: 3
         },
         {
-            subject: 'MATH',
-            course_code: '231',
-            section_number: '01',
-            schedule: 'MWF 9:00 AM - 9:50 AM',
-            instructor: 'Williams, Robert',
-            location: 'Herak 201',
-            seats_available: 0,
+            subject: "MATH",
+            course_code: "231",
+            section_number: "01",
+            schedule: "MWF 11:00 AM - 11:50 AM",
+            instructor: "Vesta Coufal",
+            location: "Herak 231",
+            seats_available: 12,
             total_seats: 25,
+            credits: 3
+        },
+        {
+            subject: "MATH",
+            course_code: "157",
+            section_number: "03",
+            schedule: "MWF 2:00 PM - 2:50 PM",
+            instructor: "Thomas McKenzie",
+            location: "Herak 233",
+            seats_available: 5,
+            total_seats: 30,
             credits: 4
         }
     ];
     
-    // Display the mock sections
-    displaySections(mockSections);
+    // Filter mock data based on criteria
+    return mockSections.filter(section => {
+        // Check subject match
+        if (criteria.subject && section.subject !== criteria.subject) {
+            return false;
+        }
+        
+        // Check course code match
+        if (criteria.course_code && !section.course_code.includes(criteria.course_code)) {
+            return false;
+        }
+        
+        // Check instructor match (case-insensitive partial match)
+        if (criteria.instructor && !section.instructor.toLowerCase().includes(criteria.instructor.toLowerCase())) {
+            return false;
+        }
+        
+        // Could add attribute filtering if needed
+        
+        // If all criteria passed, include this section
+        return true;
+    });
 }
 
 /**
@@ -1025,66 +1145,64 @@ function resetScheduleGrid() {
  * @param {string} type - The type of notification ('success', 'error', 'info')
  */
 function showNotification(message, type = 'info') {
-    // Create notification container if it doesn't exist
-    let notificationContainer = document.getElementById('notification-container');
-    
-    if (!notificationContainer) {
-        notificationContainer = document.createElement('div');
-        notificationContainer.id = 'notification-container';
-        notificationContainer.style.position = 'fixed';
-        notificationContainer.style.top = '20px';
-        notificationContainer.style.right = '20px';
-        notificationContainer.style.zIndex = '9999';
-        document.body.appendChild(notificationContainer);
+    // Prevent recursive calls that could cause stack overflow
+    if (window._isShowingNotification) {
+        console.log('Prevented recursive notification:', message);
+        return;
     }
     
-    // Create the notification element
-    const notification = document.createElement('div');
-    notification.style.margin = '10px';
-    notification.style.padding = '15px 20px';
-    notification.style.borderRadius = '4px';
-    notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-    notification.style.display = 'flex';
-    notification.style.alignItems = 'center';
-    notification.style.justifyContent = 'space-between';
-    notification.style.fontSize = '14px';
-    notification.style.transition = 'transform 0.3s, opacity 0.3s';
-    notification.style.animation = 'slideIn 0.3s forwards';
-    
-    // Set type-specific styles
-    if (type === 'success') {
-        notification.style.backgroundColor = '#d4edda';
-        notification.style.color = '#155724';
-        notification.style.borderLeft = '5px solid #28a745';
-    } else if (type === 'error') {
-        notification.style.backgroundColor = '#f8d7da';
-        notification.style.color = '#721c24';
-        notification.style.borderLeft = '5px solid #dc3545';
-    } else {
-        notification.style.backgroundColor = '#e7f5ff';
-        notification.style.color = '#1864ab';
-        notification.style.borderLeft = '5px solid #4dabf7';
-    }
-    
-    // Add the message
-    notification.innerHTML = `
-        <span>${message}</span>
-        <button style="background: none; border: none; margin-left: 15px; cursor: pointer; font-size: 16px; opacity: 0.7;">×</button>
-    `;
-    
-    // Add click handler to close button
-    notification.querySelector('button').addEventListener('click', function() {
-        notification.style.opacity = '0';
-        notification.style.transform = 'translateX(30px)';
+    try {
+        window._isShowingNotification = true;
         
-        setTimeout(() => {
-            notificationContainer.removeChild(notification);
-        }, 300);
-    });
-    
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentNode === notificationContainer) {
+        // Create notification container if it doesn't exist
+        let notificationContainer = document.getElementById('notification-container');
+        
+        if (!notificationContainer) {
+            notificationContainer = document.createElement('div');
+            notificationContainer.id = 'notification-container';
+            notificationContainer.style.position = 'fixed';
+            notificationContainer.style.top = '20px';
+            notificationContainer.style.right = '20px';
+            notificationContainer.style.zIndex = '9999';
+            document.body.appendChild(notificationContainer);
+        }
+        
+        // Create the notification element
+        const notification = document.createElement('div');
+        notification.style.margin = '10px';
+        notification.style.padding = '15px 20px';
+        notification.style.borderRadius = '4px';
+        notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+        notification.style.display = 'flex';
+        notification.style.alignItems = 'center';
+        notification.style.justifyContent = 'space-between';
+        notification.style.fontSize = '14px';
+        notification.style.transition = 'transform 0.3s, opacity 0.3s';
+        notification.style.animation = 'slideIn 0.3s forwards';
+        
+        // Set type-specific styles
+        if (type === 'success') {
+            notification.style.backgroundColor = '#d4edda';
+            notification.style.color = '#155724';
+            notification.style.borderLeft = '5px solid #28a745';
+        } else if (type === 'error') {
+            notification.style.backgroundColor = '#f8d7da';
+            notification.style.color = '#721c24';
+            notification.style.borderLeft = '5px solid #dc3545';
+        } else {
+            notification.style.backgroundColor = '#e7f5ff';
+            notification.style.color = '#1864ab';
+            notification.style.borderLeft = '5px solid #4dabf7';
+        }
+        
+        // Add the message
+        notification.innerHTML = `
+            <span>${message}</span>
+            <button style="background: none; border: none; margin-left: 15px; cursor: pointer; font-size: 16px; opacity: 0.7;">×</button>
+        `;
+        
+        // Add click handler to close button
+        notification.querySelector('button').addEventListener('click', function() {
             notification.style.opacity = '0';
             notification.style.transform = 'translateX(30px)';
             
@@ -1093,30 +1211,66 @@ function showNotification(message, type = 'info') {
                     notificationContainer.removeChild(notification);
                 }
             }, 300);
+        });
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode === notificationContainer) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(30px)';
+                
+                setTimeout(() => {
+                    if (notification.parentNode === notificationContainer) {
+                        notificationContainer.removeChild(notification);
+                    }
+                }, 300);
+            }
+        }, 5000);
+        
+        // Add animation styles if not already added
+        if (!document.querySelector('style#notification-animations')) {
+            const style = document.createElement('style');
+            style.id = 'notification-animations';
+            style.innerHTML = `
+                @keyframes slideIn {
+                    from { transform: translateX(30px); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
         }
-    }, 5000);
-    
-    // Add animation styles
-    const style = document.createElement('style');
-    style.innerHTML = `
-        @keyframes slideIn {
-            from { transform: translateX(30px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // Add to container
-    notificationContainer.appendChild(notification);
+        
+        // Add to container
+        notificationContainer.appendChild(notification);
+    } finally {
+        // Always reset the flag
+        window._isShowingNotification = false;
+    }
 }
+
+/**
+ * Display mock sections when the backend is not available
+ */
+function displayMockSections() {
+    // This function is only a stub now since we don't want mock data
+    const coursesList = document.getElementById('courses-list');
+    if (coursesList) {
+        coursesList.innerHTML = '<p>Real server connection required. Please make sure the backend is running.</p>';
+    }
+}
+
+// Make showNotification function globally available
+window.showNotification = showNotification;
+
+// Export the fetchData function to make it globally available
+window.fetchData = fetchData;
 
 // Initialize when the document loads
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Course module initialized');
+    
     // Check backend connection
     checkBackendConnection();
-    
-    // Fetch professors for dropdown
-    fetchProfessors();
     
     // Add event listener to search button
     const searchBtn = document.querySelector('#Courses .search-btn');

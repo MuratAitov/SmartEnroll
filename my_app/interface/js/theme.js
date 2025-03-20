@@ -1,19 +1,64 @@
 /**
+ * Manages theme settings (light/dark mode) for the application.
+ */
+
+// Store the reference to the event listener for cleanup
+let themeToggleListener = null;
+
+/**
+ * Initializes theme functionality on page load
+ */
+function initTheme() {
+    console.log('Initializing theme system...');
+    
+    // Set initial theme based on user preference or default
+    const storedTheme = localStorage.getItem('theme');
+    const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (storedTheme === 'dark' || (!storedTheme && prefersDarkMode)) {
+        document.body.classList.add('dark-mode');
+        updateThemeToggleText(true);
+        updateLogoImage(true);
+    } else {
+        updateThemeToggleText(false);
+        updateLogoImage(false);
+    }
+    
+    // Set up theme toggle listeners
+    setupThemeToggleListeners();
+}
+
+/**
+ * Sets up event listeners for theme toggle buttons
+ */
+function setupThemeToggleListeners() {
+    // Remove any existing listeners to prevent duplicates
+    if (themeToggleListener) {
+        document.removeEventListener('click', themeToggleListener);
+    }
+    
+    // Add click event listener for theme toggle buttons
+    themeToggleListener = function(e) {
+        if (e.target.classList.contains('theme-toggle')) {
+            toggleTheme();
+        }
+    };
+    
+    document.addEventListener('click', themeToggleListener);
+}
+
+/**
  * Toggles between light and dark mode themes.
  */
 function toggleTheme() {
     const body = document.body;
-    const logoImg = document.querySelector('.logo img');
-    const themeToggles = document.querySelectorAll('.theme-toggle');
-
-    // Toggle dark mode class on body
-    body.classList.toggle('dark-mode');
-    const isDarkMode = body.classList.contains('dark-mode');
-
-    // Update theme toggle buttons text
+    const isDarkMode = body.classList.toggle('dark-mode');
+    
+    // Store the theme preference
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    
+    // Update UI elements
     updateThemeToggleText(isDarkMode);
-
-    // Update the logo based on the theme
     updateLogoImage(isDarkMode);
 }
 
@@ -34,8 +79,12 @@ function updateThemeToggleText(isDarkMode) {
 function updateLogoImage(isDarkMode) {
     const logoImg = document.querySelector('.logo img');
     if (logoImg) {
+        // Use relative paths for better path handling
         logoImg.src = isDarkMode 
-            ? 'my_app/interface/assets/GU Logo/IMG_4570.jpg'  // Dark mode logo
-            : 'my_app/interface/assets/GU Logo/IMG_4571.jpg'; // Light mode logo
+            ? './assets/GU Logo/IMG_4570.jpg'  // Dark mode logo
+            : './assets/GU Logo/IMG_4571.jpg'; // Light mode logo
     }
 }
+
+// Initialize the theme system when the document is ready
+document.addEventListener('DOMContentLoaded', initTheme);

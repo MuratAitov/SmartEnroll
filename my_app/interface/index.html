@@ -73,16 +73,14 @@
                 </button>
                 <div class="dropdown-content" id="userDropdown">
                     <div class="user-info">
-                        <div class="student-name">Guest User</div>
-                        <div class="student-id">Please log in</div>
+                        <div class="student-name">Loading...</div>
+                        <div class="student-id">ID: Loading...</div>
                     </div>
                     <div class="dropdown-divider"></div>
                     <button id="themeToggle" class="theme-toggle">Dark Mode</button>
                     <div class="dropdown-divider"></div>
-                    <a href="#" class="login-btn" onclick="showLoginModal()">Log In</a>
-                    <a href="#" class="register-btn" onclick="showRegisterModal()">Register</a>
-                    <a href="#" class="logout-btn" onclick="logout()" style="display: none;">Sign Out</a>
                     <a href="#help">Help</a>
+                    <a href="#signout">Sign Out</a>
                 </div>
             </div>
         </div>
@@ -117,15 +115,20 @@
                         
                         <input type="text" placeholder="Attributes" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
                         
-                        <!-- Professor dropdown populated from the backend -->
-                        <select id="professors-dropdown" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
-                            <option value="">Select Instructor</option>
-                        </select>
+                        <!-- Replace professor dropdown with autocomplete input -->
+                        <div class="autocomplete-container" style="width: 100%; position: relative; margin-bottom: 15px;">
+                            <input id="instructor-input" type="text" placeholder="Instructor" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
+                            <div id="instructor-autocomplete" class="autocomplete-list" style="display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto; background-color: white; border: 1px solid #e0e4e8; border-radius: 0 0 4px 4px; z-index: 100; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                                <!-- Autocomplete suggestions will be added here dynamically -->
+                            </div>
+                        </div>
                         
                         <input type="text" placeholder="Campus" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
                         <input type="text" placeholder="Instructional Methods" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
                         
-                        <button type="button" class="search-btn" onclick="fetchData()" style="width: 100%; background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 12px 0; font-size: 14px; cursor: pointer; font-weight: 500;">Search Courses</button>
+                        <div class="button-group">
+                            <button class="search-btn" id="search-courses-btn" type="button">Search Courses</button>
+                        </div>
                     </div>
                     
                     <!-- Area to display search results -->
@@ -221,11 +224,6 @@
                             <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">3:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
                             <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">4:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
                             <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">5:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">6:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">7:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">8:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">9:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">10:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -425,308 +423,87 @@
     }
     </script>
     
-    <!-- Include the navigation.js file -->
+    <!-- Include scripts in the correct order to prevent initialization conflicts -->
+    <script src="./js/theme.js"></script>
+    <script src="./js/auth.js"></script>
     <script src="./js/navigation.js"></script>
-    <!-- Include the PDF handling functionality -->
     <script src="./js/pdfHandling.js"></script>
-    <!-- Include the course.js file for course data functionality -->
     <script src="./js/course.js"></script>
-    <!-- Include the export service functionality -->
     <script src="./js/exportService.js"></script>
-    <!-- Include the prerequisite service functionality -->
     <script src="./js/prereqService.js"></script>
     
     <script>
-    // Update PDF handling functions to work with blueprint viewer
-    function openPDF(pdfPath) {
-        // Get the map container instead of the blueprint viewer
-        const mapContainer = document.querySelector('#map-view .content-container, #map-view div[style*="flex: 1; border-radius: 8px"]');
+    // Initialize application components in the correct order
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Main application initialization starting...');
         
-        if (mapContainer) {
-            // Create and configure PDF embed element
-            const pdfViewer = document.createElement('embed');
-            pdfViewer.src = pdfPath;
-            pdfViewer.type = 'application/pdf';
-            pdfViewer.style.width = '100%';
-            pdfViewer.style.height = '100%';
-
-            // Replace the current content with the PDF viewer
-            mapContainer.innerHTML = '';
-            
-            // Create a container for the PDF
-            const pdfContainer = document.createElement('div');
-            pdfContainer.style.flex = '1';
-            pdfContainer.style.padding = '0';
-            pdfContainer.style.height = '100%';
-            pdfContainer.appendChild(pdfViewer);
-            
-            mapContainer.appendChild(pdfContainer);
-            mapContainer.style.display = 'flex';
-            mapContainer.style.flexDirection = 'column';
-        }
-    }
-    
-    // Override the PDF functions with correct paths and highlight selected building
-    function openHerakPDF() {
-        openPDF('./assets/Floor Plans/Herak Center.pdf');
-        highlightSelectedBuilding('Herak');
-    }
-
-    function openJepsonFirstFloorPDF() {
-        openPDF('./assets/Floor Plans/Jepson1stFloor.pdf');
-        highlightSelectedBuilding('JepsonFirst');
-    }
-
-    function openJepsonBasementPDF() {
-        openPDF('./assets/Floor Plans/JepsonBasementpdf.pdf');
-        highlightSelectedBuilding('JepsonBasement');
-    }
-    
-    // Function to highlight the selected building button
-    function highlightSelectedBuilding(buildingId) {
-        // Reset all building buttons to default style
-        const buildingButtons = document.querySelectorAll('.building-button');
-        buildingButtons.forEach(button => {
-            button.style.backgroundColor = 'white';
-            button.style.borderColor = '#e0e0e0';
-            button.style.color = '#333';
-        });
-        
-        // Highlight the selected building button
-        const selectedButton = document.getElementById(buildingId);
-        if (selectedButton) {
-            selectedButton.style.backgroundColor = '#f5f5f5';
-            selectedButton.style.borderColor = '#142A50';
-            selectedButton.style.color = '#142A50';
-        }
-    }
-    
-    // Function to switch between map tabs (Building Blueprints and Schedule)
-    function openMapTab(tabName, event) {
-        // Hide all tab contents
-        const tabContents = document.getElementsByClassName("map-tab-content");
-        for (let i = 0; i < tabContents.length; i++) {
-            tabContents[i].style.display = "none";
+        // Initialize theme toggle function if available
+        if (typeof initThemeToggle === 'function') {
+            initThemeToggle();
         }
         
-        // Remove active class from all tab buttons
-        const tabButtons = document.getElementsByClassName("map-tab-button");
-        for (let i = 0; i < tabButtons.length; i++) {
-            tabButtons[i].classList.remove("active");
-            tabButtons[i].style.color = "#333";
-            // Remove the underline styling
-            if (tabButtons[i].querySelector(".tab-underline")) {
-                tabButtons[i].removeChild(tabButtons[i].querySelector(".tab-underline"));
+        // Check if backend connection function is available
+        if (typeof checkBackendConnection === 'function') {
+            console.log('Backend connection function available, checking connection...');
+            checkBackendConnection();
+        } else {
+            console.warn('Backend connection function not available, using mock data');
+            // Add a small delay to ensure scripts have time to load
+            setTimeout(function() {
+                if (typeof checkBackendConnection === 'function') {
+                    console.log('Backend connection function now available, checking connection...');
+                    checkBackendConnection();
+                } else {
+                    console.error('Backend connection function still not available after delay');
+                }
+            }, 500);
+        }
+        
+        // Check if fetchData function is available for the search button
+        const searchButton = document.querySelector('#Courses .search-btn');
+        if (searchButton) {
+            if (typeof fetchData === 'function') {
+                console.log('fetchData function available, setting up event listener');
+                searchButton.addEventListener('click', fetchData);
+            } else {
+                console.error('fetchData function not found');
+                // Add a small delay to ensure scripts have time to load
+                setTimeout(function() {
+                    if (typeof fetchData === 'function') {
+                        console.log('fetchData function now available, setting up event listener');
+                        searchButton.addEventListener('click', fetchData);
+                    } else {
+                        console.error('fetchData function still not available after delay');
+                        // Fallback to inline handler for search button
+                        searchButton.onclick = function() {
+                            console.log('Using fallback search function');
+                            // Basic fallback for search functionality
+                            const criteria = {};
+                            const subjectInput = document.querySelector('#Courses input[placeholder="Subject"]');
+                            if (subjectInput && subjectInput.value.trim()) {
+                                criteria.subject = subjectInput.value.trim().toUpperCase();
+                            }
+                            
+                            const courseCodeInput = document.querySelector('#Courses input[placeholder="Course code"]');
+                            if (courseCodeInput && courseCodeInput.value.trim()) {
+                                criteria.course_code = courseCodeInput.value.trim();
+                            }
+                            
+                            const instructorInput = document.querySelector('#instructor-input');
+                            if (instructorInput && instructorInput.value.trim()) {
+                                criteria.instructor = instructorInput.value.trim();
+                            }
+                            
+                            alert('Search functionality requires the course.js script to be properly loaded. Criteria: ' + 
+                                JSON.stringify(criteria));
+                        };
+                    }
+                }, 1000);
             }
         }
         
-        // Show the selected tab content
-        const selectedTab = document.getElementById(tabName);
-        if (selectedTab) {
-            selectedTab.style.display = "block";
-        }
-        
-        // Add active class to the clicked button
-        if (event && event.currentTarget) {
-            event.currentTarget.classList.add("active");
-            event.currentTarget.style.color = "#142A50";
-            
-            // Add the red underline to active tab using the same style as registration tabs
-            const underline = document.createElement("div");
-            underline.className = "tab-underline";
-            underline.style.position = "absolute";
-            underline.style.bottom = "-1px";
-            underline.style.left = "0";
-            underline.style.width = "100%";
-            underline.style.height = "3px";
-            underline.style.backgroundColor = "#C8102E";
-            event.currentTarget.appendChild(underline);
-        }
-        
-        // Get the map container
-        const mapContainer = document.querySelector('#map-view .content-container, #map-view div[style*="flex: 1; border-radius: 8px"]');
-        
-        // If Schedule tab is clicked, restore the Google Map
-        if (tabName === 'WeekdayTab' && mapContainer) {
-            restoreGoogleMap(mapContainer);
-        }
-    }
-    
-    // Function to restore the Google Map
-    function restoreGoogleMap(container) {
-        container.innerHTML = '';
-        
-        // Create map container
-        const mapDiv = document.createElement('div');
-        mapDiv.style.flex = '1';
-        mapDiv.style.padding = '0';
-        mapDiv.style.height = '100%';
-        
-        // Create and configure iframe for Google Maps
-        const iframe = document.createElement('iframe');
-        iframe.src = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.418973710349!2d-117.40477662402845!3d47.66729508951068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x549e185c5df3f945%3A0xaf7c8489928f20!2sGonzaga%20University!5e0!3m2!1sen!2sus!4v1716416889721!5m2!1sen!2sus';
-        iframe.width = '100%';
-        iframe.height = '100%';
-        iframe.style.border = '0';
-        iframe.setAttribute('allowfullscreen', '');
-        iframe.setAttribute('loading', 'lazy');
-        iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
-        
-        mapDiv.appendChild(iframe);
-        container.appendChild(mapDiv);
-        container.style.display = 'flex';
-        container.style.flexDirection = 'column';
-    }
-    
-    // Function to toggle the day panels accordion
-    function toggleDayPanel(header) {
-        const panel = header.nextElementSibling;
-        const arrow = header.querySelector('.arrow');
-        
-        // Toggle the panel display
-        if (panel.style.display === "block") {
-            panel.style.display = "none";
-            arrow.style.transform = "rotate(0deg)";
-        } else {
-            panel.style.display = "block";
-            arrow.style.transform = "rotate(180deg)";
-        }
-    }
-    
-    // Apply the red underline to the initially active tab on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        const activeMapTab = document.querySelector('.map-tab-button.active');
-        if (activeMapTab) {
-            // Create and add the underline element
-            const underline = document.createElement("div");
-            underline.className = "tab-underline";
-            underline.style.position = "absolute";
-            underline.style.bottom = "-1px";
-            underline.style.left = "0";
-            underline.style.width = "100%";
-            underline.style.height = "3px";
-            underline.style.backgroundColor = "#C8102E";
-            activeMapTab.appendChild(underline);
-        }
-        
-        // Check backend connection first
-        checkBackendConnection();
-        
-        // Initialize professor dropdown
-        fetchProfessors();
+        console.log('Application initialized successfully');
     });
-    </script>
-
-    <!-- Login Modal -->
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="document.getElementById('login-modal').style.display='none'">&times;</span>
-            <h2>Log In</h2>
-            <form id="login-form" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label for="login-username">Username</label>
-                    <input type="text" id="login-username" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" name="password" required>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn primary-btn">Log In</button>
-                    <button type="button" class="btn secondary-btn" onclick="document.getElementById('login-modal').style.display='none'">Cancel</button>
-                </div>
-                <div class="form-footer">
-                    <p>Don't have an account? <a href="#" onclick="showRegisterModal()">Register here</a></p>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Registration Modal -->
-    <div id="register-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="document.getElementById('register-modal').style.display='none'">&times;</span>
-            <h2>Create Account</h2>
-            <form id="register-form" onsubmit="handleRegistration(event)">
-                <div class="form-group">
-                    <label for="register-name">Full Name</label>
-                    <input type="text" id="register-name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-username">Username</label>
-                    <input type="text" id="register-username" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-email">Email</label>
-                    <input type="email" id="register-email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-password">Password</label>
-                    <input type="password" id="register-password" name="password" required>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn primary-btn">Register</button>
-                    <button type="button" class="btn secondary-btn" onclick="document.getElementById('register-modal').style.display='none'">Cancel</button>
-                </div>
-                <div class="form-footer">
-                    <p>Already have an account? <a href="#" onclick="showLoginModal()">Log in here</a></p>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Add this before the closing body tag to include the auth service -->
-    <script src="./js/authService.js"></script>
-
-    <!-- Add handlers for the login and registration forms -->
-    <script>
-        // Modal control functions
-        function showLoginModal() {
-            document.getElementById('register-modal').style.display = 'none';
-            document.getElementById('login-modal').style.display = 'flex';
-        }
-        
-        function showRegisterModal() {
-            document.getElementById('login-modal').style.display = 'none';
-            document.getElementById('register-modal').style.display = 'flex';
-        }
-        
-        // Handle login form submission
-        function handleLogin(event) {
-            event.preventDefault();
-            
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            
-            login(username, password)
-                .then(user => {
-                    console.log('Login successful:', user);
-                    document.getElementById('login-modal').style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Login error:', error);
-                });
-        }
-        
-        // Handle registration form submission
-        function handleRegistration(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById('register-name').value;
-            const username = document.getElementById('register-username').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            
-            register(username, email, password, name)
-                .then(result => {
-                    console.log('Registration successful:', result);
-                    // Clear the form
-                    document.getElementById('register-form').reset();
-                })
-                .catch(error => {
-                    console.error('Registration error:', error);
-                });
-        }
     </script>
 </body>
 </html> 

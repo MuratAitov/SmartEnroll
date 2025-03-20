@@ -55,6 +55,11 @@
 }
 
 /* Autocomplete Functionality */
+.autocomplete-container {
+    position: relative;
+    width: 100%;
+}
+
 .autocomplete-list {
     display: none;
     position: absolute;
@@ -62,23 +67,55 @@
     left: 0;
     right: 0;
     background-color: white;
-    border-radius: 4px;
+    border-radius: 0 0 4px 4px;
     border: 1px solid #e0e4e8;
-    margin-top: 4px;
+    margin-top: -1px;
     max-height: 200px;
     overflow-y: auto;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .autocomplete-item {
-    padding: 8px 12px;
+    padding: 10px 15px;
     cursor: pointer;
     color: #495057;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background-color 0.2s;
 }
 
-.autocomplete-item:hover {
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
     background-color: #f8f9fa;
+}
+
+.autocomplete-item strong {
+    font-weight: 600;
+    color: #142A50;
+}
+
+/* Dark mode support */
+body.dark-mode .autocomplete-list {
+    background-color: #2c3e50;
+    border-color: #3a4a5c;
+}
+
+body.dark-mode .autocomplete-item {
+    color: #e0e0e0;
+    border-bottom-color: #3a4a5c;
+}
+
+body.dark-mode .autocomplete-item:hover,
+body.dark-mode .autocomplete-item.selected {
+    background-color: #3a4a5c;
+}
+
+body.dark-mode .autocomplete-item strong {
+    color: #f8f9fa;
 }
 
 /* Styles for Embedded PDF Viewer */
