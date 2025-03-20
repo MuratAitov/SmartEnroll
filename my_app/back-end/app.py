@@ -13,7 +13,6 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Register Blueprints with Correct URL Prefixes
-# Register Blueprints with Correct URL Prefixes
 app.register_blueprint(user_bp, url_prefix='/user_bp')
 app.register_blueprint(course_bp, url_prefix='/courses_bp')  # Only one registration
 app.register_blueprint(section_bp, url_prefix='/sections_bp')  # Only one registration
