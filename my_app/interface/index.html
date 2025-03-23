@@ -17,6 +17,65 @@
     <link rel="stylesheet" href="./css/navigation.css">
     <link rel="stylesheet" href="./css/tables.css">
     <link rel="stylesheet" href="./css/user.css">
+    <style>
+        /* Styles for the event form in the Events tab */
+        .event-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+        }
+        
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .day-selection {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        
+        .weekday-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f2f5;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            color: #142A50;
+            transition: all 0.2s ease;
+        }
+        
+        .weekday-btn:hover {
+            background-color: #e0e4e8;
+        }
+        
+        .weekday-btn.selected {
+            background-color: #142A50;
+            color: white;
+        }
+        
+        .add-event-btn {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #142A50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .add-event-btn:hover {
+            background-color: #0d1b33;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -163,7 +222,7 @@
                         <input type="text" placeholder="Start Time" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
                         <input type="text" placeholder="End Time" style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #333; background-color: white;">
                         
-                        <button type="button" class="search-btn" style="width: 100%; background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 12px 0; font-size: 14px; cursor: pointer; font-weight: 500;">Add Event</button>
+                        <button type="button" class="search-btn" onclick="addEventFromForm()" style="width: 100%; background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 12px 0; font-size: 14px; cursor: pointer; font-weight: 500;">Add Event</button>
                     </div>
                 </div>
                 
@@ -504,6 +563,176 @@
         
         console.log('Application initialized successfully');
     });
+    </script>
+
+    <script>
+    // Inline implementation of addEventFromForm to ensure it works
+    function addEventFromForm() {
+        console.log("Inline addEventFromForm called");
+        
+        try {
+            // Get values from form
+            const eventName = document.querySelector('#RecurringEvents input[placeholder="Event Name"]')?.value || "";
+            const startTime = document.querySelector('#RecurringEvents input[placeholder="Start Time"]')?.value || "";
+            const endTime = document.querySelector('#RecurringEvents input[placeholder="End Time"]')?.value || "";
+            
+            // Get selected days
+            const selectedDays = [];
+            document.querySelectorAll('#RecurringEvents .day-button.selected').forEach(btn => {
+                const day = btn.textContent.trim();
+                if (day) selectedDays.push(day);
+            });
+            
+            // Validation
+            if (!eventName) {
+                alert("Please enter an event name");
+                return;
+            }
+            
+            if (!startTime || !endTime) {
+                alert("Please specify both start and end time");
+                return;
+            }
+            
+            if (selectedDays.length === 0) {
+                alert("Please select at least one day");
+                return;
+            }
+            
+            // Format time input
+            const formatTimeInput = (timeStr) => {
+                if (timeStr.includes(':')) {
+                    const [hours, minutes] = timeStr.split(':');
+                    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+                } else {
+                    const hour = parseInt(timeStr);
+                    return isNaN(hour) ? "00:00" : `${hour.toString().padStart(2, '0')}:00`;
+                }
+            };
+            
+            const formattedStartTime = formatTimeInput(startTime);
+            const formattedEndTime = formatTimeInput(endTime);
+            
+            // Parse time to grid hours
+            const parseTimeToHour = (timeString) => {
+                const [hours, minutes] = timeString.split(':').map(Number);
+                return hours + (minutes / 60);
+            };
+            
+            const startHour = parseTimeToHour(formattedStartTime);
+            const endHour = parseTimeToHour(formattedEndTime);
+            
+            if (startHour >= endHour) {
+                alert("End time must be after start time");
+                return;
+            }
+            
+            // Get a random color
+            const getRandomColor = () => {
+                const colors = ['#4A90E2', '#B41231', '#357ABD', '#002467', '#2ECC71', '#E67E22', '#9B59B6', '#E74C3C', '#1ABC9C'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            };
+            
+            const color = getRandomColor();
+            
+            // Get day index function
+            const getDayIndex = (day) => {
+                return ['M', 'T', 'W', 'R', 'F'].indexOf(day) + 1;
+            };
+            
+            // Add to grid function
+            const addCourseToGrid = (dayIndex, startHour, endHour, courseTitle, location, instructor, color) => {
+                const rowStart = Math.floor(startHour) - 8 + 2; // Adjust for header rows and 8am start
+                
+                if (rowStart < 2 || rowStart > 11) {
+                    console.error(`Invalid row start: ${rowStart} for time ${startHour}`);
+                    return;
+                }
+                
+                const cell = document.querySelector(`table tr:nth-child(${rowStart}) td:nth-child(${dayIndex + 1})`);
+                
+                if (!cell) {
+                    console.error(`Could not find cell for day ${dayIndex} at time ${startHour}`);
+                    return;
+                }
+                
+                // Setup for positioning
+                cell.style.position = 'relative';
+                
+                // Create the event block
+                const eventBlock = document.createElement('div');
+                eventBlock.className = 'course-block';
+                eventBlock.style.position = 'absolute';
+                eventBlock.style.backgroundColor = color;
+                eventBlock.style.color = 'white';
+                eventBlock.style.width = '100%';
+                eventBlock.style.left = '0';
+                eventBlock.style.padding = '8px';
+                eventBlock.style.boxSizing = 'border-box';
+                eventBlock.style.borderRadius = '4px';
+                eventBlock.style.overflow = 'hidden';
+                eventBlock.style.zIndex = '1';
+                
+                // Calculate position and height
+                const startMinutes = (startHour % 1) * 60;
+                const endMinutes = (endHour % 1) * 60;
+                const durationInMinutes = ((endHour - startHour) * 60);
+                
+                eventBlock.style.top = `${(startMinutes / 60) * 60}px`;
+                eventBlock.style.height = `${durationInMinutes}px`;
+                
+                // Add content
+                eventBlock.innerHTML = `
+                    <div style="font-weight: 500; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${courseTitle}</div>
+                    <div style="font-size: 0.8em; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${location}</div>
+                    <div style="font-size: 0.8em; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${instructor}</div>
+                `;
+                
+                cell.appendChild(eventBlock);
+                console.log(`Added event to day ${dayIndex} at time ${startHour}`);
+            };
+            
+            // Ensure we're in the registration view
+            const registrationView = document.getElementById('registration-view');
+            if (registrationView && !registrationView.classList.contains('active')) {
+                document.querySelector('.nav-links a[data-view="registration"]').click();
+            }
+            
+            // Add to grid for each selected day
+            selectedDays.forEach(day => {
+                const dayIndex = getDayIndex(day);
+                if (dayIndex >= 0) {
+                    addCourseToGrid(
+                        dayIndex,
+                        startHour,
+                        endHour,
+                        eventName,
+                        "Personal Event", 
+                        "Your Event",
+                        color
+                    );
+                }
+            });
+            
+            // Clear form fields
+            document.querySelector('#RecurringEvents input[placeholder="Event Name"]').value = "";
+            document.querySelector('#RecurringEvents input[placeholder="Start Time"]').value = "";
+            document.querySelector('#RecurringEvents input[placeholder="End Time"]').value = "";
+            
+            // Reset day buttons
+            document.querySelectorAll('#RecurringEvents .day-button.selected').forEach(btn => {
+                btn.classList.remove('selected');
+                btn.style.backgroundColor = 'white';
+                btn.style.color = '#333';
+                btn.style.borderColor = '#e0e0e0';
+            });
+            
+            alert(`Added "${eventName}" to your schedule`);
+        } catch (error) {
+            console.error("Error adding event:", error);
+            alert("Failed to add event: " + error.message);
+        }
+    }
     </script>
 </body>
 </html> 

@@ -48,35 +48,47 @@ function fetchData() {
 function checkBackendConnection() {
     try {
         const statusElement = document.getElementById('connection-status');
+        if (!statusElement) {
+            console.warn('Connection status element not found in the DOM');
+        }
         
-        // Use relative URL to avoid CORS issues
-        fetch('/courses_bp')
+        // Try to make a simple request to the backend to test connection
+        fetch('/sections_bp/search?limit=1')
             .then(response => {
                 if (response.ok) {
                     console.log('Backend connection successful');
-                    statusElement.innerHTML = '<span style="color: green;">Connected</span>';
+                    if (statusElement) {
+                        statusElement.innerHTML = '<span style="color: green;">Connected</span>';
+                    }
                     
-                    // Fetch instructors (no mock data fallback)
+                    // If connection is successful, set up the instructor autocomplete
                     setupInstructorAutocomplete();
+                    return true;
                 } else {
                     console.error('Backend connection failed with status:', response.status);
-                    statusElement.innerHTML = '<span style="color: red;">Disconnected</span>';
+                    if (statusElement) {
+                        statusElement.innerHTML = '<span style="color: red;">Disconnected</span>';
+                    }
                     showNotification('Error connecting to server. Some features may be unavailable.', 'error');
+                    return false;
                 }
             })
             .catch(error => {
                 console.error('Error checking backend connection:', error);
-                statusElement.innerHTML = '<span style="color: red;">Disconnected</span>';
+                if (statusElement) {
+                    statusElement.innerHTML = '<span style="color: red;">Disconnected</span>';
+                }
                 showNotification('Cannot connect to server. Please check your connection.', 'error');
+                return false;
             });
     } catch (error) {
         console.error('Error in checkBackendConnection:', error);
+        return false;
     }
 }
 
 /**
- * Sets up the instructor autocomplete with either real or mock data.
- * @param {boolean} useMockData - Whether to use mock data
+ * Sets up the instructor autocomplete with data from the backend.
  */
 function setupInstructorAutocomplete() {
     console.log('Setting up instructor autocomplete...');
@@ -87,7 +99,7 @@ function setupInstructorAutocomplete() {
         return;
     }
     
-    // Use relative URL to avoid CORS issues
+    // Fetch instructors from the backend
     fetch('/courses_bp/professors')
         .then(response => {
             if (!response.ok) {
@@ -97,26 +109,32 @@ function setupInstructorAutocomplete() {
         })
         .then(data => {
             if (data && data.data && Array.isArray(data.data)) {
+                // Extract instructor names from the response
                 const instructors = data.data.map(prof => {
-                    // Handle different data structures
-                    if (prof.name) return prof.name;
-                    if (prof.instructor) return prof.instructor;
+                    // Handle different possible data structures
+                    if (typeof prof === 'object') {
+                        return prof.name || prof.instructor || prof.full_name || '';
+                    }
                     return prof; // If it's already a string
-                });
+                }).filter(name => name && name.trim() !== ''); // Filter out empty names
                 
                 console.log('Fetched instructors:', instructors);
                 
                 // Store the instructors list for later use
                 window.instructors = instructors;
                 
-                // Create custom autocomplete
+                // Set up autocomplete with the fetched instructors
                 setupCustomAutocomplete(instructorInput, instructors);
+            } else {
+                console.error('Invalid instructor data format:', data);
+                showNotification('Error loading instructor data. Invalid format received.', 'error');
             }
         })
         .catch(error => {
             console.error('Error fetching instructors:', error);
             showNotification('Error loading instructors. Please try again later.', 'error');
-            // No fallback to mock data
+            
+            // Set placeholder to indicate error
             instructorInput.placeholder = "Error loading instructors";
         });
 }
@@ -371,184 +389,66 @@ function updateCoursesListWithMockData() {
  * @param {Object} criteria - The search criteria for sections (subject, course_code, attribute, instructor)
  */
 function fetchSections(criteria = {}) {
-    // Show loading state
+    // Get the correct container element
     const coursesListContainer = document.getElementById('courses-list');
-    coursesListContainer.innerHTML = '<p>Loading sections...</p>';
-    
-    // Check if any criteria were provided
-    if (Object.keys(criteria).length === 0) {
-        coursesListContainer.innerHTML = '<p>Please enter at least one search criterion</p>';
+    if (!coursesListContainer) {
+        console.error("Could not find courses-list container");
         return;
     }
-    
+
+    // Display the loading state
+    coursesListContainer.innerHTML = '<p>Loading sections...</p>';
+
+    // Check if any criteria were provided
+    const hasSearchCriteria = Object.values(criteria).some(value => value && value.trim() !== '');
+    if (!hasSearchCriteria) {
+        coursesListContainer.innerHTML = '<p>Please enter at least one search criterion.</p>';
+        return;
+    }
+
     console.log('Searching with criteria:', criteria);
     
-    // Since the backend returns 500 errors, we'll use mockProxy to handle the search
-    // instead of trying to call the backend directly
-    mockProxySectionsSearch(criteria)
+    // Build query string from criteria
+    const queryParams = Object.entries(criteria)
+        .filter(([_, value]) => value && value.trim() !== '')
+        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value.trim())}`)
+        .join('&');
+    
+    const url = `/sections_bp/search?${queryParams}`;
+    
+    console.log('Fetching sections from:', url);
+    
+    // Perform actual fetch from backend
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                // Check if it's a 500 error specifically
+                if (response.status === 500) {
+                    throw new Error('Backend server error (500)');
+                }
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
-            // Display the sections and add a message about mock data
-            displaySections(data.data);
-            
-            // Add a message indicating this is mock data
-            const mockDataMessage = document.createElement('div');
-            mockDataMessage.style.backgroundColor = '#fff3cd';
-            mockDataMessage.style.color = '#856404';
-            mockDataMessage.style.padding = '10px';
-            mockDataMessage.style.borderRadius = '4px';
-            mockDataMessage.style.marginBottom = '15px';
-            mockDataMessage.innerHTML = 'Note: Displaying mock search results while the backend is being updated.';
-            
-            // Insert at the top of the courses list
-            coursesListContainer.insertBefore(mockDataMessage, coursesListContainer.firstChild);
+            console.log('Sections data:', data);
+            displaySections(data);
         })
         .catch(error => {
-            console.error('Error in mock search:', error);
+            console.error('Error fetching sections:', error);
+            
+            // Show an error notification
+            showNotification(`Error fetching sections: ${error.message}`, 'error');
+            
+            // Display error in the container
             coursesListContainer.innerHTML = `
                 <div style="padding: 15px; background-color: #f8d7da; color: #721c24; border-radius: 4px; margin-bottom: 15px;">
-                    <h3>Error searching for sections</h3>
+                    <h3>Error fetching sections</h3>
                     <p>${error.message}</p>
+                    <p>Please check that your backend server is running and properly configured.</p>
                 </div>
             `;
         });
-}
-
-/**
- * Acts as a proxy for section search that returns mock data matching the criteria.
- * This function simulates what the backend /sections_bp/search endpoint should do,
- * but since that endpoint returns 500 errors, we use this client-side solution.
- * 
- * @param {Object} criteria - Search criteria
- * @returns {Promise} - Promise that resolves with section data
- */
-function mockProxySectionsSearch(criteria) {
-    return new Promise((resolve) => {
-        // Simulate a network delay
-        setTimeout(() => {
-            // Create a comprehensive mock data set
-            const allMockSections = [
-                {
-                    subject: "CPSC",
-                    course_code: "325",
-                    section_number: "01",
-                    schedule: "MWF 10:00 AM - 11:15 AM",
-                    instructor: "Ryan Herzog",
-                    location: "Herak 308",
-                    seats_available: 15,
-                    total_seats: 30,
-                    credits: 3
-                },
-                {
-                    subject: "CPSC",
-                    course_code: "321",
-                    section_number: "01",
-                    schedule: "TR 9:30 AM - 10:45 AM",
-                    instructor: "Shawn Bowers",
-                    location: "Herak 311",
-                    seats_available: 8,
-                    total_seats: 25,
-                    credits: 3
-                },
-                {
-                    subject: "CPSC",
-                    course_code: "212",
-                    section_number: "02",
-                    schedule: "TR 2:00 PM - 3:15 PM",
-                    instructor: "Paul De Palma",
-                    location: "Herak 315",
-                    seats_available: 0,
-                    total_seats: 30,
-                    credits: 3
-                },
-                {
-                    subject: "MATH",
-                    course_code: "231",
-                    section_number: "01",
-                    schedule: "MWF 11:00 AM - 11:50 AM",
-                    instructor: "Vesta Coufal",
-                    location: "Herak 231",
-                    seats_available: 12,
-                    total_seats: 25,
-                    credits: 3
-                },
-                {
-                    subject: "MATH",
-                    course_code: "157",
-                    section_number: "03",
-                    schedule: "MWF 2:00 PM - 2:50 PM",
-                    instructor: "Thomas McKenzie",
-                    location: "Herak 233",
-                    seats_available: 5,
-                    total_seats: 30,
-                    credits: 4
-                },
-                {
-                    subject: "STAT",
-                    course_code: "301",
-                    section_number: "01",
-                    schedule: "MWF 1:00 PM - 1:50 PM",
-                    instructor: "Maria Tackett",
-                    location: "Herak 241",
-                    seats_available: 10,
-                    total_seats: 24,
-                    credits: 3
-                },
-                {
-                    subject: "STAT",
-                    course_code: "201",
-                    section_number: "02",
-                    schedule: "TR 3:30 PM - 4:45 PM",
-                    instructor: "Maria Tackett",
-                    location: "Herak 242",
-                    seats_available: 7,
-                    total_seats: 25,
-                    credits: 3
-                },
-                {
-                    subject: "CPSC",
-                    course_code: "353",
-                    section_number: "01",
-                    schedule: "MWF 9:00 AM - 9:50 AM",
-                    instructor: "Ryan Herzog",
-                    location: "Herak 309",
-                    seats_available: 3,
-                    total_seats: 20,
-                    credits: 3
-                }
-            ];
-            
-            // Filter sections based on search criteria
-            const filteredSections = allMockSections.filter(section => {
-                // Match subject
-                if (criteria.subject && section.subject !== criteria.subject.toUpperCase()) {
-                    return false;
-                }
-                
-                // Match course code (partial match)
-                if (criteria.course_code && !section.course_code.includes(criteria.course_code)) {
-                    return false;
-                }
-                
-                // Match instructor (case-insensitive partial match)
-                if (criteria.instructor && !section.instructor.toLowerCase().includes(criteria.instructor.toLowerCase())) {
-                    return false;
-                }
-                
-                // Match attribute if needed (not implemented in mock data)
-                if (criteria.attribute) {
-                    // In a real implementation, this would check attributes
-                    console.log('Attribute filtering not implemented in mock data');
-                }
-                
-                return true;
-            });
-            
-            // Return the filtered sections in the same format as the API would
-            resolve({
-                data: filteredSections
-            });
-        }, 500); // Simulate 500ms network delay
-    });
 }
 
 /**
@@ -556,62 +456,90 @@ function mockProxySectionsSearch(criteria) {
  * @param {Array} sections - The sections data returned from the API
  */
 function displaySections(sections) {
-    const sectionsList = document.getElementById('sections-list');
-    if (!sectionsList) return;
+    const coursesListContainer = document.getElementById('courses-list');
+    if (!coursesListContainer) {
+        console.error("Could not find courses-list container");
+        return;
+    }
 
-    // If no sections found
-    if (!sections || sections.length === 0) {
-        sectionsList.innerHTML = `
-            <div style="color: #0c5460; background-color: #d1ecf1; padding: 10px; border-radius: 4px;">
-                <p style="margin: 0;">No sections found matching your criteria.</p>
+    // Clear the loading message if it exists
+    const loadingMessage = coursesListContainer.querySelector('p');
+    if (loadingMessage && loadingMessage.textContent === 'Loading sections...') {
+        loadingMessage.remove();
+    }
+
+    // Check if sections exists and has items
+    if (!sections || (Array.isArray(sections) && sections.length === 0)) {
+        coursesListContainer.innerHTML += `
+            <div style="padding: 15px; background-color: #d1ecf1; color: #0c5460; border-radius: 4px; margin-top: 15px;">
+                No sections match your search criteria. Try broadening your search.
             </div>
         `;
         return;
     }
 
-    // Build the sections list
-    let html = '';
-    
-    sections.forEach(section => {
-        const schedule = section.schedule ? section.schedule : 'Not specified';
-        const instructor = section.instructor ? section.instructor : 'TBA';
-        const location = section.location ? section.location : 'TBA';
+    // Ensure sections is treated as an array
+    const sectionsArray = Array.isArray(sections) ? sections : 
+                         (sections.data && Array.isArray(sections.data)) ? sections.data : 
+                         [sections];
+
+    // Create a container for the sections
+    const sectionsListHTML = document.createElement('ul');
+    sectionsListHTML.id = 'sections-list';
+    sectionsListHTML.style.listStyle = 'none';
+    sectionsListHTML.style.padding = '0';
+    sectionsListHTML.style.margin = '0';
+
+    // Build the sections HTML
+    sectionsArray.forEach(section => {
+        const schedule = section.schedule || 'Not specified';
+        const instructor = section.instructor || 'TBA';
+        const location = section.location || 'TBA';
         const seatsAvailable = section.seats_available !== undefined ? section.seats_available : '?';
         const totalSeats = section.total_seats !== undefined ? section.total_seats : '?';
         
-        html += `
-            <li style="background-color: white; border-radius: 4px; margin-bottom: 10px; padding: 15px; border: 1px solid #e0e0e0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="font-weight: 600; color: #142A50; font-size: 16px;">
-                        ${section.subject} ${section.course_code} - ${section.section_number}
-                    </span>
-                    <span style="background-color: ${seatsAvailable > 0 ? '#d4edda' : '#f8d7da'}; color: ${seatsAvailable > 0 ? '#155724' : '#721c24'}; padding: 2px 8px; border-radius: 4px; font-size: 13px; font-weight: 500;">
-                        ${seatsAvailable} / ${totalSeats} seats
-                    </span>
+        const li = document.createElement('li');
+        li.style.backgroundColor = 'white';
+        li.style.borderRadius = '4px';
+        li.style.marginBottom = '10px';
+        li.style.padding = '15px';
+        li.style.border = '1px solid #e0e0e0';
+        li.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+        
+        li.innerHTML = `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-weight: 600; color: #142A50; font-size: 16px;">
+                    ${section.subject} ${section.course_code} - ${section.section_number}
+                </span>
+                <span style="background-color: ${seatsAvailable > 0 ? '#d4edda' : '#f8d7da'}; color: ${seatsAvailable > 0 ? '#155724' : '#721c24'}; padding: 2px 8px; border-radius: 4px; font-size: 13px; font-weight: 500;">
+                    ${seatsAvailable} / ${totalSeats} seats
+                </span>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; font-size: 14px; color: #555;">
+                <div style="flex: 1; min-width: 200px;">
+                    <div><span style="color: #777; margin-right: 5px;">Schedule:</span> ${schedule}</div>
+                    <div><span style="color: #777; margin-right: 5px;">Location:</span> ${location}</div>
                 </div>
-                
-                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; font-size: 14px; color: #555;">
-                    <div style="flex: 1; min-width: 200px;">
-                        <div><span style="color: #777; margin-right: 5px;">Schedule:</span> ${schedule}</div>
-                        <div><span style="color: #777; margin-right: 5px;">Location:</span> ${location}</div>
-                    </div>
-                    <div style="flex: 1; min-width: 200px;">
-                        <div><span style="color: #777; margin-right: 5px;">Instructor:</span> ${instructor}</div>
-                        <div><span style="color: #777; margin-right: 5px;">Credits:</span> ${section.credits || '?'}</div>
-                    </div>
+                <div style="flex: 1; min-width: 200px;">
+                    <div><span style="color: #777; margin-right: 5px;">Instructor:</span> ${instructor}</div>
+                    <div><span style="color: #777; margin-right: 5px;">Credits:</span> ${section.credits || '?'}</div>
                 </div>
-                
-                <div style="margin-top: 12px; display: flex; justify-content: flex-end;">
-                    <button onclick="addSectionToSchedule('${section.subject}', '${section.course_code}', '${section.section_number}')" 
-                            style="background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 8px 12px; font-size: 14px; cursor: pointer;">
-                        Add to Schedule
-                    </button>
-                </div>
-            </li>
+            </div>
+            
+            <div style="margin-top: 12px; display: flex; justify-content: flex-end;">
+                <button onclick="addSectionToSchedule('${section.subject}', '${section.course_code}', '${section.section_number}')" 
+                        style="background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 8px 12px; font-size: 14px; cursor: pointer;">
+                    Add to Schedule
+                </button>
+            </div>
         `;
+        
+        sectionsListHTML.appendChild(li);
     });
-    
-    sectionsList.innerHTML = html;
+
+    // Add the sections list to the container
+    coursesListContainer.appendChild(sectionsListHTML);
 }
 
 /**
@@ -1032,6 +960,13 @@ function addCourseToGrid(dayIndex, startHour, endHour, courseTitle, location, in
     courseBlock.title = `${courseTitle}\nLocation: ${location}\nInstructor: ${instructor}`;
     courseBlock.style.cursor = 'pointer';
     
+    // Add double-click event listener for editing
+    courseBlock.addEventListener('dblclick', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        editEventOnSchedule(this);
+    });
+    
     console.log('Successfully added course to grid');
 }
 
@@ -1231,6 +1166,333 @@ function displayMockSections() {
     }
 }
 
+/**
+ * Adds an event to the schedule grid from the form in the Events tab
+ */
+function addEventFromForm() {
+    console.log("addEventFromForm called");
+    
+    try {
+        // Get values from form
+        const eventName = document.querySelector('#event-name')?.value || "";
+        const eventLocation = document.querySelector('#event-location')?.value || "";
+        const startTime = document.querySelector('#event-start-time')?.value || "";
+        const endTime = document.querySelector('#event-end-time')?.value || "";
+        
+        console.log("Form values:", { eventName, eventLocation, startTime, endTime });
+        
+        // Get selected days
+        const selectedDays = [];
+        document.querySelectorAll('.weekday-btn.selected').forEach(btn => {
+            const day = btn.textContent.trim();
+            if (day) selectedDays.push(day);
+        });
+        
+        console.log("Selected days:", selectedDays);
+        
+        // Validate inputs
+        if (!eventName) {
+            showNotification("Please enter an event name", "error");
+            return;
+        }
+        
+        if (!startTime || !endTime) {
+            showNotification("Please specify both start and end time", "error");
+            return;
+        }
+        
+        if (selectedDays.length === 0) {
+            showNotification("Please select at least one day", "error");
+            return;
+        }
+        
+        // Format time for display (24h to 12h conversion)
+        const formatTime = (timeStr) => {
+            const [hours, minutes] = timeStr.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+            return `${hour12}:${minutes} ${ampm}`;
+        };
+        
+        const startFormatted = formatTime(startTime);
+        const endFormatted = formatTime(endTime);
+        
+        console.log("Formatted times:", { startFormatted, endFormatted });
+        
+        // Parse time to grid hours
+        const startHour = parseTimeToHour(startTime);
+        const endHour = parseTimeToHour(endTime);
+        
+        if (startHour >= endHour) {
+            showNotification("End time must be after start time", "error");
+            return;
+        }
+        
+        console.log("Parsed hours:", { startHour, endHour });
+        
+        // Get a random color for the event
+        const color = getRandomCourseColor();
+        
+        // Ensure we're in the registration view
+        const registrationView = document.getElementById('registration-view');
+        if (registrationView && !registrationView.classList.contains('active')) {
+            document.querySelector('.nav-links a[data-view="registration"]').click();
+        }
+        
+        // Add to grid for each selected day
+        selectedDays.forEach(day => {
+            const dayIndex = getDayIndex(day);
+            console.log(`Adding event for day ${day} (index: ${dayIndex})`);
+            
+            if (dayIndex >= 0) {
+                // The instructor parameter is set to "Personal Event" to distinguish it from courses
+                addCourseToGrid(
+                    dayIndex,
+                    startHour,
+                    endHour,
+                    eventName,
+                    eventLocation || "Your Location",
+                    "Personal Event",
+                    color
+                );
+            }
+        });
+        
+        // Show success notification
+        showNotification(`Added "${eventName}" to your schedule`, "success");
+        
+        // Clear form fields
+        document.querySelector('#event-name').value = "";
+        document.querySelector('#event-location').value = "";
+        
+        console.log("Event successfully added to grid");
+    } catch (error) {
+        console.error("Error adding event:", error);
+        showNotification("Failed to add event: " + error.message, "error");
+    }
+}
+
+/**
+ * Shows an edit dialog for an existing event on the schedule.
+ * @param {HTMLElement} eventBlock - The event block element to edit
+ */
+function editEventOnSchedule(eventBlock) {
+    try {
+        console.log('Opening edit dialog for event:', eventBlock);
+        
+        // Extract current event details
+        const eventName = eventBlock.querySelector('.event-name').textContent.trim();
+        const eventLocation = eventBlock.querySelector('.course-location') ? 
+                             eventBlock.querySelector('.course-location').textContent.trim() : '';
+        const instructorOrType = eventBlock.querySelector('.course-instructor') ? 
+                               eventBlock.querySelector('.course-instructor').textContent.trim() : '';
+        
+        // Get the time information from data attributes
+        const startTime = eventBlock.dataset.startTime || '10:00 AM';
+        const endTime = eventBlock.dataset.endTime || '11:00 AM';
+        
+        // Find which day this event is on
+        let eventDay = '';
+        const cell = eventBlock.closest('td');
+        if (cell) {
+            const cellIndex = Array.from(cell.parentNode.children).indexOf(cell);
+            // First column is time, so subtract 1 for day index
+            const dayIndex = cellIndex - 1;
+            const days = ['M', 'T', 'W', 'R', 'F'];
+            if (dayIndex >= 0 && dayIndex < days.length) {
+                eventDay = days[dayIndex];
+            }
+        }
+        
+        // Create modal dialog
+        const modalOverlay = document.createElement('div');
+        modalOverlay.className = 'edit-dialog';
+        modalOverlay.style.position = 'fixed';
+        modalOverlay.style.top = '0';
+        modalOverlay.style.left = '0';
+        modalOverlay.style.width = '100%';
+        modalOverlay.style.height = '100%';
+        modalOverlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        modalOverlay.style.display = 'flex';
+        modalOverlay.style.alignItems = 'center';
+        modalOverlay.style.justifyContent = 'center';
+        modalOverlay.style.zIndex = '1000';
+        
+        // Convert display times (12h format) to input format (24h)
+        const convertTo24Hour = (timeStr) => {
+            const [time, period] = timeStr.split(' ');
+            const [hours, minutes] = time.split(':');
+            let hour = parseInt(hours);
+            
+            if (period === 'PM' && hour < 12) {
+                hour += 12;
+            } else if (period === 'AM' && hour === 12) {
+                hour = 0;
+            }
+            
+            return `${hour.toString().padStart(2, '0')}:${minutes}`;
+        };
+        
+        // Try to convert times to 24h format for the inputs
+        let startTime24 = '';
+        let endTime24 = '';
+        try {
+            startTime24 = convertTo24Hour(startTime);
+            endTime24 = convertTo24Hour(endTime);
+        } catch (e) {
+            console.error('Error converting times:', e);
+            // Default values if conversion fails
+            startTime24 = '10:00';
+            endTime24 = '11:00';
+        }
+        
+        // Create edit form content
+        modalOverlay.innerHTML = `
+            <div class="edit-form" style="background: white; padding: 20px; border-radius: 8px; width: 350px; max-width: 90%;">
+                <h3 style="margin-top: 0; color: #142A50;">Edit Event</h3>
+                
+                <div style="margin-bottom: 15px;">
+                    <label for="edit-event-name" style="display: block; margin-bottom: 5px; font-weight: 500;">Event Name</label>
+                    <input id="edit-event-name" type="text" value="${eventName}" style="width: 100%; padding: 8px; border: 1px solid #e0e4e8; border-radius: 4px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label for="edit-event-location" style="display: block; margin-bottom: 5px; font-weight: 500;">Location</label>
+                    <input id="edit-event-location" type="text" value="${eventLocation}" style="width: 100%; padding: 8px; border: 1px solid #e0e4e8; border-radius: 4px;">
+                </div>
+                
+                <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label for="edit-start-time" style="display: block; margin-bottom: 5px; font-weight: 500;">Start Time</label>
+                        <input id="edit-start-time" type="time" value="${startTime24}" style="width: 100%; padding: 8px; border: 1px solid #e0e4e8; border-radius: 4px;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="edit-end-time" style="display: block; margin-bottom: 5px; font-weight: 500;">End Time</label>
+                        <input id="edit-end-time" type="time" value="${endTime24}" style="width: 100%; padding: 8px; border: 1px solid #e0e4e8; border-radius: 4px;">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Day</label>
+                    <div class="weekday-buttons" style="display: flex; gap: 8px;">
+                        <button class="weekday-btn ${eventDay === 'M' ? 'selected' : ''}" data-day="M" style="flex: 1; padding: 8px; border: 1px solid #e0e4e8; background: ${eventDay === 'M' ? '#4A90E2' : 'white'}; color: ${eventDay === 'M' ? 'white' : '#333'}; border-radius: 4px; cursor: pointer;">M</button>
+                        <button class="weekday-btn ${eventDay === 'T' ? 'selected' : ''}" data-day="T" style="flex: 1; padding: 8px; border: 1px solid #e0e4e8; background: ${eventDay === 'T' ? '#4A90E2' : 'white'}; color: ${eventDay === 'T' ? 'white' : '#333'}; border-radius: 4px; cursor: pointer;">T</button>
+                        <button class="weekday-btn ${eventDay === 'W' ? 'selected' : ''}" data-day="W" style="flex: 1; padding: 8px; border: 1px solid #e0e4e8; background: ${eventDay === 'W' ? '#4A90E2' : 'white'}; color: ${eventDay === 'W' ? 'white' : '#333'}; border-radius: 4px; cursor: pointer;">W</button>
+                        <button class="weekday-btn ${eventDay === 'R' ? 'selected' : ''}" data-day="R" style="flex: 1; padding: 8px; border: 1px solid #e0e4e8; background: ${eventDay === 'R' ? '#4A90E2' : 'white'}; color: ${eventDay === 'R' ? 'white' : '#333'}; border-radius: 4px; cursor: pointer;">R</button>
+                        <button class="weekday-btn ${eventDay === 'F' ? 'selected' : ''}" data-day="F" style="flex: 1; padding: 8px; border: 1px solid #e0e4e8; background: ${eventDay === 'F' ? '#4A90E2' : 'white'}; color: ${eventDay === 'F' ? 'white' : '#333'}; border-radius: 4px; cursor: pointer;">F</button>
+                    </div>
+                </div>
+                
+                <div class="edit-buttons" style="display: flex; gap: 10px;">
+                    <button id="cancel-edit" style="flex: 1; padding: 10px; border: none; background: #e0e4e8; color: #495057; border-radius: 4px; cursor: pointer;">Cancel</button>
+                    <button id="save-edit" style="flex: 1; padding: 10px; border: none; background: #4A90E2; color: white; border-radius: 4px; cursor: pointer;">Save Changes</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modalOverlay);
+        
+        // Add event listeners to the day buttons in the edit modal
+        modalOverlay.querySelectorAll('.weekday-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove selected class from all buttons
+                modalOverlay.querySelectorAll('.weekday-btn').forEach(b => {
+                    b.classList.remove('selected');
+                    b.style.backgroundColor = 'white';
+                    b.style.color = '#333';
+                });
+                
+                // Add selected class to clicked button
+                this.classList.add('selected');
+                this.style.backgroundColor = '#4A90E2';
+                this.style.color = 'white';
+            });
+        });
+        
+        // Handle cancel button
+        const cancelButton = modalOverlay.querySelector('#cancel-edit');
+        cancelButton.addEventListener('click', function() {
+            modalOverlay.remove();
+        });
+        
+        // Handle save button
+        const saveButton = modalOverlay.querySelector('#save-edit');
+        saveButton.addEventListener('click', function() {
+            // Get updated values
+            const updatedName = modalOverlay.querySelector('#edit-event-name').value;
+            const updatedLocation = modalOverlay.querySelector('#edit-event-location').value;
+            const updatedStartTime = modalOverlay.querySelector('#edit-start-time').value;
+            const updatedEndTime = modalOverlay.querySelector('#edit-end-time').value;
+            
+            // Format times for display (24h to 12h)
+            const formatTimeFrom24h = (timeStr) => {
+                const [hours, minutes] = timeStr.split(':');
+                const hour = parseInt(hours);
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                const hour12 = hour % 12 || 12;
+                return `${hour12}:${minutes} ${ampm}`;
+            };
+            
+            const formattedStartTime = formatTimeFrom24h(updatedStartTime);
+            const formattedEndTime = formatTimeFrom24h(updatedEndTime);
+            
+            // Get selected day
+            const selectedDayButton = modalOverlay.querySelector('.weekday-btn.selected');
+            const newDay = selectedDayButton ? selectedDayButton.getAttribute('data-day') : eventDay;
+            
+            // Get the new day index
+            const newDayIndex = getDayIndex(newDay);
+            
+            // Calculate grid hours
+            const newStartHour = parseTimeToHour(formattedStartTime);
+            const newEndHour = parseTimeToHour(formattedEndTime);
+            
+            // Validate inputs
+            if (!updatedName.trim()) {
+                showNotification("Event name cannot be empty", "error");
+                return;
+            }
+            
+            if (newStartHour >= newEndHour) {
+                showNotification("End time must be after start time", "error");
+                return;
+            }
+            
+            // Remove the old event from the grid
+            eventBlock.remove();
+            
+            // Add the new event with updated information
+            const color = eventBlock.style.backgroundColor || getRandomCourseColor();
+            
+            addCourseToGrid(
+                newDayIndex,
+                newStartHour,
+                newEndHour,
+                updatedName,
+                updatedLocation,
+                instructorOrType,
+                color
+            );
+            
+            // Close the modal
+            modalOverlay.remove();
+            
+            // Show success notification
+            showNotification("Event updated successfully", "success");
+            
+            // Adjust the grid if the day changed
+            if (newDay !== eventDay) {
+                resetScheduleGrid();
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error editing event:', error);
+        showNotification("Error editing event: " + error.message, "error");
+    }
+}
+
 // Make showNotification function globally available
 window.showNotification = showNotification;
 
@@ -1248,7 +1510,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBtn = document.querySelector('#Courses .search-btn');
     if (searchBtn) {
         searchBtn.addEventListener('click', fetchData);
+        console.log('Search button event listener added');
+    } else {
+        console.warn('Search button not found in the DOM');
     }
+    
+    // Add event listener for the "Add Event" button in the Events tab
+    const addEventButton = document.querySelector('#RecurringEvents .search-btn');
+    console.log('Found add event button:', addEventButton);
+    
+    if (addEventButton) {
+        addEventButton.addEventListener('click', addEventFromForm);
+        console.log('Added event listener to "Add Event" button');
+    } else {
+        console.error('Could not find the "Add Event" button');
+    }
+    
+    // Set up event listeners for day selection buttons
+    document.querySelectorAll('#RecurringEvents .weekday-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            this.classList.toggle('selected');
+        });
+    });
     
     // Add event listeners for enter key on input fields
     const inputFields = document.querySelectorAll('#Courses input[type="text"]');
@@ -1259,4 +1542,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
+    console.log('Course module initialization complete');
 });
+
+// Make addEventFromForm globally available
+window.addEventFromForm = addEventFromForm;
+
+// Make editEventOnSchedule globally available
+window.editEventOnSchedule = editEventOnSchedule;
