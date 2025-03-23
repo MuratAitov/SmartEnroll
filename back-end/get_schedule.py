@@ -1,6 +1,6 @@
 from supabase import create_client, Client
 from credentials import SUPABASE_URL, SUPABASE_KEY
-from combo import get_merged_requirements_for_student  # Ваша функция, возвращающая структуру требований
+from combo import get_merged_requirements_for_student 
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
