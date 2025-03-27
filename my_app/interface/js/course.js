@@ -58,44 +58,46 @@ function checkBackendConnection() {
         connectionIndicator.style.color = '#666';
     }
     
-    // Try to connect to the backend API - use direct root endpoint
-    fetch('/')
+    // Try to connect to the backend API - use correct endpoint
+    fetch('/sections_bp')
         .then(response => {
             if (response.ok) {
-                console.log('Backend connection successful via root endpoint');
-                
-                // Update the connection status indicator
-                if (connectionIndicator) {
-                    connectionIndicator.textContent = 'Connected';
-                    connectionIndicator.style.backgroundColor = '#d4edda';
-                    connectionIndicator.style.color = '#155724';
-                }
-                
-                // Setup autocomplete for instructors
-                setupInstructorAutocomplete();
-                return;
+                return response.json();
             }
-            throw new Error(`Root endpoint responded with status: ${response.status}`);
+            throw new Error(`Server responded with status: ${response.status}`);
+        })
+        .then(data => {
+            console.log('Backend connection successful:', data);
+            
+            // Update the connection status indicator
+            if (connectionIndicator) {
+                connectionIndicator.textContent = 'Connected';
+                connectionIndicator.style.backgroundColor = '#d4edda';
+                connectionIndicator.style.color = '#155724';
+            }
+            
+            // Setup autocomplete for instructors
+            setupInstructorAutocomplete();
         })
         .catch(error => {
             console.error('Backend connection failed:', error);
             
             // Log detailed error for debugging
-            console.warn('Will retry connecting to the courses_bp endpoint...');
+            console.warn('Will retry connecting to the real backend...');
             
-            // Make another attempt with the courses_bp endpoint
-            fetch('/courses_bp')
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Connected to courses_bp endpoint successfully');
+            // Make another attempt with a different endpoint
+            fetch('/')
+    .then(response => {
+        if (response.ok) {
                         if (connectionIndicator) {
                             connectionIndicator.textContent = 'Connected';
                             connectionIndicator.style.backgroundColor = '#d4edda';
                             connectionIndicator.style.color = '#155724';
                         }
+                        console.log('Connected to backend root endpoint successfully');
                         setupInstructorAutocomplete();
-                    } else {
-                        throw new Error('Failed to connect to courses_bp endpoint');
+        } else {
+                        throw new Error('Failed to connect to backend root endpoint');
                     }
                 })
                 .catch(finalError => {
@@ -111,7 +113,7 @@ function checkBackendConnection() {
                     // Display error message
                     displayConnectionError();
                 });
-        });
+    });
 }
 
 /**
@@ -394,32 +396,31 @@ function updateCoursesListWithMockData() {
 function fetchSections(criteria = {}) {
     console.log('Fetching sections with criteria:', criteria);
     
-    // Clear any previous notifications about mock data
-    const notificationContainer = document.getElementById('notification-container');
-    if (notificationContainer) {
-        notificationContainer.innerHTML = '';
-    }
-    
-    // Try to fetch from the real backend
+    // Always try to fetch from the real backend first
     fetchSectionsReal(criteria)
-        .then(data => {
-            console.log('Sections data received from backend:', data);
-            displaySections(data.data || []);
-        })
         .catch(error => {
             console.error('Error fetching sections from backend:', error);
+            console.warn('Retry with a different endpoint...');
             
-            // Show error notification
-            showNotification('Error connecting to server: ' + error.message, 'error');
-            
-            // Fall back to mock data as a last resort
-            const mockData = { data: createMockSectionsBasedOnCriteria(criteria) };
-            console.log('Falling back to mock section data:', mockData);
-            displaySections(mockData.data || []);
-            
-            // Notify user about using mock data
-            showNotification('Using sample course data as fallback', 'info');
-        });
+            // Try a different endpoint format as a fallback
+            return fetch('/sections_bp/search' + constructQueryString(criteria))
+    .then(response => {
+        if (!response.ok) {
+                        throw new Error(`Server responded with status: ${response.status}`);
+        }
+        return response.json();
+                })
+                .catch(finalError => {
+                    console.error('Final attempt failed:', finalError);
+                    showNotification('Error connecting to server. Using cached data.', 'error');
+                    // Only use mock data as a last resort
+                    return { data: createMockSectionsBasedOnCriteria(criteria) };
+                });
+    })
+    .then(data => {
+            console.log('Sections data received:', data);
+        displaySections(data.data || []);
+    });
 }
 
 /**
@@ -432,41 +433,14 @@ function fetchSectionsReal(criteria = {}) {
     const queryString = constructQueryString(criteria);
     console.log('Fetching real sections with query:', queryString);
     
-    // Try all possible backend endpoints based on your app.py configuration
-    const possibleEndpoints = [
-        '/courses_bp/sections' + queryString,
-        '/course_bp/sections' + queryString,
-        '/api/sections' + queryString
-    ];
-    
-    // Helper function to attempt fetch with multiple endpoints
-    function tryFetchWithEndpoints(endpoints, index = 0) {
-        if (index >= endpoints.length) {
-            // All endpoints failed, throw error
-            return Promise.reject(new Error('All backend endpoints failed'));
-        }
-        
-        const endpoint = endpoints[index];
-        console.log(`Attempting to fetch from endpoint: ${endpoint}`);
-        
-        return fetch(endpoint)
-            .then(response => {
-                if (!response.ok) {
-                    console.warn(`Endpoint ${endpoint} responded with status: ${response.status}`);
-                    // Try next endpoint
-                    return tryFetchWithEndpoints(endpoints, index + 1);
-                }
-                return response.json();
-            })
-            .catch(error => {
-                console.warn(`Error fetching from ${endpoint}:`, error);
-                // Try next endpoint
-                return tryFetchWithEndpoints(endpoints, index + 1);
-            });
-    }
-    
-    // Start trying endpoints
-    return tryFetchWithEndpoints(possibleEndpoints);
+    // Make the actual API call with the correct endpoint
+    return fetch('/sections_bp/search' + queryString)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
+            return response.json();
+        });
 }
 
 /**
