@@ -61,53 +61,82 @@ function ensureSidebarVisible() {
     });
 }
 
-// Switch between sidebar tabs
+/**
+ * Opens a tab and makes it active.
+ * @param {string} tabName - The ID of the tab to open
+ * @param {Event} event - The click event
+ */
 function openTab(tabName, event) {
-    console.log('Opening tab:', tabName);
+    console.log('Opening tab:', tabName); // Debug output
     
-    // Ensure sidebar is visible
-    ensureSidebarVisible();
-    
-    // Update debug display if it exists
-    if (typeof updateDebug === 'function') {
-        updateDebug('openTab', `'${tabName}'`);
+    // Hide all tab content
+    const tabContents = document.getElementsByClassName('tab-content');
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].style.display = 'none';
     }
     
-    // Hide all tab contents
-    var tabContents = document.getElementsByClassName("tab-content");
-    for (var i = 0; i < tabContents.length; i++) {
-        tabContents[i].style.display = "none";
-        tabContents[i].classList.remove("active");
+    // Remove 'active' class from all tab buttons
+    const tabLinks = document.getElementsByClassName('tab-button');
+    for (let i = 0; i < tabLinks.length; i++) {
+        tabLinks[i].className = tabLinks[i].className.replace(' active', '');
     }
     
-    // Remove active class from all tab buttons
-    var tabButtons = document.getElementsByClassName("tab-button");
-    for (var i = 0; i < tabButtons.length; i++) {
-        tabButtons[i].classList.remove("active");
-        tabButtons[i].style.color = "#333";
+    // Remove 'active' class from all nav links
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Add 'active' class to the clicked link
+    if (event && event.currentTarget) {
+        event.currentTarget.className += ' active';
     }
     
-    // Show the selected tab content
-    var selectedTab = document.getElementById(tabName);
-    if (selectedTab) {
-        selectedTab.style.display = "block";
-        selectedTab.classList.add("active");
+    // Special handling for different tabs
+    if (tabName === 'Schedule') {
+        // Make sure the registration view is shown when Schedule tab is opened
+        document.getElementById('registration-view').style.display = 'block';
+        ensureSidebarVisible();
+    } else if (tabName === 'Courses') {
+        // Clear previous search results when opening Courses tab
+        const coursesList = document.getElementById('courses-list');
+        if (coursesList) {
+            coursesList.innerHTML = '';
+        }
+        ensureSidebarVisible();
+    } else if (tabName === 'RecurringEvents') {
+        // Show the recurring events tab
+        ensureSidebarVisible();
+    } else if (tabName === 'Finals') {
+        // Finals tab should display without the sidebar
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) {
+            sidebar.style.display = 'none';
+        }
         
-        // Make sure form elements inside the tab are visible
-        const formElements = selectedTab.querySelectorAll('input, button, .button-group, .day-selector');
-        formElements.forEach(el => {
-            el.style.display = el.tagName === 'INPUT' || el.tagName === 'BUTTON' ? 'block' : 'flex';
-            if (el.tagName === 'INPUT') {
-                el.style.width = '100%';
-            }
+        // Make the main content area full width
+        const mainContent = document.querySelector('main');
+        if (mainContent) {
+            mainContent.style.gridTemplateColumns = '1fr';
+        }
+        
+        // Hide other views
+        document.querySelectorAll('.view-container').forEach(view => {
+            view.style.display = 'none';
         });
     }
     
-    // Add active class to the clicked button
-    if (event && event.currentTarget) {
-        event.currentTarget.classList.add("active");
-        event.currentTarget.style.color = "#142A50";
+    // Show the selected tab content
+    const currentTab = document.getElementById(tabName);
+    if (currentTab) {
+        currentTab.style.display = 'block';
+        console.log('Tab display set to block:', tabName); // Debug output
+    } else {
+        console.warn('Tab not found:', tabName); // Debug output
     }
+    
+    // Save the active tab to localStorage
+    localStorage.setItem('activeTab', tabName);
 }
 
 // Toggle filter buttons active state

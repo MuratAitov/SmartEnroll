@@ -12,11 +12,11 @@ def search():
     Example of usage (query params):
     GET /sections/search?subject=CPSC&course_code=101&attribute=Core&instructor=Smith
     """
-    subject = request.args.get('subject')     
+    subject = request.args.get('subject')
     course_code = request.args.get('course_code')
     attribute = request.args.get('attribute')
     instructor = request.args.get('instructor')
-    
+
     # Fixed term value "Fall 2025", or use:
     # term = request.args.get('term', 'Fall 2025')
     term = "Fall 2025"

@@ -108,7 +108,7 @@
         <nav class="nav-links">
             <a href="#" data-view="registration" class="active">Registration</a>
             <a href="#" data-view="map">Map</a>
-            <a href="#" data-view="finals">Finals</a>
+            <a href="#" data-view="finals" onclick="openTab('Finals', event)">Finals</a>
             <a href="#" data-view="rmp">Rate My Professor</a>
             <a href="#" data-view="reflection">Reflection</a>
         </nav>
@@ -413,6 +413,123 @@
                 <h2>Reflection Tool</h2>
                 <div style="max-width: 900px; margin: 0 auto; background-color: #f5f5f5; padding: 20px; border-radius: 8px;">
                     <p>Reflection tools and content will be displayed here.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Finals tab content -->
+        <div id="Finals" class="tab-content">
+            <div class="finals-container">
+                <h2>Fall 2024 Finals Schedule</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Time</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Monday</td>
+                            <td>8:00 AM - 10:00 AM</td>
+                            <td>December 9, 2024</td>
+                        </tr>
+                        <tr>
+                            <td>Monday</td>
+                            <td>10:30 AM - 12:30 PM</td>
+                            <td>December 9, 2024</td>
+                        </tr>
+                        <tr>
+                            <td>Monday</td>
+                            <td>1:00 PM - 3:00 PM</td>
+                            <td>December 9, 2024</td>
+                        </tr>
+                        <tr>
+                            <td>Monday</td>
+                            <td>3:30 PM - 5:30 PM</td>
+                            <td>December 9, 2024</td>
+                        </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td>8:00 AM - 10:00 AM</td>
+                            <td>December 10, 2024</td>
+                        </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td>10:30 AM - 12:30 PM</td>
+                            <td>December 10, 2024</td>
+                        </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td>1:00 PM - 3:00 PM</td>
+                            <td>December 10, 2024</td>
+                        </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td>3:30 PM - 5:30 PM</td>
+                            <td>December 10, 2024</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h2>Spring 2025 Finals Schedule</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Time</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Monday</td>
+                            <td>8:00 AM - 10:00 AM</td>
+                            <td>May 5, 2025</td>
+                        </tr>
+                        <tr>
+                            <td>Monday</td>
+                            <td>10:30 AM - 12:30 PM</td>
+                            <td>May 5, 2025</td>
+                        </tr>
+                        <tr>
+                            <td>Monday</td>
+                            <td>1:00 PM - 3:00 PM</td>
+                            <td>May 5, 2025</td>
+                        </tr>
+                        <tr>
+                            <td>Monday</td>
+                            <td>3:30 PM - 5:30 PM</td>
+                            <td>May 5, 2025</td>
+                        </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td>8:00 AM - 10:00 AM</td>
+                            <td>May 6, 2025</td>
+                        </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td>10:30 AM - 12:30 PM</td>
+                            <td>May 6, 2025</td>
+                        </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td>1:00 PM - 3:00 PM</td>
+                            <td>May 6, 2025</td>
+                        </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td>3:30 PM - 5:30 PM</td>
+                            <td>May 6, 2025</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="finals-info-box">
+                    <h3>Final Examination Information</h3>
+                    <p>Final examinations are held at the end of each semester as indicated in the University calendar. Students are responsible for consulting the final examination schedule before making travel arrangements.</p>
+                    <p>Final examinations or their equivalent can be administered only during the final examination period. Students are not expected to take more than two final examinations in one calendar day.</p>
                 </div>
             </div>
         </div>
@@ -734,5 +851,96 @@
         }
     }
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ENSURE FINALS TAB IS HIDDEN INITIALLY
+        const finalsTab = document.getElementById('Finals');
+        if (finalsTab) {
+            finalsTab.style.display = 'none';
+        }
+        
+        // Handle navigation between views
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                // Remove active class from all links
+                navLinks.forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Get the view to show from data attribute
+                const viewToShow = this.getAttribute('data-view');
+                
+                // Hide the Finals tab content first (regardless of what was clicked)
+                const finalsTab = document.getElementById('Finals');
+                if (finalsTab) {
+                    finalsTab.style.display = 'none';
+                }
+                
+                // Show the sidebar for non-Finals tabs
+                const sidebar = document.querySelector('.sidebar');
+                if (sidebar) {
+                    if (viewToShow === 'finals') {
+                        sidebar.style.display = 'none';
+                    } else {
+                        sidebar.style.display = 'block';
+                    }
+                }
+                
+                // Reset main grid template
+                const mainContent = document.querySelector('main');
+                if (mainContent) {
+                    if (viewToShow === 'finals') {
+                        mainContent.style.gridTemplateColumns = '1fr';
+                    } else {
+                        mainContent.style.gridTemplateColumns = '';
+                    }
+                }
+                
+                // Hide all view containers first
+                document.querySelectorAll('.view-container').forEach(container => {
+                    container.style.display = 'none';
+                });
+                
+                // Show the selected view container based on data-view
+                if (viewToShow === 'finals') {
+                    // For Finals tab, show the Finals tab content
+                    if (finalsTab) {
+                        finalsTab.style.display = 'block';
+                    }
+                } else if (viewToShow === 'registration') {
+                    // Show registration view
+                    const registrationView = document.getElementById('registration-view');
+                    if (registrationView) {
+                        registrationView.style.display = 'flex';
+                    }
+                } else {
+                    // For other views (map, rmp, reflection)
+                    const viewContainer = document.getElementById(viewToShow + '-view');
+                    if (viewContainer) {
+                        viewContainer.style.display = 'flex';
+                    }
+                }
+            });
+        });
+        
+        // Ensure the registration view is active by default
+        const registrationLink = document.querySelector('.nav-links a[data-view="registration"]');
+        if (registrationLink) {
+            registrationLink.classList.add('active');
+            
+            const registrationView = document.getElementById('registration-view');
+            if (registrationView) {
+                registrationView.style.display = 'flex';
+            }
+        }
+    });
+    </script>
 </body>
-</html> 
+</html>

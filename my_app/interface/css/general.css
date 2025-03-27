@@ -606,4 +606,106 @@ table.schedule-grid tbody tr td:first-child,
 .logo-img {
     height: 25px;
     width: auto;
+}
+
+/* Finals Schedule Styles */
+.finals-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.finals-container h2 {
+    color: #142A50;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.finals-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.finals-container th {
+    background-color: #142A50;
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 500;
+}
+
+.finals-container td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+.finals-container tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.finals-container tr:hover {
+    background-color: #f2f7ff;
+}
+
+.finals-info-box {
+    background-color: #f2f7ff;
+    border-left: 4px solid #142A50;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 0 4px 4px 0;
+}
+
+.finals-info-box h3 {
+    margin-top: 0;
+    color: #142A50;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.finals-info-box p {
+    margin: 10px 0;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* Dark mode styles for Finals */
+body.dark-mode .finals-container h2 {
+    color: #a4c7fa;
+}
+
+body.dark-mode .finals-container th {
+    background-color: #1e3a66;
+    color: #e9ecef;
+}
+
+body.dark-mode .finals-container td {
+    border-color: #2c3440;
+}
+
+body.dark-mode .finals-container tr:nth-child(even) {
+    background-color: #232b38;
+}
+
+body.dark-mode .finals-container tr:nth-child(odd) {
+    background-color: #1a2232;
+}
+
+body.dark-mode .finals-container tr:hover {
+    background-color: #273344;
+}
+
+body.dark-mode .finals-info-box {
+    background-color: #1a2232;
+    border-left-color: #3670d6;
+}
+
+body.dark-mode .finals-info-box h3 {
+    color: #a4c7fa;
+}
+
+body.dark-mode .finals-info-box p {
+    color: #cfd6e1;
 } 

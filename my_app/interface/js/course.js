@@ -13,6 +13,7 @@ function fetchData() {
     
     if (subjectInput && subjectInput.value.trim()) {
         criteria.subject = subjectInput.value.trim().toUpperCase();
+        // <-- toUpperCase(), потому что в БД subject = 'MATH'
     }
     
     if (courseCodeInput && courseCodeInput.value.trim()) {
@@ -33,110 +34,111 @@ function fetchData() {
         coursesList.innerHTML = '';
     }
     
-    // If we have criteria, fetch sections, otherwise show courses
+    // If we have criteria, fetch sections from real server, otherwise show courses
     if (Object.keys(criteria).length > 0) {
         fetchSections(criteria);
     } else {
         // Show mock course data if no search criteria
-        fetchCourses();
+    fetchCourses();
     }
 }
 
 /**
- * Checks if the backend is connected and updates the connection indicator.
+ * Checks if the backend is available and connects to it
+ * @returns {Promise<boolean>} True if connection successful, false otherwise
  */
 function checkBackendConnection() {
-    try {
-        const statusElement = document.getElementById('connection-status');
-        if (!statusElement) {
-            console.warn('Connection status element not found in the DOM');
-        }
-        
-        // Try to make a simple request to the backend to test connection
-        fetch('/sections_bp/search?limit=1')
-            .then(response => {
-                if (response.ok) {
-                    console.log('Backend connection successful');
-                    if (statusElement) {
-                        statusElement.innerHTML = '<span style="color: green;">Connected</span>';
+    console.log('Checking backend connection...');
+    
+    // Reset connection indicator to "Checking..."
+    const connectionIndicator = document.getElementById('connection-indicator');
+    if (connectionIndicator) {
+        connectionIndicator.textContent = 'Checking...';
+        connectionIndicator.style.backgroundColor = '#f0f0f0';
+        connectionIndicator.style.color = '#666';
+    }
+    
+    // Try to connect to the backend API - use direct root endpoint
+    fetch('/')
+        .then(response => {
+            if (response.ok) {
+                console.log('Backend connection successful via root endpoint');
+                
+                // Update the connection status indicator
+                if (connectionIndicator) {
+                    connectionIndicator.textContent = 'Connected';
+                    connectionIndicator.style.backgroundColor = '#d4edda';
+                    connectionIndicator.style.color = '#155724';
+                }
+                
+                // Setup autocomplete for instructors
+                setupInstructorAutocomplete();
+                return;
+            }
+            throw new Error(`Root endpoint responded with status: ${response.status}`);
+        })
+        .catch(error => {
+            console.error('Backend connection failed:', error);
+            
+            // Log detailed error for debugging
+            console.warn('Will retry connecting to the courses_bp endpoint...');
+            
+            // Make another attempt with the courses_bp endpoint
+            fetch('/courses_bp')
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Connected to courses_bp endpoint successfully');
+                        if (connectionIndicator) {
+                            connectionIndicator.textContent = 'Connected';
+                            connectionIndicator.style.backgroundColor = '#d4edda';
+                            connectionIndicator.style.color = '#155724';
+                        }
+                        setupInstructorAutocomplete();
+                    } else {
+                        throw new Error('Failed to connect to courses_bp endpoint');
+                    }
+                })
+                .catch(finalError => {
+                    console.error('Final backend connection attempt failed:', finalError);
+                    
+                    // Update the connection status indicator
+                    if (connectionIndicator) {
+                        connectionIndicator.textContent = 'Disconnected';
+                        connectionIndicator.style.backgroundColor = '#f8d7da';
+                        connectionIndicator.style.color = '#721c24';
                     }
                     
-                    // If connection is successful, set up the instructor autocomplete
-                    setupInstructorAutocomplete();
-                    return true;
-                } else {
-                    console.error('Backend connection failed with status:', response.status);
-                    if (statusElement) {
-                        statusElement.innerHTML = '<span style="color: red;">Disconnected</span>';
-                    }
-                    showNotification('Error connecting to server. Some features may be unavailable.', 'error');
-                    return false;
-                }
-            })
-            .catch(error => {
-                console.error('Error checking backend connection:', error);
-                if (statusElement) {
-                    statusElement.innerHTML = '<span style="color: red;">Disconnected</span>';
-                }
-                showNotification('Cannot connect to server. Please check your connection.', 'error');
-                return false;
-            });
-    } catch (error) {
-        console.error('Error in checkBackendConnection:', error);
-        return false;
-    }
+                    // Display error message
+                    displayConnectionError();
+                });
+        });
 }
 
 /**
- * Sets up the instructor autocomplete with data from the backend.
+ * Sets up the autocomplete functionality for the instructor input field
  */
 function setupInstructorAutocomplete() {
-    console.log('Setting up instructor autocomplete...');
+    console.log('Setting up instructor autocomplete');
     const instructorInput = document.getElementById('instructor-input');
-    
     if (!instructorInput) {
-        console.error('Instructor input field not found');
+        console.warn('Instructor input not found');
         return;
     }
     
-    // Fetch instructors from the backend
-    fetch('/courses_bp/professors')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data && data.data && Array.isArray(data.data)) {
-                // Extract instructor names from the response
-                const instructors = data.data.map(prof => {
-                    // Handle different possible data structures
-                    if (typeof prof === 'object') {
-                        return prof.name || prof.instructor || prof.full_name || '';
-                    }
-                    return prof; // If it's already a string
-                }).filter(name => name && name.trim() !== ''); // Filter out empty names
-                
-                console.log('Fetched instructors:', instructors);
-                
-                // Store the instructors list for later use
-                window.instructors = instructors;
-                
-                // Set up autocomplete with the fetched instructors
-                setupCustomAutocomplete(instructorInput, instructors);
-            } else {
-                console.error('Invalid instructor data format:', data);
-                showNotification('Error loading instructor data. Invalid format received.', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching instructors:', error);
-            showNotification('Error loading instructors. Please try again later.', 'error');
-            
-            // Set placeholder to indicate error
-            instructorInput.placeholder = "Error loading instructors";
-        });
+    // Use a mock data approach instead of relying on a backend endpoint
+    const mockInstructors = [
+        "Dr. Smith", "Dr. Johnson", "Prof. Williams", "Prof. Brown", 
+        "Dr. Jones", "Dr. Garcia", "Prof. Miller", "Prof. Davis",
+        "Dr. Rodriguez", "Dr. Martinez", "Prof. Hernandez", "Prof. Lopez"
+    ];
+    
+    console.log('Using mock instructors data:', mockInstructors);
+    
+    // Store the instructors list for later use
+    window.instructors = mockInstructors;
+    
+    // Set up autocomplete with the mock instructors
+    setupCustomAutocomplete(instructorInput, mockInstructors);
 }
 
 /**
@@ -148,63 +150,63 @@ function setupCustomAutocomplete(inputElement, items) {
     // Create autocomplete container
     const container = document.createElement('div');
     container.className = 'autocomplete-container';
-    
+
     // Insert container after input
     inputElement.parentNode.insertBefore(container, inputElement.nextSibling);
-    
+
     // Move input inside container
     container.appendChild(inputElement);
-    
+
     // Create dropdown list
     const dropdownList = document.createElement('div');
     dropdownList.className = 'autocomplete-list';
     container.appendChild(dropdownList);
-    
+
     // Event handlers
     inputElement.addEventListener('input', function() {
         const value = this.value.toLowerCase();
-        
+
         // Hide dropdown if input is empty
         if (!value) {
             dropdownList.style.display = 'none';
             return;
         }
-        
+
         // Filter items based on input
-        const filteredItems = items.filter(item => 
+        const filteredItems = items.filter(item =>
             item.toLowerCase().includes(value)
         ).slice(0, 10); // Limit to 10 suggestions
-        
+
         // Populate dropdown
         if (filteredItems.length > 0) {
             dropdownList.innerHTML = '';
-            
+
             filteredItems.forEach(item => {
                 const element = document.createElement('div');
                 element.className = 'autocomplete-item';
                 element.innerHTML = highlightMatches(item, value);
-                
+
                 element.addEventListener('click', function() {
                     inputElement.value = item;
                     dropdownList.style.display = 'none';
                 });
-                
+
                 dropdownList.appendChild(element);
             });
-            
+
             dropdownList.style.display = 'block';
         } else {
             dropdownList.style.display = 'none';
         }
     });
-    
+
     // Hide dropdown when clicking outside
     document.addEventListener('click', function(e) {
         if (!container.contains(e.target)) {
             dropdownList.style.display = 'none';
         }
     });
-    
+
     // Show dropdown when focusing on input
     inputElement.addEventListener('focus', function() {
         const value = this.value.toLowerCase();
@@ -213,14 +215,14 @@ function setupCustomAutocomplete(inputElement, items) {
             this.dispatchEvent(new Event('input'));
         }
     });
-    
+
     // Add keyboard navigation
     inputElement.addEventListener('keydown', function(e) {
         const items = dropdownList.querySelectorAll('.autocomplete-item');
         if (!items.length) return;
-        
+
         const currentSelected = dropdownList.querySelector('.selected');
-        
+
         if (e.key === 'ArrowDown') {
             e.preventDefault();
             if (!currentSelected) {
@@ -261,7 +263,7 @@ function setupCustomAutocomplete(inputElement, items) {
  */
 function highlightMatches(text, query) {
     if (!query) return text;
-    
+
     const regex = new RegExp(`(${query})`, 'gi');
     return text.replace(regex, '<strong>$1</strong>');
 }
@@ -297,7 +299,7 @@ function displayConnectionError() {
  */
 function fetchCourses() {
     // Display mock course data instead of trying to fetch
-    updateCoursesListWithMockData();
+        updateCoursesListWithMockData();
 }
 
 /**
@@ -367,7 +369,7 @@ function updateCoursesListWithMockData() {
         };
         
         // Add click handler to fetch sections
-        li.onclick = function() { 
+        li.onclick = function() {
             // Use mock data instead of actual API
             displayMockSections();
             
@@ -385,227 +387,302 @@ function updateCoursesListWithMockData() {
 }
 
 /**
- * Fetches sections based on search criteria.
- * @param {Object} criteria - The search criteria for sections (subject, course_code, attribute, instructor)
+ * Fetches sections based on search criteria directly from the backend.
+ * @param {Object} criteria - Search criteria (subject, course_code, attribute, instructor)
+ * @returns {Promise} Resolves with {data: [...]}
  */
 function fetchSections(criteria = {}) {
-    // Get the correct container element
-    const coursesListContainer = document.getElementById('courses-list');
-    if (!coursesListContainer) {
-        console.error("Could not find courses-list container");
-        return;
+    console.log('Fetching sections with criteria:', criteria);
+    
+    // Clear any previous notifications about mock data
+    const notificationContainer = document.getElementById('notification-container');
+    if (notificationContainer) {
+        notificationContainer.innerHTML = '';
     }
-
-    // Display the loading state
-    coursesListContainer.innerHTML = '<p>Loading sections...</p>';
-
-    // Check if any criteria were provided
-    const hasSearchCriteria = Object.values(criteria).some(value => value && value.trim() !== '');
-    if (!hasSearchCriteria) {
-        coursesListContainer.innerHTML = '<p>Please enter at least one search criterion.</p>';
-        return;
-    }
-
-    console.log('Searching with criteria:', criteria);
     
-    // Build query string from criteria
-    const queryParams = Object.entries(criteria)
-        .filter(([_, value]) => value && value.trim() !== '')
-        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value.trim())}`)
-        .join('&');
-    
-    const url = `/sections_bp/search?${queryParams}`;
-    
-    console.log('Fetching sections from:', url);
-    
-    // Perform actual fetch from backend
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                // Check if it's a 500 error specifically
-                if (response.status === 500) {
-                    throw new Error('Backend server error (500)');
-                }
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
+    // Try to fetch from the real backend
+    fetchSectionsReal(criteria)
         .then(data => {
-            console.log('Sections data:', data);
-            displaySections(data);
+            console.log('Sections data received from backend:', data);
+            displaySections(data.data || []);
         })
         .catch(error => {
-            console.error('Error fetching sections:', error);
+            console.error('Error fetching sections from backend:', error);
             
-            // Show an error notification
-            showNotification(`Error fetching sections: ${error.message}`, 'error');
+            // Show error notification
+            showNotification('Error connecting to server: ' + error.message, 'error');
             
-            // Display error in the container
-            coursesListContainer.innerHTML = `
-                <div style="padding: 15px; background-color: #f8d7da; color: #721c24; border-radius: 4px; margin-bottom: 15px;">
-                    <h3>Error fetching sections</h3>
-                    <p>${error.message}</p>
-                    <p>Please check that your backend server is running and properly configured.</p>
-                </div>
-            `;
+            // Fall back to mock data as a last resort
+            const mockData = { data: createMockSectionsBasedOnCriteria(criteria) };
+            console.log('Falling back to mock section data:', mockData);
+            displaySections(mockData.data || []);
+            
+            // Notify user about using mock data
+            showNotification('Using sample course data as fallback', 'info');
         });
 }
 
 /**
- * Displays the fetched sections in the UI.
- * @param {Array} sections - The sections data returned from the API
+ * Fetches sections from the backend based on search criteria.
+ * @param {Object} criteria - Search criteria (subject, course_code, attribute, instructor)
+ * @returns {Promise} Resolves with {data: [...]}
+ */
+function fetchSectionsReal(criteria = {}) {
+    // Construct the query string from criteria
+    const queryString = constructQueryString(criteria);
+    console.log('Fetching real sections with query:', queryString);
+    
+    // Try all possible backend endpoints based on your app.py configuration
+    const possibleEndpoints = [
+        '/courses_bp/sections' + queryString,
+        '/course_bp/sections' + queryString,
+        '/api/sections' + queryString
+    ];
+    
+    // Helper function to attempt fetch with multiple endpoints
+    function tryFetchWithEndpoints(endpoints, index = 0) {
+        if (index >= endpoints.length) {
+            // All endpoints failed, throw error
+            return Promise.reject(new Error('All backend endpoints failed'));
+        }
+        
+        const endpoint = endpoints[index];
+        console.log(`Attempting to fetch from endpoint: ${endpoint}`);
+        
+        return fetch(endpoint)
+            .then(response => {
+                if (!response.ok) {
+                    console.warn(`Endpoint ${endpoint} responded with status: ${response.status}`);
+                    // Try next endpoint
+                    return tryFetchWithEndpoints(endpoints, index + 1);
+                }
+                return response.json();
+            })
+            .catch(error => {
+                console.warn(`Error fetching from ${endpoint}:`, error);
+                // Try next endpoint
+                return tryFetchWithEndpoints(endpoints, index + 1);
+            });
+    }
+    
+    // Start trying endpoints
+    return tryFetchWithEndpoints(possibleEndpoints);
+}
+
+/**
+ * Creates mock section data based on search criteria
+ * @param {Object} criteria - Search criteria
+ * @returns {Array} Array of mock section objects
+ */
+function createMockSectionsBasedOnCriteria(criteria) {
+    const subject = criteria.subject || "CPSC";
+    const courseCode = criteria.course_code || "121";
+    
+    return [
+        {
+            subject: subject,
+            course_code: courseCode,
+            section_number: "01",
+            schedule: "MWF 10:00 AM - 11:00 AM",
+            instructor: criteria.instructor || "John Doe",
+            location: "Herak 201",
+            credits: 3,
+            seats_available: 10,
+            total_seats: 30
+        },
+        {
+            subject: subject,
+            course_code: courseCode,
+            section_number: "02",
+            schedule: "TR 1:00 PM - 2:15 PM",
+            instructor: criteria.instructor || "Jane Smith",
+            location: "Herak 202",
+            credits: 3,
+            seats_available: 0,
+            total_seats: 25
+        },
+        {
+            subject: subject,
+            course_code: courseCode,
+            section_number: "03",
+            schedule: "MWF 2:00 PM - 3:00 PM",
+            instructor: criteria.instructor || "Robert Johnson",
+            location: "Herak 301",
+            credits: 3,
+            seats_available: 5,
+            total_seats: 28
+        },
+        {
+            subject: subject,
+            course_code: courseCode,
+            section_number: "04",
+            schedule: "TR 3:30 PM - 4:45 PM",
+            instructor: criteria.instructor || "Emily Davis",
+            location: "Herak 303",
+            credits: 3,
+            seats_available: 15,
+            total_seats: 30
+        }
+    ];
+}
+
+/**
+ * Displays the fetched sections in the UI
+ * @param {Array} sections - Array of section objects
  */
 function displaySections(sections) {
+    // Get the correct container element
     const coursesListContainer = document.getElementById('courses-list');
     if (!coursesListContainer) {
-        console.error("Could not find courses-list container");
+        console.error('Courses list container not found');
         return;
     }
 
     // Clear the loading message if it exists
     const loadingMessage = coursesListContainer.querySelector('p');
     if (loadingMessage && loadingMessage.textContent === 'Loading sections...') {
-        loadingMessage.remove();
+        coursesListContainer.innerHTML = '';
     }
 
-    // Check if sections exists and has items
-    if (!sections || (Array.isArray(sections) && sections.length === 0)) {
-        coursesListContainer.innerHTML += `
-            <div style="padding: 15px; background-color: #d1ecf1; color: #0c5460; border-radius: 4px; margin-top: 15px;">
-                No sections match your search criteria. Try broadening your search.
+    // Create a new list for the sections
+    const sectionsList = document.createElement('ul');
+    sectionsList.id = 'sections-list';
+    sectionsList.style.listStyle = 'none';
+    sectionsList.style.padding = '0';
+    sectionsList.style.margin = '0';
+
+    // If no sections were found, show a message
+    if (!sections || sections.length === 0) {
+        sectionsList.innerHTML = `
+            <div style="color: #0c5460; background-color: #d1ecf1; padding: 10px; border-radius: 4px;">
+                <p style="margin: 0;">No sections found matching your criteria.</p>
             </div>
         `;
+        coursesListContainer.appendChild(sectionsList);
         return;
     }
 
-    // Ensure sections is treated as an array
-    const sectionsArray = Array.isArray(sections) ? sections : 
-                         (sections.data && Array.isArray(sections.data)) ? sections.data : 
-                         [sections];
+    // 1) Create an array of unique sections
+    const uniqueSections = [];
+    const seen = new Set();
+    
+    // Process each section
+    sections.forEach(section => {
+        // Create a unique key for the section
+        const key = `${section.subject}-${section.course_code}-${section.section_number}`;
+        
+        // Only add each section once
+        if (!seen.has(key)) {
+            seen.add(key);
+            uniqueSections.push(section);
+        }
+    });
 
-    // Create a container for the sections
-    const sectionsListHTML = document.createElement('ul');
-    sectionsListHTML.id = 'sections-list';
-    sectionsListHTML.style.listStyle = 'none';
-    sectionsListHTML.style.padding = '0';
-    sectionsListHTML.style.margin = '0';
+    console.log(`Displaying ${uniqueSections.length} unique sections`);
 
-    // Build the sections HTML
-    sectionsArray.forEach(section => {
-        const schedule = section.schedule || 'Not specified';
-        const instructor = section.instructor || 'TBA';
-        const location = section.location || 'TBA';
+    // Create an HTML fragment to hold all sections
+    const sectionsListHTML = document.createDocumentFragment();
+
+    // 2) Create and add list items for each section
+    uniqueSections.forEach(section => {
+        const li = document.createElement('li');
+        li.style.marginBottom = '20px';
+        li.style.padding = '15px';
+        li.style.borderRadius = '8px';
+        li.style.backgroundColor = '#f9f9f9';
+        li.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+        
+        // Calculate seats information
         const seatsAvailable = section.seats_available !== undefined ? section.seats_available : '?';
         const totalSeats = section.total_seats !== undefined ? section.total_seats : '?';
         
-        const li = document.createElement('li');
-        li.style.backgroundColor = 'white';
-        li.style.borderRadius = '4px';
-        li.style.marginBottom = '10px';
-        li.style.padding = '15px';
-        li.style.border = '1px solid #e0e0e0';
-        li.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+        // Extract schedule, location, and instructor (with defaults)
+        const schedule = section.schedule || 'Not specified';
+        const location = section.location || 'TBA';
+        const instructor = section.instructor || 'TBA';
         
         li.innerHTML = `
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                <span style="font-weight: 600; color: #142A50; font-size: 16px;">
-                    ${section.subject} ${section.course_code} - ${section.section_number}
-                </span>
-                <span style="background-color: ${seatsAvailable > 0 ? '#d4edda' : '#f8d7da'}; color: ${seatsAvailable > 0 ? '#155724' : '#721c24'}; padding: 2px 8px; border-radius: 4px; font-size: 13px; font-weight: 500;">
-                    ${seatsAvailable} / ${totalSeats} seats
-                </span>
-            </div>
-            
-            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; font-size: 14px; color: #555;">
-                <div style="flex: 1; min-width: 200px;">
-                    <div><span style="color: #777; margin-right: 5px;">Schedule:</span> ${schedule}</div>
-                    <div><span style="color: #777; margin-right: 5px;">Location:</span> ${location}</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: 600; color: #142A50; font-size: 16px;">
+                        ${section.subject} ${section.course_code} - ${section.section_number}
+                    </span>
+                    <span style="background-color: ${seatsAvailable > 0 ? '#d4edda' : '#f8d7da'}; color: ${seatsAvailable > 0 ? '#155724' : '#721c24'}; padding: 2px 8px; border-radius: 4px; font-size: 13px; font-weight: 500;">
+                        ${seatsAvailable} / ${totalSeats} seats
+                    </span>
                 </div>
-                <div style="flex: 1; min-width: 200px;">
-                    <div><span style="color: #777; margin-right: 5px;">Instructor:</span> ${instructor}</div>
-                    <div><span style="color: #777; margin-right: 5px;">Credits:</span> ${section.credits || '?'}</div>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; font-size: 14px; color: #555;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <div><span style="color: #777; margin-right: 5px;">Schedule:</span> ${schedule}</div>
+                        <div><span style="color: #777; margin-right: 5px;">Location:</span> ${location}</div>
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <div><span style="color: #777; margin-right: 5px;">Instructor:</span> ${instructor}</div>
+                        <div><span style="color: #777; margin-right: 5px;">Credits:</span> ${section.credits || '?'}</div>
+                    </div>
                 </div>
-            </div>
-            
-            <div style="margin-top: 12px; display: flex; justify-content: flex-end;">
-                <button onclick="addSectionToSchedule('${section.subject}', '${section.course_code}', '${section.section_number}')" 
-                        style="background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 8px 12px; font-size: 14px; cursor: pointer;">
-                    Add to Schedule
-                </button>
-            </div>
+                
+                <div style="margin-top: 12px; display: flex; justify-content: flex-end;">
+                    <button onclick="addSectionToSchedule('${section.subject}', '${section.course_code}', '${section.section_number}')" 
+                            style="background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 8px 12px; font-size: 14px; cursor: pointer;">
+                        Add to Schedule
+                    </button>
+                </div>
         `;
         
         sectionsListHTML.appendChild(li);
     });
 
-    // Add the sections list to the container
-    coursesListContainer.appendChild(sectionsListHTML);
+    // Add all sections to the list
+    sectionsList.appendChild(sectionsListHTML);
+    
+    // Add the list to the container
+    coursesListContainer.appendChild(sectionsList);
 }
 
 /**
- * Adds a section to the user's schedule and displays it on the schedule grid.
- * @param {string} subject - The subject code
- * @param {string} courseCode - The course code
- * @param {string} sectionNumber - The section number
+ * Adds a section to the schedule grid.
+ * @param {string} subject - Subject code (e.g., "CPSC")
+ * @param {string} courseCode - Course code (e.g., "121")
+ * @param {string} sectionNumber - Section number (e.g., "01")
  */
 function addSectionToSchedule(subject, courseCode, sectionNumber) {
     console.log(`Adding section to schedule: ${subject} ${courseCode}-${sectionNumber}`);
     
     // Make sure we're viewing the registration view with schedule grid
     const registrationView = document.getElementById('registration-view');
-    if (registrationView && registrationView.style.display !== 'flex') {
-        // If we're not in the registration view, switch to it
-        document.querySelector('.nav-links a[data-view="registration"]').click();
+    if (registrationView) {
+        registrationView.style.display = 'block';
     }
-    
-    // Check if the schedule grid is visible
-    const scheduleGrid = document.querySelector('.schedule-grid');
-    if (scheduleGrid) {
-        // Make sure the grid is displayed
-        scheduleGrid.style.display = 'flex';
-        console.log('Schedule grid display style:', scheduleGrid.style.display);
-    } else {
-        console.error('Schedule grid not found in the DOM');
-        showNotification('Could not find schedule grid', 'error');
-        return;
-    }
-    
-    // Get the section data from the sections list
+
+    // Use the original element IDs that exist in the HTML
     const sectionsList = document.getElementById('sections-list');
     if (!sectionsList) {
         console.error('Sections list not found');
+        showNotification('Error: Could not find the sections list', 'error');
         return;
     }
     
-    // Find the section element with the matching details
-    const sectionElement = Array.from(sectionsList.querySelectorAll('li')).find(li => {
-        return li.innerHTML.includes(`${subject} ${courseCode} - ${sectionNumber}`);
-    });
-    
-    if (!sectionElement) {
-        console.error('Could not find section details in the DOM');
+    // If no section is found with the details, use mock data
+    if (typeof mockSections !== 'undefined' && mockSections) {
+        console.log('Using mock data for section');
         
-        // Create a default section with hardcoded values for testing
-        const mockSchedule = 'MWF 10:00 AM - 11:15 AM';
-        const mockInstructor = 'Instructor Name';
-        const mockLocation = 'Building 123';
-        
-        // Show a warning notification
-        showNotification('Using default schedule for testing: ' + mockSchedule, 'info');
-        
-        // Parse mock schedule
-        const days = ['M', 'W', 'F'];
-        const startTime = '10:00 AM';
-        const endTime = '11:15 AM';
-        
-        // Convert start/end times to row indices
-        const startHour = parseTimeToHour(startTime);
-        const endHour = parseTimeToHour(endTime);
-        
-        // Add to grid with default color
+        // Use a random color from our palette for this course
         const courseColor = getRandomCourseColor();
         
-        days.forEach(day => {
+        // Mock schedule data - in a real app, this would come from the server
+        const mockStartTime = '10:00 AM';
+        const mockEndTime = '11:15 AM';
+        const mockDays = ['M', 'W', 'F'];
+        const mockLocation = 'TBA';
+        const mockInstructor = 'TBA';
+        
+        // Convert mock times to grid hours
+        const startHour = parseTimeToHour(mockStartTime);
+        const endHour = parseTimeToHour(mockEndTime);
+        
+        // Add the course to the grid for each day
+        mockDays.forEach(day => {
             const dayIndex = getDayIndex(day);
             addCourseToGrid(
                 dayIndex,
@@ -618,9 +695,6 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
             );
         });
         
-        // Update credits display
-        updateCreditCount();
-        
         // Show success message
         showNotification(`Added ${subject} ${courseCode} to your schedule`, 'success');
         
@@ -628,6 +702,17 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
     }
     
     try {
+        // Find the section element with the matching details
+        const sectionElement = Array.from(sectionsList.querySelectorAll('li')).find(li => {
+            return li.innerHTML.includes(`${subject} ${courseCode} - ${sectionNumber}`);
+        });
+
+        if (!sectionElement) {
+            console.error('Section element not found in list');
+            showNotification('Error: Could not find the selected section', 'error');
+            return;
+        }
+
         // Extract schedule information from the section element
         const scheduleText = sectionElement.querySelector('div[style*="flex: 1"] div:first-child').textContent;
         const scheduleValue = scheduleText.split(':')[1]?.trim() || 'Not specified';
@@ -722,10 +807,12 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
                         instructorValue,
                         courseColor
                     );
+                } else {
+                    console.warn(`Invalid day: ${day}`);
                 }
             });
             
-            // Update the credits display
+            // Update the credit count
             updateCreditCount();
             
             // Show a success message
@@ -971,21 +1058,23 @@ function addCourseToGrid(dayIndex, startHour, endHour, courseTitle, location, in
 }
 
 /**
- * Updates the credit count displayed in the header.
+ * Updates the credit count displayed in the UI
  */
 function updateCreditCount() {
-    // For now, let's use a simple count of course blocks
+    // Count the course blocks in the grid that aren't duplicates of the same course
     const courseBlocks = document.querySelectorAll('.course-block');
+    const courseSet = new Set();
     
-    // Count unique courses (avoid counting the same course multiple times)
-    const uniqueCourses = new Set();
+    // Track courses by their title to avoid double-counting
     courseBlocks.forEach(block => {
-        const courseTitle = block.querySelector('div').textContent;
-        uniqueCourses.add(courseTitle);
+        const courseTitle = block.querySelector('.course-title')?.textContent;
+        if (courseTitle) {
+            courseSet.add(courseTitle);
+        }
     });
     
-    // Each course is 3 credits (simplified assumption)
-    const creditCount = uniqueCourses.size * 3;
+    // Simple estimate: 3 credits per course (you might want to fetch actual credit values)
+    const creditCount = courseSet.size * 3;
     
     // Update the credit display
     const creditDisplay = document.querySelector('.credits-display');
@@ -1156,39 +1245,53 @@ function showNotification(message, type = 'info') {
 }
 
 /**
- * Display mock sections when the backend is not available
+ * Displays mock sections data for testing
  */
 function displayMockSections() {
-    // This function is only a stub now since we don't want mock data
-    const coursesList = document.getElementById('courses-list');
-    if (coursesList) {
-        coursesList.innerHTML = '<p>Real server connection required. Please make sure the backend is running.</p>';
-    }
+    // Import mock sections data (this should be defined in a separate file)
+    const mockSections = [
+        {
+            subject: "CPSC",
+            course_code: "121",
+            section_number: "01",
+            schedule: "MWF 10:00 AM - 11:00 AM",
+            instructor: "John Doe",
+            location: "Herak 201",
+            credits: 3,
+            seats_available: 10,
+            total_seats: 30
+        },
+        {
+            subject: "CPSC",
+            course_code: "121",
+            section_number: "02",
+            schedule: "TR 1:00 PM - 2:15 PM",
+            instructor: "Jane Smith",
+            location: "Herak 202",
+            credits: 3,
+            seats_available: 0,
+            total_seats: 25
+        }
+    ];
+    
+    // Display the mock sections
+    displaySections(mockSections);
 }
 
 /**
- * Adds an event to the schedule grid from the form in the Events tab
+ * Adds an event from the event form to the schedule
  */
 function addEventFromForm() {
-    console.log("addEventFromForm called");
-    
     try {
-        // Get values from form
-        const eventName = document.querySelector('#event-name')?.value || "";
-        const eventLocation = document.querySelector('#event-location')?.value || "";
-        const startTime = document.querySelector('#event-start-time')?.value || "";
-        const endTime = document.querySelector('#event-end-time')?.value || "";
+        console.log("Adding event from form");
+        
+        // Get values from the form in the RecurringEvents tab
+        const eventName = document.querySelector('#RecurringEvents input[placeholder="Event Name"]').value.trim();
+        const eventLocation = document.querySelector('#RecurringEvents input[placeholder="Location (optional)"]').value.trim();
+        const startTime = document.querySelector('#RecurringEvents input[type="time"][placeholder="Start Time"]').value;
+        const endTime = document.querySelector('#RecurringEvents input[type="time"][placeholder="End Time"]').value;
         
         console.log("Form values:", { eventName, eventLocation, startTime, endTime });
-        
-        // Get selected days
-        const selectedDays = [];
-        document.querySelectorAll('.weekday-btn.selected').forEach(btn => {
-            const day = btn.textContent.trim();
-            if (day) selectedDays.push(day);
-        });
-        
-        console.log("Selected days:", selectedDays);
         
         // Validate inputs
         if (!eventName) {
@@ -1197,79 +1300,91 @@ function addEventFromForm() {
         }
         
         if (!startTime || !endTime) {
-            showNotification("Please specify both start and end time", "error");
+            showNotification("Please enter both start and end times", "error");
             return;
         }
+        
+        // Get selected days
+        const selectedDays = [];
+        document.querySelectorAll('#RecurringEvents .weekday-btn.selected').forEach(btn => {
+            selectedDays.push(btn.textContent.trim());
+        });
+        
+        console.log("Selected days:", selectedDays);
         
         if (selectedDays.length === 0) {
-            showNotification("Please select at least one day", "error");
+            showNotification("Please select at least one day for your event", "error");
             return;
         }
         
-        // Format time for display (24h to 12h conversion)
+        // Format times for display
         const formatTime = (timeStr) => {
+            if (!timeStr) return '';
             const [hours, minutes] = timeStr.split(':');
-            const hour = parseInt(hours);
+            let hour = parseInt(hours, 10);
             const ampm = hour >= 12 ? 'PM' : 'AM';
-            const hour12 = hour % 12 || 12;
-            return `${hour12}:${minutes} ${ampm}`;
+            hour = hour % 12 || 12;
+            return `${hour}:${minutes} ${ampm}`;
         };
         
-        const startFormatted = formatTime(startTime);
-        const endFormatted = formatTime(endTime);
+        const formattedStartTime = formatTime(startTime);
+        const formattedEndTime = formatTime(endTime);
         
-        console.log("Formatted times:", { startFormatted, endFormatted });
+        console.log("Formatted times:", { formattedStartTime, formattedEndTime });
         
-        // Parse time to grid hours
-        const startHour = parseTimeToHour(startTime);
-        const endHour = parseTimeToHour(endTime);
+        // Convert to grid hours
+        const startHour = parseTimeToHour(formattedStartTime);
+        const endHour = parseTimeToHour(formattedEndTime);
+        
+        console.log("Grid hours:", { startHour, endHour });
         
         if (startHour >= endHour) {
             showNotification("End time must be after start time", "error");
             return;
         }
         
-        console.log("Parsed hours:", { startHour, endHour });
-        
         // Get a random color for the event
         const color = getRandomCourseColor();
         
-        // Ensure we're in the registration view
+        // Make sure we're viewing the registration view with schedule grid
         const registrationView = document.getElementById('registration-view');
-        if (registrationView && !registrationView.classList.contains('active')) {
-            document.querySelector('.nav-links a[data-view="registration"]').click();
+        if (registrationView) {
+            registrationView.style.display = 'block';
         }
         
-        // Add to grid for each selected day
+        // Add the event to the schedule grid for each selected day
         selectedDays.forEach(day => {
             const dayIndex = getDayIndex(day);
-            console.log(`Adding event for day ${day} (index: ${dayIndex})`);
-            
-            if (dayIndex >= 0) {
-                // The instructor parameter is set to "Personal Event" to distinguish it from courses
+            if (dayIndex !== -1) {
                 addCourseToGrid(
                     dayIndex,
                     startHour,
                     endHour,
                     eventName,
-                    eventLocation || "Your Location",
+                    eventLocation || "N/A",
                     "Personal Event",
                     color
                 );
             }
         });
         
-        // Show success notification
+        // Show success message
         showNotification(`Added "${eventName}" to your schedule`, "success");
         
-        // Clear form fields
-        document.querySelector('#event-name').value = "";
-        document.querySelector('#event-location').value = "";
+        // Clear the form
+        document.querySelector('#RecurringEvents input[placeholder="Event Name"]').value = "";
+        document.querySelector('#RecurringEvents input[placeholder="Location (optional)"]').value = "";
+        document.querySelector('#RecurringEvents input[type="time"][placeholder="Start Time"]').value = "";
+        document.querySelector('#RecurringEvents input[type="time"][placeholder="End Time"]').value = "";
         
-        console.log("Event successfully added to grid");
+        // Clear selected days
+        document.querySelectorAll('#RecurringEvents .weekday-btn.selected').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        
     } catch (error) {
-        console.error("Error adding event:", error);
-        showNotification("Failed to add event: " + error.message, "error");
+        console.error("Error adding event from form:", error);
+        showNotification("Error adding event: " + error.message, "error");
     }
 }
 
@@ -1502,7 +1617,7 @@ window.fetchData = fetchData;
 // Initialize when the document loads
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Course module initialized');
-    
+
     // Check backend connection
     checkBackendConnection();
     
@@ -1551,3 +1666,31 @@ window.addEventFromForm = addEventFromForm;
 
 // Make editEventOnSchedule globally available
 window.editEventOnSchedule = editEventOnSchedule;
+
+// Helper function to construct query string from criteria object
+function constructQueryString(criteria) {
+    if (!criteria || Object.keys(criteria).length === 0) {
+        return '';
+    }
+    
+    const params = new URLSearchParams();
+    
+    if (criteria.subject) {
+        params.append('subject', criteria.subject);
+    }
+    
+    if (criteria.course_code) {
+        params.append('course_code', criteria.course_code);
+    }
+    
+    if (criteria.instructor) {
+        params.append('instructor', criteria.instructor);
+    }
+    
+    if (criteria.attribute) {
+        params.append('attribute', criteria.attribute);
+    }
+    
+    const queryString = params.toString();
+    return queryString ? `?${queryString}` : '';
+}
