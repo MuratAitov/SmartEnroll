@@ -58,13 +58,13 @@ function checkBackendConnection() {
     return new Promise((resolve) => {
         // Try to ping an endpoint that's guaranteed to exist (like the root endpoint)
         fetch('http://localhost:5001/')
-            .then(response => {
+        .then(response => {
                 resolve(response.status < 400); // Resolve true if status is not an error
-            })
-            .catch(error => {
-                console.error('Backend connection failed:', error);
+        })
+        .catch(error => {
+            console.error('Backend connection failed:', error);
                 resolve(false); // Resolve false if there's an error
-            });
+                });
     });
 }
 
@@ -233,8 +233,8 @@ function displayConnectionError() {
                 <h3>Backend Connection Error</h3>
                 <p>Could not connect to the course database. Using sample data for demonstration.</p>
                 <button id="use-mock-data-btn" class="btn btn-primary">Load Sample Courses</button>
-            </div>
-        `;
+        </div>
+    `;
         
         // Add event listener to the button
         const mockDataBtn = document.getElementById('use-mock-data-btn');
@@ -373,7 +373,7 @@ function fetchSections(criteria = {}) {
                 displaySections(sections);
                 showNotification('Using sample data - backend connection unavailable', 'warning');
             }
-        });
+    });
 }
 
 /**
@@ -508,15 +508,15 @@ function createMockSectionsBasedOnCriteria(criteria) {
                 
                 // Create mock section
                 const mockSection = {
-                    subject: subject,
-                    course_code: courseCode,
+            subject: subject,
+            course_code: courseCode,
                     section_number: sectionNumber,
                     schedule: schedule,
                     instructor: ['Smith, John', 'Johnson, Sarah', 'Williams, Michael', 'Brown, Lisa'][Math.floor(Math.random() * 4)],
                     location: ['College Hall 101', 'Herak Center 222', 'Hughes Hall 304', 'Tilford Center 201'][Math.floor(Math.random() * 4)],
                     credits: ['3', '4', '1'][Math.floor(Math.random() * 3)],
                     seats_available: Math.floor(Math.random() * 30),
-                    total_seats: 30
+            total_seats: 30
                 };
                 
                 // If filtering by instructor and it doesn't match, skip
@@ -538,112 +538,153 @@ function createMockSectionsBasedOnCriteria(criteria) {
 }
 
 /**
- * Displays the fetched sections in the UI
+ * Displays the sections in the UI
  * @param {Array} sections - Array of section objects
  */
 function displaySections(sections) {
-    const sectionsList = document.getElementById('sections-list');
-    if (!sectionsList) {
-        console.error('Sections list container not found');
+    // Store sections data globally for later reference
+    window.sectionsData = sections;
+    
+    // Get the container where we'll display sections
+    const sectionsContainer = document.getElementById('sections-list');
+    if (!sectionsContainer) {
+        console.error("Sections container not found!");
         return;
     }
-    
-    // Clear previous sections
-    sectionsList.innerHTML = '';
+
+    // Clear existing content
+    sectionsContainer.innerHTML = '';
     
     if (!sections || sections.length === 0) {
-        sectionsList.innerHTML = '<p class="no-results">No sections found. Try different search criteria.</p>';
+        sectionsContainer.innerHTML = '<div class="no-results">No sections found matching your criteria.</div>';
         return;
     }
+
+    // Create a Set to track unique section identifiers
+    const uniqueSectionIds = new Set();
     
-    // Group sections by course
+    // Group sections by subject + course_code (e.g., "CPSC 121")
     const courseGroups = {};
+    
     sections.forEach(section => {
+        // Create a unique identifier for this section
+        const sectionId = `${section.subject}-${section.course_code}-${section.section_number}`;
+        
+        // Skip if we've already processed this section
+        if (uniqueSectionIds.has(sectionId)) {
+            return;
+        }
+        
+        // Mark this section as processed
+        uniqueSectionIds.add(sectionId);
+        
+        // Create the course key
         const courseKey = `${section.subject} ${section.course_code}`;
+        
+        // Initialize the course group if it doesn't exist
         if (!courseGroups[courseKey]) {
             courseGroups[courseKey] = [];
         }
+        
+        // Add the section to its course group
         courseGroups[courseKey].push(section);
     });
     
-    // Create section items for each course
-    Object.keys(courseGroups).forEach(courseKey => {
-        const courseSections = courseGroups[courseKey];
+    // Now process each course group
+    Object.entries(courseGroups).forEach(([courseKey, courseSections]) => {
+        // Create a course container
+        const courseDiv = document.createElement('div');
+        courseDiv.className = 'course-item';
         
-        // Create course group header
+        // Create the course header
         const courseHeader = document.createElement('div');
         courseHeader.className = 'course-header';
+        
+        // Set the title and section count
         courseHeader.innerHTML = `
             <h3>${courseKey}</h3>
-            <p class="section-count">${courseSections.length} section${courseSections.length !== 1 ? 's' : ''}</p>
+            <span class="section-count">${courseSections.length} section${courseSections.length !== 1 ? 's' : ''}</span>
         `;
-        sectionsList.appendChild(courseHeader);
         
-        // Create section items
+        courseDiv.appendChild(courseHeader);
+        
+        // Add each section
         courseSections.forEach(section => {
-            const sectionItem = document.createElement('div');
-            sectionItem.className = 'section-item';
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'section-item';
             
-            // Determine seat availability status
-            let availabilityClass = 'available';
-            let availabilityText = 'Available';
+            // Format the availability text and class
+            let availabilityText = 'Unknown';
+            let availabilityClass = '';
             
-            if (section.seats_available === 0) {
-                availabilityClass = 'full';
-                availabilityText = 'Full';
-            } else if (section.seats_available < 5) {
-                availabilityClass = 'limited';
-                availabilityText = 'Limited';
+            if (section.seats_available !== undefined && section.total_seats !== undefined) {
+                if (section.seats_available > 10) {
+                    availabilityText = `${section.seats_available} available`;
+                    availabilityClass = 'available';
+                } else if (section.seats_available > 0) {
+                    availabilityText = `${section.seats_available} left`;
+                    availabilityClass = 'limited';
+                } else {
+                    availabilityText = 'Full';
+                    availabilityClass = 'full';
+                }
             }
             
-            // Format location
-            const location = section.location || 'TBA';
-            
-            // Create the HTML for the section item
-            sectionItem.innerHTML = `
-                <div class="section-header">
-                    <h4>Section ${section.section_number}</h4>
-                    <span class="availability ${availabilityClass}">${availabilityText}</span>
-                </div>
-                <div class="section-details">
-                    <p><strong>Schedule:</strong> ${section.schedule || 'TBA'}</p>
-                    <p><strong>Instructor:</strong> ${section.instructor || 'TBA'}</p>
-                    <p><strong>Location:</strong> ${location}</p>
-                    <p><strong>Credits:</strong> ${section.credits || '3'}</p>
-                    <p><strong>Seats:</strong> ${section.seats_available}/${section.total_seats}</p>
-                </div>
-                <div class="section-actions">
-                    <button class="add-section-btn" data-subject="${section.subject}" data-course-code="${section.course_code}" data-section="${section.section_number}">
-                        Add to Schedule
-                    </button>
-                    <button class="search-prereq-btn" data-course="${section.subject} ${section.course_code}">
-                        View Prerequisites
-                    </button>
-                </div>
+            // Create the section header
+            const sectionHeader = document.createElement('div');
+            sectionHeader.className = 'section-header';
+            sectionHeader.innerHTML = `
+                <h4>Section ${section.section_number}</h4>
+                <div class="availability ${availabilityClass}">${availabilityText}</div>
             `;
             
-            sectionsList.appendChild(sectionItem);
-        });
-    });
-    
-    // Add event listeners to buttons
-    document.querySelectorAll('.add-section-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const subject = this.getAttribute('data-subject');
-            const courseCode = this.getAttribute('data-course-code');
-            const sectionNumber = this.getAttribute('data-section');
+            // Create the section details
+            const sectionDetails = document.createElement('div');
+            sectionDetails.className = 'section-details';
+            sectionDetails.innerHTML = `
+                <p><strong>Schedule:</strong> ${section.schedule}</p>
+                <p><strong>Instructor:</strong> ${section.instructor}</p>
+                <p><strong>Location:</strong> ${section.location}</p>
+                <p><strong>Credits:</strong> ${section.credits}</p>
+            `;
             
-            // Call the function to add this section to schedule
-            addSectionToSchedule(subject, courseCode, sectionNumber);
+            // Create the section actions
+            const sectionActions = document.createElement('div');
+            sectionActions.className = 'section-actions';
+            
+            // Add "Add to Schedule" button
+            const addButton = document.createElement('button');
+            addButton.className = 'add-section-btn';
+            addButton.textContent = 'Add to Schedule';
+            addButton.addEventListener('click', () => {
+                addSectionToSchedule(section.subject, section.course_code, section.section_number);
+            });
+            
+            // Add "Search Prerequisites" button
+            const prereqButton = document.createElement('button');
+            prereqButton.className = 'search-prereq-btn';
+            prereqButton.textContent = 'Prerequisites';
+            prereqButton.addEventListener('click', () => {
+                displayPrerequisiteTree(`${section.subject} ${section.course_code}`);
+            });
+            
+            sectionActions.appendChild(addButton);
+            sectionActions.appendChild(prereqButton);
+            
+            // Assemble the section div
+            sectionDiv.appendChild(sectionHeader);
+            sectionDiv.appendChild(sectionDetails);
+            sectionDiv.appendChild(sectionActions);
+            
+            // Add the section to the course container
+            courseDiv.appendChild(sectionDiv);
         });
+        
+        // Add the course container to the sections container
+        sectionsContainer.appendChild(courseDiv);
     });
     
-    document.querySelectorAll('.search-prereq-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const courseCode = this.getAttribute('data-course');
-            displayPrerequisiteTree(courseCode);
-        });
-    });
+    console.log(`Displayed ${uniqueSectionIds.size} sections in ${Object.keys(courseGroups).length} courses`);
 }
 
 /**
@@ -660,6 +701,86 @@ function getDayIndex(day) {
         'F': 4
     };
     return dayMap[day] || -1;
+}
+
+/**
+ * Returns a random course color from a predefined palette.
+ * Ensures the same course always gets the same color.
+ * @param {string} courseId - A unique identifier for the course (e.g., "CPSC 121")
+ * @returns {string} A color code
+ */
+function getRandomCourseColor(courseId = null) {
+    // Define a palette of visually distinct colors
+    const colors = [
+        '#4285f4', // Google blue
+        '#ea4335', // Google red
+        '#fbbc05', // Google yellow
+        '#34a853', // Google green
+        '#8b5cf6', // Purple
+        '#ec4899', // Pink
+        '#06b6d4', // Cyan
+        '#84cc16', // Lime
+        '#f59e0b', // Amber
+        '#3b82f6', // Blue
+        '#ef4444', // Red
+        '#10b981', // Emerald
+        '#6366f1', // Indigo
+        '#14b8a6', // Teal
+        '#f97316', // Orange
+        '#a855f7'  // Purple
+    ];
+    
+    console.log(`Getting color for course: ${courseId}`);
+    
+    // Initialize course color map if it doesn't exist
+    if (!window.courseColorMap) {
+        window.courseColorMap = new Map();
+        console.log("Initialized new course color map");
+    }
+    
+    // If no courseId provided, just return a random color
+    if (!courseId) {
+        console.log("No courseId provided, returning random color");
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+    
+    // Log current color map for debugging
+    console.log("Current course color map:", Array.from(window.courseColorMap.entries()));
+    
+    // If we already have a color for this course, return that color
+    if (window.courseColorMap.has(courseId)) {
+        const existingColor = window.courseColorMap.get(courseId);
+        console.log(`Retrieved existing color for ${courseId}: ${existingColor}`);
+        return existingColor;
+    }
+    
+    // Otherwise, assign a new color
+    let selectedColor;
+    
+    // Get all currently used colors
+    const usedColors = Array.from(window.courseColorMap.values());
+    console.log("Currently used colors:", usedColors);
+    
+    // Try to find a color that hasn't been used yet
+    const availableColors = colors.filter(color => !usedColors.includes(color));
+    console.log("Available unused colors:", availableColors);
+    
+    if (availableColors.length > 0) {
+        // If we have unused colors, pick one randomly
+        selectedColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+        console.log(`Selected unused color: ${selectedColor}`);
+    } else {
+        // If all colors are used, pick a random one from the full palette
+        selectedColor = colors[Math.floor(Math.random() * colors.length)];
+        console.log(`All colors used, selected random color: ${selectedColor}`);
+    }
+    
+    // Store the color for the course
+    window.courseColorMap.set(courseId, selectedColor);
+    console.log(`Assigned new color for ${courseId}: ${selectedColor}`);
+    console.log("Updated course color map:", Array.from(window.courseColorMap.entries()));
+    
+    return selectedColor;
 }
 
 /**
@@ -700,9 +821,9 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
         const firstSpaceIndex = scheduleInfo.indexOf(' ');
         if (firstSpaceIndex === -1) {
             showNotification(`Invalid schedule format: ${scheduleInfo}`, 'error');
-            return;
-        }
-        
+        return;
+    }
+    
         const days = scheduleInfo.substring(0, firstSpaceIndex).trim();
         let timeRange = scheduleInfo.substring(firstSpaceIndex + 1).trim();
         
@@ -717,8 +838,13 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
         const startTime = timeMatch[1].trim();
         const endTime = timeMatch[2].trim();
         
-        // Get a random color for this course
-        const courseColor = getRandomCourseColor();
+        // Create a unique course identifier
+        const courseKey = `${subject} ${courseCode}`;
+        console.log(`Course key for color assignment: ${courseKey}`);
+        
+        // Get a color for this course - ensure we're using a string that uniquely identifies this course
+        const courseColor = getRandomCourseColor(courseKey);
+        console.log(`Color assigned for ${courseKey}: ${courseColor}`);
         
         // Add course blocks for each day
         for (const day of days) {
@@ -762,7 +888,10 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
             // Create a course block
             const courseBlock = document.createElement('div');
             courseBlock.className = 'course-block';
+            
+            // Ensure we're using the assigned course color
             courseBlock.style.backgroundColor = courseColor;
+            console.log(`Setting background color for course block to: ${courseColor}`);
             
             // Calculate exact hour difference for height - precisely scale the block
             const durationHours = endHour - startHour;
@@ -773,7 +902,7 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
             // Set position and size based on start time and duration
             courseBlock.style.position = 'absolute';
             courseBlock.style.left = '0';
-            courseBlock.style.top = '0'; 
+            courseBlock.style.top = '0';
             courseBlock.style.width = '100%';
             
             // Calculate height based on duration - each hour is one row height
@@ -781,9 +910,21 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
             courseBlock.style.height = `${heightInRows * 100}%`;
             
             // Store course data as attributes
-            courseBlock.setAttribute('data-course', `${subject} ${courseCode}`);
+            courseBlock.setAttribute('data-course', courseKey);
             courseBlock.setAttribute('data-section', sectionNumber);
-            courseBlock.setAttribute('data-credits', sectionData.credits || '3');
+            
+            // Make sure we get the actual credit value
+            let creditValue = sectionData.credits;
+            // If it's a string like "3.0" or just "3", parse it to a number
+            if (typeof creditValue === 'string') {
+                creditValue = parseInt(creditValue, 10);
+            }
+            // If it's still not a valid number, default to 3
+            if (isNaN(creditValue) || creditValue <= 0) {
+                creditValue = 3;
+            }
+            
+            courseBlock.setAttribute('data-credits', creditValue);
             courseBlock.setAttribute('data-start-time', startTime);
             courseBlock.setAttribute('data-end-time', endTime);
             courseBlock.setAttribute('data-day', day);
@@ -792,7 +933,7 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
             const deleteButton = document.createElement('button');
             deleteButton.className = 'course-delete-btn';
             deleteButton.innerHTML = '×'; // Using the multiplication symbol as an X
-            deleteButton.title = `Remove ${subject} ${courseCode}`;
+            deleteButton.title = `Remove ${courseKey}`;
             
             // Add delete button click handler
             deleteButton.addEventListener('click', function(e) {
@@ -801,12 +942,15 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
                 removeCourseFromSchedule(subject, courseCode, sectionNumber);
             });
             
-            // Add course information
-            courseBlock.innerHTML = `
-                <div class="event-name">${subject} ${courseCode}</div>
+            // Build HTML content
+            const courseContent = `
+                <div class="event-name">${courseKey}</div>
                 <div class="event-time">${startTime} - ${endTime}</div>
                 <div class="event-location">${sectionData.location || 'TBA'}</div>
             `;
+            
+            // Set inner HTML
+            courseBlock.innerHTML = courseContent;
             
             // Append the delete button to the course block
             courseBlock.appendChild(deleteButton);
@@ -828,8 +972,8 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
             
             // Update total credits
             updateCreditCount();
-            
-            showNotification(`${subject} ${courseCode} added to schedule.`, 'success');
+        
+            showNotification(`${courseKey} added to schedule.`, 'success');
         }
     } catch (error) {
         console.error('Error adding course to schedule:', error);
@@ -845,10 +989,12 @@ function addSectionToSchedule(subject, courseCode, sectionNumber) {
  * @param {string} day - The day of the course to remove (optional - if provided, only removes that day's instance)
  */
 function removeCourseFromSchedule(subject, courseCode, sectionNumber, day = null) {
+    const courseKey = `${subject} ${courseCode}`;
+    
     // Confirmation message
     const confirmMessage = day 
-        ? `Remove ${subject} ${courseCode} on ${getDayName(day)} from your schedule?`
-        : `Remove ${subject} ${courseCode} from your schedule?`;
+        ? `Remove ${courseKey} on ${getDayName(day)} from your schedule?`
+        : `Remove ${courseKey} from your schedule?`;
     
     if (confirm(confirmMessage)) {
         let removed = false;
@@ -862,7 +1008,7 @@ function removeCourseFromSchedule(subject, courseCode, sectionNumber, day = null
             
             // If day is specified, only remove that specific day's block
             // Otherwise remove all instances of this section
-            if (blockCourse === `${subject} ${courseCode}` && 
+            if (blockCourse === courseKey && 
                 blockSection === sectionNumber && 
                 (!day || blockDay === day)) {
                 block.remove();
@@ -874,9 +1020,16 @@ function removeCourseFromSchedule(subject, courseCode, sectionNumber, day = null
             // Update the credit count
             updateCreditCount();
             
+            // Check if all instances of this course are removed
+            const remainingBlocks = document.querySelectorAll(`.course-block[data-course="${courseKey}"]`);
+            if (remainingBlocks.length === 0 && window.courseColorMap) {
+                // If no more instances of this course exist, remove its color mapping
+                window.courseColorMap.delete(courseKey);
+            }
+            
             // Show notification
             const dayText = day ? ` on ${getDayName(day)}` : '';
-            showNotification(`${subject} ${courseCode} removed from schedule${dayText}.`, 'info');
+            showNotification(`${courseKey} removed from schedule${dayText}.`, 'info');
         }
     }
 }
@@ -915,62 +1068,71 @@ if (!document.getElementById('highlight-animation-style')) {
 }
 
 /**
- * Returns a random course color from a predefined palette.
- * @returns {string} A color code
- */
-function getRandomCourseColor() {
-    const colors = [
-        '#4285f4', '#ea4335', '#fbbc05', '#34a853',  // Google colors
-        '#3b82f6', '#ef4444', '#f59e0b', '#10b981',  // Tailwind colors
-        '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16',  // More Tailwind colors
-    ];
-    
-    // Track used colors to avoid repeats when possible
-    if (!window.usedColors) {
-        window.usedColors = [];
-    }
-    
-    // If all colors have been used, reset the used colors array
-    if (window.usedColors.length >= colors.length) {
-        window.usedColors = [];
-    }
-    
-    // Find an unused color
-    const availableColors = colors.filter(color => !window.usedColors.includes(color));
-    const selectedColor = availableColors.length > 0 
-        ? availableColors[Math.floor(Math.random() * availableColors.length)]
-        : colors[Math.floor(Math.random() * colors.length)];
-    
-    // Add to used colors
-    window.usedColors.push(selectedColor);
-    
-    return selectedColor;
-}
-
-/**
  * Updates the credit count displayed in the UI
  */
 function updateCreditCount() {
-    // Count the course blocks in the grid that aren't duplicates of the same course
+    // Get all course blocks in the grid
     const courseBlocks = document.querySelectorAll('.course-block');
-    const courseSet = new Set();
     
-    // Track courses by their title to avoid double-counting
+    // Track unique courses and their credit values
+    const courseCredits = new Map();
+    
+    // Process each course block
     courseBlocks.forEach(block => {
-        const courseTitle = block.querySelector('.course-title')?.textContent;
-        if (courseTitle) {
-            courseSet.add(courseTitle);
+        const course = block.getAttribute('data-course');
+        const section = block.getAttribute('data-section');
+        
+        // Create a unique key for this course section
+        const courseKey = `${course}-${section}`;
+        
+        // Skip if we've already counted this course section
+        if (courseCredits.has(courseKey)) {
+            return;
         }
+        
+        // Get credits from data attribute (defaulting to 3 if not specified)
+        let credits = block.getAttribute('data-credits');
+        
+        // Convert credits to a number
+        if (credits) {
+            // Handle credits stored as strings (e.g., "3", "4", etc.)
+            credits = parseInt(credits, 10);
+            
+            // If parsing failed, use 3 as default
+            if (isNaN(credits)) {
+                credits = 3;
+            }
+        } else {
+            // Default to 3 credits if not specified
+            credits = 3;
+        }
+        
+        // Store the credits for this course
+        courseCredits.set(courseKey, credits);
     });
     
-    // Simple estimate: 3 credits per course (you might want to fetch actual credit values)
-    const creditCount = courseSet.size * 3;
+    // Calculate total credits
+    let totalCredits = 0;
+    courseCredits.forEach(credits => {
+        totalCredits += credits;
+    });
     
     // Update the credit display
     const creditDisplay = document.querySelector('.credits-display');
     if (creditDisplay) {
-        creditDisplay.textContent = `${creditCount} Credits`;
+        creditDisplay.textContent = `${totalCredits} Credits`;
+        
+        // Optional: Add custom styling based on credit load
+        if (totalCredits > 18) {
+            creditDisplay.style.color = '#dc3545'; // Red for overload warning
+        } else if (totalCredits >= 15) {
+            creditDisplay.style.color = '#28a745'; // Green for full load
+        } else {
+            creditDisplay.style.removeProperty('color'); // Default color
+        }
     }
+    
+    console.log(`Credit count updated: ${totalCredits} credits (${courseCredits.size} unique courses)`);
 }
 
 /**
