@@ -260,29 +260,131 @@
             
             <!-- Content container -->
             <div class="content-container" style="flex: 1; padding: 15px; display: flex;">
-                <div id="schedule-container" class="schedule-grid" style="flex: 1; border-radius: 8px; overflow: hidden; background-color: #FFFFFF; box-shadow: 0 1px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
-                    <table style="width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 0; flex: 1; height: 100%;">
+                <div id="schedule-container" class="schedule-grid" style="flex: 1; border-radius: 8px; overflow: hidden; background-color: #FFFFFF; box-shadow: 0 1px 5px rgba(0,0,0,0.05);">
+                    <table style="width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 0; height: 100%;">
                         <thead>
                             <tr>
-                                <th class="time-header" style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></th>
-                                <th style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;">M</th>
-                                <th style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;">T</th>
-                                <th style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;">W</th>
-                                <th style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;">R</th>
-                                <th style="background-color: #142A50; color: #ffffff; padding: 10px; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;">F</th>
+                                <th style="background-color: #f8f9fa; color: #333; padding: 0; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0; width: 50px;"></th>
+                                <th style="background-color: #f8f9fa; color: #333; padding: 0; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;">M</th>
+                                <th style="background-color: #f8f9fa; color: #333; padding: 0; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;">T</th>
+                                <th style="background-color: #f8f9fa; color: #333; padding: 0; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;">W</th>
+                                <th style="background-color: #f8f9fa; color: #333; padding: 0; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;">R</th>
+                                <th style="background-color: #f8f9fa; color: #333; padding: 0; font-weight: 500; font-size: 14px; height: 36px; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;">F</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">8:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">9:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">10:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">11:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">12:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">1:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">2:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">3:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">4:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-                            <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">5:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">8 am</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">9 am</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">10 am</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">11 am</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">12 pm</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">1 pm</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">2 pm</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">3 pm</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">4 pm</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">5 pm</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">6 pm</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">7 pm</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">8 pm</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; padding-top: 5px; border-top: none; border-bottom: none; color: #666; font-size: 13px; font-weight: 400; background-color: #f8f9fa; width: 50px;"><span class="time-label">9 pm</span></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                                <td style="height: 60px; padding: 0; text-align: center; vertical-align: middle; border: 1px solid #e0e0e0;"></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -392,7 +494,6 @@
             <div style="width: 100%; padding: 20px; text-align: center;">
                 <h2>Finals Schedule</h2>
                 <div style="max-width: 900px; margin: 0 auto; background-color: #f5f5f5; padding: 20px; border-radius: 8px;">
-                    <p>Finals schedule will be displayed here.</p>
                 </div>
             </div>
         </div>
@@ -418,120 +519,426 @@
         </div>
 
         <!-- Add Finals tab content -->
-        <div id="Finals" class="tab-content">
-            <div class="finals-container">
-                <h2>Fall 2024 Finals Schedule</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Day</th>
-                            <th>Time</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Monday</td>
-                            <td>8:00 AM - 10:00 AM</td>
-                            <td>December 9, 2024</td>
-                        </tr>
-                        <tr>
-                            <td>Monday</td>
-                            <td>10:30 AM - 12:30 PM</td>
-                            <td>December 9, 2024</td>
-                        </tr>
-                        <tr>
-                            <td>Monday</td>
-                            <td>1:00 PM - 3:00 PM</td>
-                            <td>December 9, 2024</td>
-                        </tr>
-                        <tr>
-                            <td>Monday</td>
-                            <td>3:30 PM - 5:30 PM</td>
-                            <td>December 9, 2024</td>
-                        </tr>
-                        <tr>
-                            <td>Tuesday</td>
-                            <td>8:00 AM - 10:00 AM</td>
-                            <td>December 10, 2024</td>
-                        </tr>
-                        <tr>
-                            <td>Tuesday</td>
-                            <td>10:30 AM - 12:30 PM</td>
-                            <td>December 10, 2024</td>
-                        </tr>
-                        <tr>
-                            <td>Tuesday</td>
-                            <td>1:00 PM - 3:00 PM</td>
-                            <td>December 10, 2024</td>
-                        </tr>
-                        <tr>
-                            <td>Tuesday</td>
-                            <td>3:30 PM - 5:30 PM</td>
-                            <td>December 10, 2024</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <h2>Spring 2025 Finals Schedule</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Day</th>
-                            <th>Time</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Monday</td>
-                            <td>8:00 AM - 10:00 AM</td>
-                            <td>May 5, 2025</td>
-                        </tr>
-                        <tr>
-                            <td>Monday</td>
-                            <td>10:30 AM - 12:30 PM</td>
-                            <td>May 5, 2025</td>
-                        </tr>
-                        <tr>
-                            <td>Monday</td>
-                            <td>1:00 PM - 3:00 PM</td>
-                            <td>May 5, 2025</td>
-                        </tr>
-                        <tr>
-                            <td>Monday</td>
-                            <td>3:30 PM - 5:30 PM</td>
-                            <td>May 5, 2025</td>
-                        </tr>
-                        <tr>
-                            <td>Tuesday</td>
-                            <td>8:00 AM - 10:00 AM</td>
-                            <td>May 6, 2025</td>
-                        </tr>
-                        <tr>
-                            <td>Tuesday</td>
-                            <td>10:30 AM - 12:30 PM</td>
-                            <td>May 6, 2025</td>
-                        </tr>
-                        <tr>
-                            <td>Tuesday</td>
-                            <td>1:00 PM - 3:00 PM</td>
-                            <td>May 6, 2025</td>
-                        </tr>
-                        <tr>
-                            <td>Tuesday</td>
-                            <td>3:30 PM - 5:30 PM</td>
-                            <td>May 6, 2025</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="finals-info-box">
-                    <h3>Final Examination Information</h3>
-                    <p>Final examinations are held at the end of each semester as indicated in the University calendar. Students are responsible for consulting the final examination schedule before making travel arrangements.</p>
-                    <p>Final examinations or their equivalent can be administered only during the final examination period. Students are not expected to take more than two final examinations in one calendar day.</p>
-                </div>
+        <div id="Finals" class="tab-content" style="display: block;">
+            <div class="semester-toggle">
+                <button class="semester-switch active" data-semester="fall" id="fall-btn">Fall</button>
+                <button class="semester-switch" data-semester="spring" id="spring-btn">Spring</button>
             </div>
+            
+            <div class="finals-container" id="fall-finals">
+                <h2 style="display: none;">Fall 2024 Finals Schedule</h2>
+                <table class="finals-table">
+                    <thead>
+                        <tr>
+                            <th>Class Days</th>
+                            <th>Class Time</th>
+                            <th>Final Exam Time</th>
+                            <th>Final Exam Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Tuesday Finals -->
+                        <tr>
+                            <td>MWF</td>
+                            <td>8:00 AM</td>
+                            <td>8:00 am to 10:00 am</td>
+                            <td>Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td>MWF</td>
+                            <td>3:10 PM</td>
+                            <td>10:30 am to 12:30 pm</td>
+                            <td>Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td>MWF</td>
+                            <td>10:00 AM</td>
+                            <td>1:00 pm to 3:00 pm</td>
+                            <td>Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>12:25 PM</td>
+                            <td>3:30 pm to 5:30 pm</td>
+                            <td>Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td>MWF</td>
+                            <td>2:10 PM</td>
+                            <td>6:00 pm to 8:00 pm</td>
+                            <td>Tuesday</td>
+                        </tr>
+                        
+                        <!-- Wednesday Finals -->
+                        <tr>
+                            <td>MWF</td>
+                            <td>9:00 AM</td>
+                            <td>8:00 am to 10:00 am</td>
+                            <td>Wednesday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>8:00 AM</td>
+                            <td>10:30 am to 12:30 pm</td>
+                            <td>Wednesday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>9:25 AM</td>
+                            <td>1:00 pm to 3:00 pm</td>
+                            <td>Wednesday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>10:50 AM</td>
+                            <td>3:30 pm to 5:30 pm</td>
+                            <td>Wednesday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>4:10, 4:40 pm</td>
+                            <td>6:00 pm to 8:00 pm</td>
+                            <td>Wednesday</td>
+                        </tr>
+                        
+                        <!-- Thursday Finals -->
+                        <tr>
+                            <td>MWF</td>
+                            <td>11:00 AM</td>
+                            <td>8:00 am to 10:00 am</td>
+                            <td>Thursday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>1:50 PM</td>
+                            <td>10:30 am to 12:30 pm</td>
+                            <td>Thursday</td>
+                        </tr>
+                        <tr>
+                            <td>MWF</td>
+                            <td>1:10 PM</td>
+                            <td>1:00 pm to 3:00 pm</td>
+                            <td>Thursday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>3:15 PM</td>
+                            <td>3:30 pm to 5:30 pm</td>
+                            <td>Thursday</td>
+                        </tr>
+                        <tr>
+                            <td>MWF</td>
+                            <td>4:00, 4:10 pm</td>
+                            <td>6:00 pm to 8:00 pm</td>
+                            <td>Thursday</td>
+                        </tr>
+                        
+                        <!-- Friday Finals -->
+                        <tr>
+                            <td>MW</td>
+                            <td>5:00, 5:10, 6:00 pm</td>
+                            <td>8:00 to 10:00 am</td>
+                            <td>Friday</td>
+                        </tr>
+                        <tr>
+                            <td>M or R</td>
+                            <td>6:00 PM</td>
+                            <td>10:30 am to 12:30 pm</td>
+                            <td>Friday</td>
+                        </tr>
+                        <tr>
+                            <td>T or W</td>
+                            <td>6:00 PM</td>
+                            <td>1:00 pm to 3:00 pm</td>
+                            <td>Friday</td>
+                        </tr>
+                        <tr>
+                            <td>Arranged</td>
+                            <td></td>
+                            <td>3:30 pm to 5:30 pm</td>
+                            <td>Friday</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="finals-container" id="spring-finals" style="display: none;">
+                <h2 style="display: none;">Spring 2025 Finals Schedule</h2>
+                <table class="finals-table">
+                    <thead>
+                        <tr>
+                            <th>Class Days</th>
+                            <th>Class Time</th>
+                            <th>Final Exam Time</th>
+                            <th>Final Exam Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Tuesday Finals -->
+                        <tr>
+                            <td>MWF</td>
+                            <td>8:00 am</td>
+                            <td>8:00 to 10:00 am</td>
+                            <td>Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>9:00, 9:25 am</td>
+                            <td>10:30 am to 12:30 pm</td>
+                            <td>Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td>MWF</td>
+                            <td>11:00 am</td>
+                            <td>1:00 to 3:00 pm</td>
+                            <td>Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>1:50, 2:10, 2:40 pm</td>
+                            <td>3:30 to 5:30 pm</td>
+                            <td>Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td>MWF</td>
+                            <td>3:10 pm</td>
+                            <td>6:00 to 8:00 pm</td>
+                            <td>Tuesday</td>
+                        </tr>
+                        
+                        <!-- Wednesday Finals -->
+                        <tr>
+                            <td>MWF</td>
+                            <td>9:00 am</td>
+                            <td>8:00 to 10:00 am</td>
+                            <td>Wednesday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>10:50 am</td>
+                            <td>10:30 am to 12:30 pm</td>
+                            <td>Wednesday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>3:15 pm</td>
+                            <td>1:00 to 3:00 pm</td>
+                            <td>Wednesday</td>
+                        </tr>
+                        <tr>
+                            <td>MWF</td>
+                            <td>2:10 pm</td>
+                            <td>3:30 to 5:30 pm</td>
+                            <td>Wednesday</td>
+                        </tr>
+                        <tr>
+                            <td>MWF</td>
+                            <td>4:10 pm</td>
+                            <td>6:00 to 8:00 pm</td>
+                            <td>Wednesday</td>
+                        </tr>
+                        
+                        <!-- Thursday Finals -->
+                        <tr>
+                            <td>MWF</td>
+                            <td>10:00 am</td>
+                            <td>8:00 to 10:00 am</td>
+                            <td>Thursday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>8:00 am</td>
+                            <td>10:30 am to 12:30 pm</td>
+                            <td>Thursday</td>
+                        </tr>
+                        <tr>
+                            <td>MWF</td>
+                            <td>1:10 pm</td>
+                            <td>1:00 to 3:00 pm</td>
+                            <td>Thursday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>12:25 pm</td>
+                            <td>3:30 to 5:30 pm</td>
+                            <td>Thursday</td>
+                        </tr>
+                        <tr>
+                            <td>TR</td>
+                            <td>4:10, 4:40 pm</td>
+                            <td>6:00 to 8:00 pm</td>
+                            <td>Thursday</td>
+                        </tr>
+                        
+                        <!-- Friday Finals -->
+                        <tr>
+                            <td>M or W</td>
+                            <td>6:00 pm</td>
+                            <td>8:00 to 10:00 am</td>
+                            <td>Friday</td>
+                        </tr>
+                        <tr>
+                            <td>T or R</td>
+                            <td>6:00 pm</td>
+                            <td>10:30 am to 12:30 pm</td>
+                            <td>Friday</td>
+                        </tr>
+                        <tr>
+                            <td>Arranged</td>
+                            <td></td>
+                            <td>1:00 to 3:00 pm</td>
+                            <td>Friday</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="finals-info-box">
+                <h3>Finals Schedule Information</h3>
+                <p>This table shows when your final exam will be scheduled based on your regular class meeting time.</p>
+                <p>If you have any conflicts, please contact your professor as soon as possible.</p>
+            </div>
+            
+            <style>
+                .semester-toggle {
+                    display: flex;
+                    justify-content: center;
+                    margin-bottom: 20px;
+                }
+                
+                .semester-switch {
+                    padding: 10px 20px;
+                    margin: 0 5px;
+                    background-color: #f8f9fa;
+                    border: 1px solid #dee2e6;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                
+                .semester-switch.active {
+                    background-color: #142A50;
+                    color: white;
+                    border-color: #142A50;
+                    font-weight: 500;
+                }
+                
+                .finals-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 20px 0;
+                    font-size: 16px;
+                }
+                
+                .finals-table th, .finals-table td {
+                    padding: 12px 15px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+                
+                .finals-table th {
+                    background-color: #142A50;
+                    color: white;
+                    font-weight: 600;
+                }
+                
+                .finals-table tr:nth-child(5n+6) {
+                    border-bottom: 1px solid #ddd; /* Changed from 3px solid #142A50 to match other rows */
+                }
+                
+                .finals-table tr:hover {
+                    background-color: rgba(20, 42, 80, 0.05);
+                }
+                
+                .finals-info-box {
+                    margin-top: 30px;
+                    padding: 20px;
+                    background-color: #f8f9fa;
+                    border-left: 5px solid #142A50;
+                    border-radius: 4px;
+                }
+                
+                .finals-info-box h3 {
+                    margin-top: 0;
+                    color: #142A50;
+                }
+                
+                /* Dark mode support */
+                body.dark-mode .semester-switch {
+                    background-color: #2c3e50;
+                    border-color: #3a4a5c;
+                    color: #e0e0e0;
+                }
+                
+                body.dark-mode .semester-switch.active {
+                    background-color: #4A90E2;
+                    border-color: #4A90E2;
+                }
+                
+                body.dark-mode .finals-table th {
+                    background-color: #2c3e50;
+                }
+                
+                body.dark-mode .finals-table td {
+                    border-bottom-color: #3a4a5c;
+                }
+                
+                body.dark-mode .finals-table tr:nth-child(5n+6) {
+                    border-bottom-color: #3a4a5c; /* Keep this line but it will now match other rows */
+                }
+                
+                body.dark-mode .finals-table tr:hover {
+                    background-color: rgba(255, 255, 255, 0.05);
+                }
+                
+                body.dark-mode .finals-info-box {
+                    background-color: #2c3e50;
+                    border-left-color: #4A90E2;
+                }
+                
+                body.dark-mode .finals-info-box h3 {
+                    color: #e0e0e0;
+                }
+            </style>
+            
+            <script>
+                // Add event listeners for semester switching - using a more direct approach
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Get the semester buttons
+                    const fallBtn = document.getElementById('fall-btn');
+                    const springBtn = document.getElementById('spring-btn');
+                    const fallFinals = document.getElementById('fall-finals');
+                    const springFinals = document.getElementById('spring-finals');
+                    
+                    // Add click event for Fall button
+                    fallBtn.addEventListener('click', function() {
+                        // Update button states
+                        fallBtn.classList.add('active');
+                        springBtn.classList.remove('active');
+                        
+                        // Show/hide appropriate content
+                        fallFinals.style.display = 'block';
+                        springFinals.style.display = 'none';
+                    });
+                    
+                    // Add click event for Spring button
+                    springBtn.addEventListener('click', function() {
+                        // Update button states
+                        springBtn.classList.add('active');
+                        fallBtn.classList.remove('active');
+                        
+                        // Show/hide appropriate content
+                        springFinals.style.display = 'block';
+                        fallFinals.style.display = 'none';
+                    });
+                    
+                    // Make sure the Finals tab itself stays visible
+                    const finalsTab = document.getElementById('Finals');
+                    if (finalsTab) {
+                        finalsTab.style.display = 'block';
+                    }
+                });
+            </script>
         </div>
     </main>
 
@@ -539,6 +946,64 @@
     // Simple implementation of the sidebar functions
     function openTab(tabName, event) {
         console.log('Opening tab:', tabName);
+        
+        try {
+            // Handle Finals tab specially to prevent it from disappearing
+            if (tabName === "Finals") {
+                console.log("Opening Finals tab");
+                
+                // Make sure the tab content is visible
+                const finalsTab = document.getElementById("Finals");
+                if (finalsTab) {
+                    finalsTab.style.display = "block";
+                    
+                    // Get the active semester button and show its content
+                    const activeBtn = finalsTab.querySelector('.semester-switch.active');
+                    if (activeBtn) {
+                        const semester = activeBtn.getAttribute('data-semester');
+                        const semesterContent = document.getElementById(semester + '-finals');
+                        
+                        // Hide all semester contents first
+                        document.querySelectorAll('.finals-container').forEach(container => {
+                            container.style.display = 'none';
+                        });
+                        
+                        // Show the active semester content
+                        if (semesterContent) {
+                            semesterContent.style.display = 'block';
+                        }
+                    } else {
+                        // Default to fall if no semester is active
+                        const fallContent = document.getElementById('fall-finals');
+                        if (fallContent) {
+                            fallContent.style.display = 'block';
+                        }
+                        
+                        const fallBtn = document.getElementById('fall-btn');
+                        if (fallBtn) {
+                            fallBtn.classList.add('active');
+                        }
+                    }
+                }
+                
+                // Add active class to the navigation button
+                if (event && event.currentTarget) {
+                    // Remove active class from all tab buttons
+                    const tabButtons = document.getElementsByClassName("tab-button");
+                    for (let i = 0; i < tabButtons.length; i++) {
+                        tabButtons[i].classList.remove("active");
+                        tabButtons[i].style.color = "#333";
+                    }
+                    
+                    // Add active class to the clicked button
+                    event.currentTarget.classList.add("active");
+                    event.currentTarget.style.color = "#142A50";
+                }
+                
+                return; // Exit early for Finals tab
+            }
+            
+            // For other tabs, continue with normal flow
         
         // Hide all tab contents
         const tabContents = document.getElementsByClassName("tab-content");
@@ -565,6 +1030,9 @@
         if (event && event.currentTarget) {
             event.currentTarget.classList.add("active");
             event.currentTarget.style.color = "#142A50";
+            }
+        } catch (error) {
+            console.error("Error in openTab function:", error);
         }
     }
     
@@ -638,11 +1106,11 @@
         // Check if fetchData function is available for the search button
         const searchButton = document.querySelector('#Courses .search-btn');
         if (searchButton) {
-            if (typeof fetchData === 'function') {
+                if (typeof fetchData === 'function') {
                 console.log('fetchData function available, setting up event listener');
                 searchButton.addEventListener('click', fetchData);
-            } else {
-                console.error('fetchData function not found');
+                } else {
+                    console.error('fetchData function not found');
                 // Add a small delay to ensure scripts have time to load
                 setTimeout(function() {
                     if (typeof fetchData === 'function') {
@@ -940,6 +1408,19 @@
                 registrationView.style.display = 'flex';
             }
         }
+    });
+    </script>
+
+    <!-- Remove the Add Test Course button if it exists -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find and remove any Add Test Course button
+            const testCourseButtons = document.querySelectorAll('button, .button, a.btn');
+            testCourseButtons.forEach(button => {
+                if (button.textContent.includes('Add Test Course')) {
+                    button.remove();
+                }
+            });
     });
     </script>
 </body>

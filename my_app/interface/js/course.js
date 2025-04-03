@@ -1,4 +1,11 @@
 /**
+ * This file handles course search and registration functionality
+ */
+
+// Initialize global state
+window.sectionsData = [];
+
+/**
  * Initiates fetching of all necessary data.
  */
 function fetchData() {
@@ -389,115 +396,155 @@ function updateCoursesListWithMockData() {
 }
 
 /**
- * Fetches sections based on search criteria directly from the backend.
- * @param {Object} criteria - Search criteria (subject, course_code, attribute, instructor)
- * @returns {Promise} Resolves with {data: [...]}
+ * Fetches sections based on search criteria
+ * This acts as a facade that either calls the real API or uses mock data
+ * @param {Object} criteria - Search criteria
  */
 function fetchSections(criteria = {}) {
-    console.log('Fetching sections with criteria:', criteria);
+    // For development, we might choose to use mock data or real data
+    const useMockData = false; // Set to false to use real API
     
-    // Always try to fetch from the real backend first
-    fetchSectionsReal(criteria)
-        .catch(error => {
-            console.error('Error fetching sections from backend:', error);
-            console.warn('Retry with a different endpoint...');
-            
-            // Try a different endpoint format as a fallback
-            return fetch('/sections_bp/search' + constructQueryString(criteria))
-    .then(response => {
-        if (!response.ok) {
-                        throw new Error(`Server responded with status: ${response.status}`);
-        }
-        return response.json();
-                })
-                .catch(finalError => {
-                    console.error('Final attempt failed:', finalError);
-                    showNotification('Error connecting to server. Using cached data.', 'error');
-                    // Only use mock data as a last resort
-                    return { data: createMockSectionsBasedOnCriteria(criteria) };
-                });
-    })
-    .then(data => {
-            console.log('Sections data received:', data);
-        displaySections(data.data || []);
-    });
+    if (useMockData) {
+        const sections = createMockSectionsBasedOnCriteria(criteria);
+        // Store sections data globally for reference by other functions
+        window.sectionsData = sections;
+        displaySections(sections);
+    } else {
+        fetchSectionsReal(criteria);
+    }
 }
 
 /**
- * Fetches sections from the backend based on search criteria.
- * @param {Object} criteria - Search criteria (subject, course_code, attribute, instructor)
- * @returns {Promise} Resolves with {data: [...]}
+ * Fetches sections from the real API based on search criteria
+ * @param {Object} criteria - Search criteria
  */
 function fetchSectionsReal(criteria = {}) {
-    // Construct the query string from criteria
-    const queryString = constructQueryString(criteria);
-    console.log('Fetching real sections with query:', queryString);
+    // Show loading state
+    const sectionsList = document.getElementById('sections-list');
+    if (sectionsList) {
+        sectionsList.innerHTML = '<div class="loading">Loading sections...</div>';
+    }
     
-    // Make the actual API call with the correct endpoint
-    return fetch('/sections_bp/search' + queryString)
+    // Construct query string from criteria
+    const queryString = constructQueryString(criteria);
+    
+    // Make API request
+    fetch(`http://localhost:5001/sections_bp/search${queryString}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`Server responded with status: ${response.status}`);
+                throw new Error(`HTTP error ${response.status}`);
             }
             return response.json();
+        })
+        .then(data => {
+            console.log('Fetched sections:', data);
+            
+            if (data && Array.isArray(data.data)) {
+                // Store sections data globally for reference by other functions
+                window.sectionsData = data.data;
+                displaySections(data.data);
+            } else {
+                console.error('Invalid data format received:', data);
+                displaySections([]);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching sections:', error);
+            
+            // Check backend connection and show appropriate error
+            checkBackendConnection()
+                .then(isConnected => {
+                    if (!isConnected) {
+                        displayConnectionError();
+                    } else {
+                        // If connected but still error, show generic error
+                        const sectionsList = document.getElementById('sections-list');
+                        if (sectionsList) {
+                            sectionsList.innerHTML = '<div class="error">An error occurred while fetching sections. Please try again.</div>';
+                        }
+                    }
+                });
         });
 }
 
 /**
- * Creates mock section data based on search criteria
+ * Creates mock section data based on search criteria for testing
  * @param {Object} criteria - Search criteria
- * @returns {Array} Array of mock section objects
+ * @returns {Array} - Array of mock section objects
  */
 function createMockSectionsBasedOnCriteria(criteria) {
-    const subject = criteria.subject || "CPSC";
-    const courseCode = criteria.course_code || "121";
+    const mockSections = [];
+    const subjects = criteria.subject ? [criteria.subject] : ['CPSC', 'MATH', 'CHEM', 'ENGL', 'HIST'];
+    const courseCodes = criteria.course_code ? [criteria.course_code] : ['121', '122', '221', '223', '260', '321', '101', '102'];
     
-    return [
-        {
-            subject: subject,
-            course_code: courseCode,
-            section_number: "01",
-            schedule: "MWF 10:00 AM - 11:00 AM",
-            instructor: criteria.instructor || "John Doe",
-            location: "Herak 201",
-            credits: 3,
-            seats_available: 10,
-            total_seats: 30
-        },
-        {
-            subject: subject,
-            course_code: courseCode,
-            section_number: "02",
-            schedule: "TR 1:00 PM - 2:15 PM",
-            instructor: criteria.instructor || "Jane Smith",
-            location: "Herak 202",
-            credits: 3,
-            seats_available: 0,
-            total_seats: 25
-        },
-        {
-            subject: subject,
-            course_code: courseCode,
-            section_number: "03",
-            schedule: "MWF 2:00 PM - 3:00 PM",
-            instructor: criteria.instructor || "Robert Johnson",
-            location: "Herak 301",
-            credits: 3,
-            seats_available: 5,
-            total_seats: 28
-        },
-        {
-            subject: subject,
-            course_code: courseCode,
-            section_number: "04",
-            schedule: "TR 3:30 PM - 4:45 PM",
-            instructor: criteria.instructor || "Emily Davis",
-            location: "Herak 303",
-            credits: 3,
-            seats_available: 15,
-            total_seats: 30
+    // Generate mock sections based on criteria
+    for (const subject of subjects) {
+        // If filtering by subject and it doesn't match, skip
+        if (criteria.subject && criteria.subject !== subject) continue;
+        
+        for (const courseCode of courseCodes) {
+            // If filtering by course code and it doesn't match, skip
+            if (criteria.course_code && criteria.course_code !== courseCode) continue;
+            
+            // Generate between 1-3 sections for each course
+            const sectionCount = Math.floor(Math.random() * 3) + 1;
+            
+            for (let i = 1; i <= sectionCount; i++) {
+                const sectionNumber = i.toString().padStart(2, '0'); // 01, 02, 03, etc.
+                
+                // Generate random schedule
+                const days = ['MWF', 'TR', 'MW', 'TRF'][Math.floor(Math.random() * 4)];
+                
+                // Generate start time between 8 AM and 4 PM
+                const startHour = 8 + Math.floor(Math.random() * 9);
+                const startMinute = [0, 30][Math.floor(Math.random() * 2)];
+                const startPeriod = startHour >= 12 ? 'PM' : 'AM';
+                const displayStartHour = startHour > 12 ? startHour - 12 : startHour;
+                
+                // End time is 50 or 75 minutes later
+                const duration = days.includes('R') ? 75 : 50; // TR classes are typically 75 min
+                let endHour = startHour;
+                let endMinute = startMinute + duration;
+                
+                if (endMinute >= 60) {
+                    endHour += 1;
+                    endMinute -= 60;
+                }
+                
+                const endPeriod = endHour >= 12 ? 'PM' : 'AM';
+                const displayEndHour = endHour > 12 ? endHour - 12 : endHour;
+                
+                // Format times
+                const startTime = `${displayStartHour}:${startMinute.toString().padStart(2, '0')} ${startPeriod}`;
+                const endTime = `${displayEndHour}:${endMinute.toString().padStart(2, '0')} ${endPeriod}`;
+                
+                // Create mock section
+                const mockSection = {
+                    subject: subject,
+                    course_code: courseCode,
+                    section_number: sectionNumber,
+                    schedule: `${days} ${startTime} - ${endTime}`,
+                    instructor: ['Smith, John', 'Johnson, Sarah', 'Williams, Michael', 'Brown, Lisa'][Math.floor(Math.random() * 4)],
+                    location: ['College Hall 101', 'Herak Center 222', 'Hughes Hall 304', 'Tilford Center 201'][Math.floor(Math.random() * 4)],
+                    credits: ['3', '4', '1'][Math.floor(Math.random() * 3)],
+                    seats_available: Math.floor(Math.random() * 30),
+                    total_seats: 30
+                };
+                
+                // If filtering by instructor and it doesn't match, skip
+                if (criteria.instructor && !mockSection.instructor.toLowerCase().includes(criteria.instructor.toLowerCase())) {
+                    continue;
+                }
+                
+                mockSections.push(mockSection);
+            }
         }
-    ];
+    }
+    
+    // Ensure we're storing this mock data globally
+    window.sectionsData = mockSections;
+    
+    return mockSections;
 }
 
 /**
@@ -505,339 +552,376 @@ function createMockSectionsBasedOnCriteria(criteria) {
  * @param {Array} sections - Array of section objects
  */
 function displaySections(sections) {
-    // Get the correct container element
-    const coursesListContainer = document.getElementById('courses-list');
-    if (!coursesListContainer) {
-        console.error('Courses list container not found');
+    const sectionsList = document.getElementById('sections-list');
+    if (!sectionsList) {
+        console.error('Sections list container not found');
         return;
     }
-
-    // Clear the loading message if it exists
-    const loadingMessage = coursesListContainer.querySelector('p');
-    if (loadingMessage && loadingMessage.textContent === 'Loading sections...') {
-        coursesListContainer.innerHTML = '';
-    }
-
-    // Create a new list for the sections
-    const sectionsList = document.createElement('ul');
-    sectionsList.id = 'sections-list';
-    sectionsList.style.listStyle = 'none';
-    sectionsList.style.padding = '0';
-    sectionsList.style.margin = '0';
-
-    // If no sections were found, show a message
-    if (!sections || sections.length === 0) {
-        sectionsList.innerHTML = `
-            <div style="color: #0c5460; background-color: #d1ecf1; padding: 10px; border-radius: 4px;">
-                <p style="margin: 0;">No sections found matching your criteria.</p>
-            </div>
-        `;
-        coursesListContainer.appendChild(sectionsList);
-        return;
-    }
-
-    // 1) Create an array of unique sections
-    const uniqueSections = [];
-    const seen = new Set();
     
-    // Process each section
+    // Clear previous sections
+    sectionsList.innerHTML = '';
+    
+    if (!sections || sections.length === 0) {
+        sectionsList.innerHTML = '<p class="no-results">No sections found. Try different search criteria.</p>';
+        return;
+    }
+    
+    // Group sections by course
+    const courseGroups = {};
     sections.forEach(section => {
-        // Create a unique key for the section
-        const key = `${section.subject}-${section.course_code}-${section.section_number}`;
-        
-        // Only add each section once
-        if (!seen.has(key)) {
-            seen.add(key);
-            uniqueSections.push(section);
+        const courseKey = `${section.subject} ${section.course_code}`;
+        if (!courseGroups[courseKey]) {
+            courseGroups[courseKey] = [];
         }
+        courseGroups[courseKey].push(section);
     });
-
-    console.log(`Displaying ${uniqueSections.length} unique sections`);
-
-    // Create an HTML fragment to hold all sections
-    const sectionsListHTML = document.createDocumentFragment();
-
-    // 2) Create and add list items for each section
-    uniqueSections.forEach(section => {
-        const li = document.createElement('li');
-        li.style.marginBottom = '20px';
-        li.style.padding = '15px';
-        li.style.borderRadius = '8px';
-        li.style.backgroundColor = '#f9f9f9';
-        li.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+    
+    // Create section items for each course
+    Object.keys(courseGroups).forEach(courseKey => {
+        const courseSections = courseGroups[courseKey];
         
-        // Calculate seats information
-        const seatsAvailable = section.seats_available !== undefined ? section.seats_available : '?';
-        const totalSeats = section.total_seats !== undefined ? section.total_seats : '?';
+        // Create course group header
+        const courseHeader = document.createElement('div');
+        courseHeader.className = 'course-header';
+        courseHeader.innerHTML = `
+            <h3>${courseKey}</h3>
+            <p class="section-count">${courseSections.length} section${courseSections.length !== 1 ? 's' : ''}</p>
+        `;
+        sectionsList.appendChild(courseHeader);
         
-        // Extract schedule, location, and instructor (with defaults)
-        const schedule = section.schedule || 'Not specified';
-        const location = section.location || 'TBA';
-        const instructor = section.instructor || 'TBA';
-        
-        li.innerHTML = `
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="font-weight: 600; color: #142A50; font-size: 16px;">
-                        ${section.subject} ${section.course_code} - ${section.section_number}
-                    </span>
-                    <span style="background-color: ${seatsAvailable > 0 ? '#d4edda' : '#f8d7da'}; color: ${seatsAvailable > 0 ? '#155724' : '#721c24'}; padding: 2px 8px; border-radius: 4px; font-size: 13px; font-weight: 500;">
-                        ${seatsAvailable} / ${totalSeats} seats
-                    </span>
+        // Create section items
+        courseSections.forEach(section => {
+            const sectionItem = document.createElement('div');
+            sectionItem.className = 'section-item';
+            
+            // Determine seat availability status
+            let availabilityClass = 'available';
+            let availabilityText = 'Available';
+            
+            if (section.seats_available === 0) {
+                availabilityClass = 'full';
+                availabilityText = 'Full';
+            } else if (section.seats_available < 5) {
+                availabilityClass = 'limited';
+                availabilityText = 'Limited';
+            }
+            
+            // Format location
+            const location = section.location || 'TBA';
+            
+            // Create the HTML for the section item
+            sectionItem.innerHTML = `
+                <div class="section-header">
+                    <h4>Section ${section.section_number}</h4>
+                    <span class="availability ${availabilityClass}">${availabilityText}</span>
                 </div>
-                
-                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; font-size: 14px; color: #555;">
-                    <div style="flex: 1; min-width: 200px;">
-                        <div><span style="color: #777; margin-right: 5px;">Schedule:</span> ${schedule}</div>
-                        <div><span style="color: #777; margin-right: 5px;">Location:</span> ${location}</div>
-                    </div>
-                    <div style="flex: 1; min-width: 200px;">
-                        <div><span style="color: #777; margin-right: 5px;">Instructor:</span> ${instructor}</div>
-                        <div><span style="color: #777; margin-right: 5px;">Credits:</span> ${section.credits || '?'}</div>
-                    </div>
+                <div class="section-details">
+                    <p><strong>Schedule:</strong> ${section.schedule || 'TBA'}</p>
+                    <p><strong>Instructor:</strong> ${section.instructor || 'TBA'}</p>
+                    <p><strong>Location:</strong> ${location}</p>
+                    <p><strong>Credits:</strong> ${section.credits || '3'}</p>
+                    <p><strong>Seats:</strong> ${section.seats_available}/${section.total_seats}</p>
                 </div>
-                
-                <div style="margin-top: 12px; display: flex; justify-content: flex-end;">
-                    <button onclick="addSectionToSchedule('${section.subject}', '${section.course_code}', '${section.section_number}')" 
-                            style="background-color: #142A50; color: white; border: none; border-radius: 4px; padding: 8px 12px; font-size: 14px; cursor: pointer;">
+                <div class="section-actions">
+                    <button class="add-section-btn" data-subject="${section.subject}" data-course-code="${section.course_code}" data-section="${section.section_number}">
                         Add to Schedule
                     </button>
+                    <button class="search-prereq-btn" data-course="${section.subject} ${section.course_code}">
+                        View Prerequisites
+                    </button>
                 </div>
-        `;
-        
-        sectionsListHTML.appendChild(li);
+            `;
+            
+            sectionsList.appendChild(sectionItem);
+        });
     });
-
-    // Add all sections to the list
-    sectionsList.appendChild(sectionsListHTML);
     
-    // Add the list to the container
-    coursesListContainer.appendChild(sectionsList);
+    // Add event listeners to buttons
+    document.querySelectorAll('.add-section-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const subject = this.getAttribute('data-subject');
+            const courseCode = this.getAttribute('data-course-code');
+            const sectionNumber = this.getAttribute('data-section');
+            
+            // Call the function to add this section to schedule
+            addSectionToSchedule(subject, courseCode, sectionNumber);
+        });
+    });
+    
+    document.querySelectorAll('.search-prereq-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const courseCode = this.getAttribute('data-course');
+            displayPrerequisiteTree(courseCode);
+        });
+    });
 }
 
 /**
- * Adds a section to the schedule grid.
- * @param {string} subject - Subject code (e.g., "CPSC")
- * @param {string} courseCode - Course code (e.g., "121")
- * @param {string} sectionNumber - Section number (e.g., "01")
+ * Gets the index of a day letter (M, T, W, R, F)
+ * @param {string} day - The day letter
+ * @returns {number} - The index (0-4)
+ */
+function getDayIndex(day) {
+    const dayMap = {
+        'M': 0,
+        'T': 1,
+        'W': 2,
+        'R': 3,
+        'F': 4
+    };
+    return dayMap[day] || -1;
+}
+
+/**
+ * Adds a section to the schedule grid
  */
 function addSectionToSchedule(subject, courseCode, sectionNumber) {
-    console.log(`Adding section to schedule: ${subject} ${courseCode}-${sectionNumber}`);
+    console.log(`Adding section to schedule: ${subject} ${courseCode} ${sectionNumber}`);
     
-    // Make sure we're viewing the registration view with schedule grid
-    const registrationView = document.getElementById('registration-view');
-    if (registrationView) {
-        registrationView.style.display = 'block';
-    }
-
-    // Use the original element IDs that exist in the HTML
-    const sectionsList = document.getElementById('sections-list');
-    if (!sectionsList) {
-        console.error('Sections list not found');
-        showNotification('Error: Could not find the sections list', 'error');
+    // Find the section data from our sections array
+    const sectionData = findSectionByNumber(subject, courseCode, sectionNumber);
+    
+    if (!sectionData) {
+        console.error(`Section ${sectionNumber} of ${subject} ${courseCode} not found.`);
+        showNotification(`Section ${sectionNumber} of ${subject} ${courseCode} not found.`, 'error');
         return;
     }
     
-    // If no section is found with the details, use mock data
-    if (typeof mockSections !== 'undefined' && mockSections) {
-        console.log('Using mock data for section');
-        
-        // Use a random color from our palette for this course
-        const courseColor = getRandomCourseColor();
-        
-        // Mock schedule data - in a real app, this would come from the server
-        const mockStartTime = '10:00 AM';
-        const mockEndTime = '11:15 AM';
-        const mockDays = ['M', 'W', 'F'];
-        const mockLocation = 'TBA';
-        const mockInstructor = 'TBA';
-        
-        // Convert mock times to grid hours
-        const startHour = parseTimeToHour(mockStartTime);
-        const endHour = parseTimeToHour(mockEndTime);
-        
-        // Add the course to the grid for each day
-        mockDays.forEach(day => {
-            const dayIndex = getDayIndex(day);
-            addCourseToGrid(
-                dayIndex,
-                startHour,
-                endHour,
-                `${subject} ${courseCode}`,
-                mockLocation,
-                mockInstructor,
-                courseColor
-            );
-        });
-        
-        // Show success message
-        showNotification(`Added ${subject} ${courseCode} to your schedule`, 'success');
-        
+    // Parse the schedule information (days, time)
+    const scheduleInfo = sectionData.schedule;
+    if (!scheduleInfo || scheduleInfo === 'TBA' || scheduleInfo === 'Not specified') {
+        showNotification(`Schedule information not available for ${subject} ${courseCode} ${sectionNumber}.`, 'info');
         return;
+    }
+    
+    // Check if the section is already added
+    const existingCourses = document.querySelectorAll('.course-block');
+    for (const courseEl of existingCourses) {
+        if (courseEl.getAttribute('data-section') === sectionNumber && 
+            courseEl.getAttribute('data-course') === `${subject} ${courseCode}`) {
+            showNotification(`${subject} ${courseCode} ${sectionNumber} is already in your schedule.`, 'info');
+            return;
+        }
     }
     
     try {
-        // Find the section element with the matching details
-        const sectionElement = Array.from(sectionsList.querySelectorAll('li')).find(li => {
-            return li.innerHTML.includes(`${subject} ${courseCode} - ${sectionNumber}`);
-        });
-
-        if (!sectionElement) {
-            console.error('Section element not found in list');
-            showNotification('Error: Could not find the selected section', 'error');
+        // Parse days and time information - improved to handle different formats
+        // First split by the first space to separate days from times
+        const firstSpaceIndex = scheduleInfo.indexOf(' ');
+        if (firstSpaceIndex === -1) {
+            showNotification(`Invalid schedule format: ${scheduleInfo}`, 'error');
             return;
         }
-
-        // Extract schedule information from the section element
-        const scheduleText = sectionElement.querySelector('div[style*="flex: 1"] div:first-child').textContent;
-        const scheduleValue = scheduleText.split(':')[1]?.trim() || 'Not specified';
         
-        // Extract other information
-        const instructorText = sectionElement.querySelector('div[style*="flex: 1"] div:nth-child(2)').textContent;
-        const instructorValue = instructorText.split(':')[1]?.trim() || 'TBA';
+        const days = scheduleInfo.substring(0, firstSpaceIndex).trim();
+        let timeRange = scheduleInfo.substring(firstSpaceIndex + 1).trim();
         
-        const locationText = sectionElement.querySelector('div[style*="flex: 1"]:nth-child(1) div:nth-child(2)').textContent;
-        const locationValue = locationText.split(':')[1]?.trim() || 'TBA';
-        
-        console.log('Parsed course info:', {
-            schedule: scheduleValue,
-            instructor: instructorValue,
-            location: locationValue
-        });
-        
-        // Parse the schedule format (e.g., "MWF 10:00 AM - 11:00 AM")
-        const days = [];
-        if (scheduleValue.includes('M')) days.push('M');
-        if (scheduleValue.includes('TR') || scheduleValue.includes('TTh')) {
-            days.push('T');
-            days.push('R');
-        } else {
-            if (scheduleValue.includes('T') && !scheduleValue.includes('Th')) days.push('T');
-            if (scheduleValue.includes('Th')) days.push('R');
-        }
-        if (scheduleValue.includes('W')) days.push('W');
-        if (scheduleValue.includes('F')) days.push('F');
-        
-        // If no days were parsed, use default days
-        if (days.length === 0) {
-            console.warn('No days parsed from schedule, using default MWF');
-            days.push('M', 'W', 'F');
+        // Extract start and end times - handle format with or without spaces around hyphen
+        // This regex handles formats like "10:00 AM - 10:50 AM", "10:00AM - 10:50AM", or "10:00AM-10:50AM"
+        const timeMatch = timeRange.match(/(\d+:\d+\s*(?:AM|PM))\s*-\s*(\d+:\d+\s*(?:AM|PM))/i);
+        if (!timeMatch) {
+            showNotification(`Could not parse time information: ${timeRange}`, 'error');
+            return;
         }
         
-        console.log('Parsed days:', days);
+        const startTime = timeMatch[1].trim();
+        const endTime = timeMatch[2].trim();
         
-        // Extract time (e.g., "10:00 AM - 11:00 AM")
-        let startTime = '';
-        let endTime = '';
-        
-        // Simple time extraction using regex
-        const timePattern = /(\d{1,2}:\d{2}\s*[AP]M)\s*-\s*(\d{1,2}:\d{2}\s*[AP]M)/i;
-        const timeMatch = scheduleValue.match(timePattern);
-        
-        if (timeMatch) {
-            startTime = timeMatch[1];
-            endTime = timeMatch[2];
-        } else {
-            // Try another pattern for times without AM/PM
-            const simpleTimePattern = /(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/;
-            const simpleTimeMatch = scheduleValue.match(simpleTimePattern);
-            
-            if (simpleTimeMatch) {
-                startTime = simpleTimeMatch[1];
-                endTime = simpleTimeMatch[2];
-            }
-        }
-        
-        // If we still don't have times, use default times
-        if (!startTime || !endTime) {
-            console.warn('Could not parse time from schedule, using default times');
-            startTime = '10:00 AM';  // Default start time
-            endTime = '11:15 AM';    // Default end time
-        }
-        
-        console.log('Parsed times:', { startTime, endTime });
-        
-        // Convert start/end times to row indices in the schedule grid
-        const startHour = parseTimeToHour(startTime);
-        const endHour = parseTimeToHour(endTime);
-        
-        console.log('Converted to grid hours:', { startHour, endHour });
-        
-        // Use a random color from our palette for this course
+        // Get a random color for this course
         const courseColor = getRandomCourseColor();
         
-        // Check that we have all we need before adding to grid
-        if (days.length > 0 && startHour >= 0 && endHour > startHour) {
-            // Add the course to the schedule grid for each day
-            days.forEach(day => {
-                const dayIndex = getDayIndex(day);
-                if (dayIndex !== -1) {
-                    console.log(`Adding to grid: day=${day}, dayIndex=${dayIndex}, hour=${startHour}-${endHour}`);
-                    addCourseToGrid(
-                        dayIndex, 
-                        startHour, 
-                        endHour, 
-                        `${subject} ${courseCode}`, 
-                        locationValue, 
-                        instructorValue,
-                        courseColor
-                    );
-                } else {
-                    console.warn(`Invalid day: ${day}`);
-                }
+        // Add course blocks for each day
+        for (const day of days) {
+            const dayIndex = getDayIndex(day);
+            if (dayIndex === -1) continue;
+            
+            // Find the start and end times in hours for positioning
+            const startHour = parseTimeToHour(startTime);
+            const endHour = parseTimeToHour(endTime);
+            
+            if (isNaN(startHour) || isNaN(endHour)) {
+                showNotification(`Invalid time format: ${timeRange}`, 'error');
+                return;
+            }
+            
+            // Get the base row for the starting time
+            const timeRow = findTimeRow(startTime);
+            if (!timeRow) {
+                showNotification(`Could not find time slot for ${startTime}`, 'info');
+                continue;
+            }
+            
+            // Get column index (day + 1 because first column is time labels)
+            const colIndex = dayIndex + 1;
+            
+            // Get the target cell and prepare to add the course block
+            const cell = timeRow.cells[colIndex];
+            if (!cell) {
+                console.error(`Cell not found for day index ${dayIndex} at time ${startTime}`);
+                continue;
+            }
+            
+            // Check if there's already a course in this time slot
+            const existingBlock = cell.querySelector('.course-block');
+            if (existingBlock) {
+                const existingCourse = existingBlock.getAttribute('data-course');
+                showNotification(`Time conflict with ${existingCourse}`, 'error');
+                return;
+            }
+            
+            // Create a course block
+            const courseBlock = document.createElement('div');
+            courseBlock.className = 'course-block';
+            courseBlock.style.backgroundColor = courseColor;
+            
+            // Calculate exact hour difference for height - precisely scale the block
+            const durationHours = endHour - startHour;
+            
+            // Get row height from a time row to calculate precise height
+            const rowHeight = timeRow.offsetHeight;
+            
+            // Set position and size based on start time and duration
+            courseBlock.style.position = 'absolute';
+            courseBlock.style.left = '0';
+            courseBlock.style.top = '0'; 
+            courseBlock.style.width = '100%';
+            
+            // Calculate height based on duration - each hour is one row height
+            const heightInRows = durationHours;
+            courseBlock.style.height = `${heightInRows * 100}%`;
+            
+            // Store course data as attributes
+            courseBlock.setAttribute('data-course', `${subject} ${courseCode}`);
+            courseBlock.setAttribute('data-section', sectionNumber);
+            courseBlock.setAttribute('data-credits', sectionData.credits || '3');
+            courseBlock.setAttribute('data-start-time', startTime);
+            courseBlock.setAttribute('data-end-time', endTime);
+            courseBlock.setAttribute('data-day', day);
+
+            // Create delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'course-delete-btn';
+            deleteButton.innerHTML = '×'; // Using the multiplication symbol as an X
+            deleteButton.title = `Remove ${subject} ${courseCode}`;
+            
+            // Add delete button click handler
+            deleteButton.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent event from bubbling to parent
+                // Remove all instances of this course across all days
+                removeCourseFromSchedule(subject, courseCode, sectionNumber);
             });
             
+            // Add course information
+            courseBlock.innerHTML = `
+                <div class="event-name">${subject} ${courseCode}</div>
+                <div class="event-time">${startTime} - ${endTime}</div>
+                <div class="event-location">${sectionData.location || 'TBA'}</div>
+            `;
+            
+            // Append the delete button to the course block
+            courseBlock.appendChild(deleteButton);
+            
+            // Add double-click event to remove course (keeping as alternative)
+            courseBlock.addEventListener('dblclick', function() {
+                removeCourseFromSchedule(subject, courseCode, sectionNumber, day);
+            });
+            
+            // Add the course block to the cell
+            cell.style.position = 'relative'; // Make sure the cell can position absolute children
+            cell.appendChild(courseBlock);
+            
+            // Add highlight animation
+            courseBlock.classList.add('highlight-animation');
+            setTimeout(() => {
+                courseBlock.classList.remove('highlight-animation');
+            }, 1500);
+            
+            // Update total credits
+            updateCreditCount();
+            
+            showNotification(`${subject} ${courseCode} added to schedule.`, 'success');
+        }
+    } catch (error) {
+        console.error('Error adding course to schedule:', error);
+        showNotification('Error adding course to schedule. Please try again.', 'error');
+    }
+}
+
+/**
+ * Removes a course section from the schedule grid
+ * @param {string} subject - The course subject
+ * @param {string} courseCode - The course code
+ * @param {string} sectionNumber - The section number
+ * @param {string} day - The day of the course to remove (optional - if provided, only removes that day's instance)
+ */
+function removeCourseFromSchedule(subject, courseCode, sectionNumber, day = null) {
+    // Confirmation message
+    const confirmMessage = day 
+        ? `Remove ${subject} ${courseCode} on ${getDayName(day)} from your schedule?`
+        : `Remove ${subject} ${courseCode} from your schedule?`;
+    
+    if (confirm(confirmMessage)) {
+        let removed = false;
+        
+        // Find all instances of this course section
+        const courseBlocks = document.querySelectorAll('.course-block');
+        courseBlocks.forEach(block => {
+            const blockCourse = block.getAttribute('data-course');
+            const blockSection = block.getAttribute('data-section');
+            const blockDay = block.getAttribute('data-day');
+            
+            // If day is specified, only remove that specific day's block
+            // Otherwise remove all instances of this section
+            if (blockCourse === `${subject} ${courseCode}` && 
+                blockSection === sectionNumber && 
+                (!day || blockDay === day)) {
+                block.remove();
+                removed = true;
+            }
+        });
+        
+        if (removed) {
             // Update the credit count
             updateCreditCount();
             
-            // Show a success message
-            showNotification(`Added ${subject} ${courseCode} to your schedule`, 'success');
-        } else {
-            console.error('Invalid schedule parameters:', { days, startHour, endHour });
-            showNotification('Could not add course to schedule due to invalid schedule', 'error');
+            // Show notification
+            const dayText = day ? ` on ${getDayName(day)}` : '';
+            showNotification(`${subject} ${courseCode} removed from schedule${dayText}.`, 'info');
         }
-    } catch (error) {
-        console.error('Error adding section to schedule:', error);
-        showNotification('Error adding course to schedule: ' + error.message, 'error');
     }
 }
 
 /**
- * Parses a time string and returns the corresponding hour as a number.
- * @param {string} timeString - Time string (e.g., "10:00 AM")
- * @returns {number} Hour value (e.g., 10)
+ * Gets the full name of a day from its letter code
+ * @param {string} day - The day letter (M, T, W, R, F)
+ * @returns {string} - The full day name
  */
-function parseTimeToHour(timeString) {
-    // Default to 8 AM if parsing fails
-    if (!timeString) return 8;
-    
-    let hour = 8;
-    
-    // Parse hour from time string
-    const hourMatch = timeString.match(/(\d{1,2}):/);
-    if (hourMatch) {
-        hour = parseInt(hourMatch[1], 10);
-        
-        // Adjust for PM times
-        if (timeString.toUpperCase().includes('PM') && hour < 12) {
-            hour += 12;
-        }
-        
-        // Convert to grid hour (8 AM = row 0)
-        hour = hour - 8;
-    }
-    
-    // Ensure hour is within valid range
-    return Math.max(0, Math.min(hour, 9));
+function getDayName(day) {
+    const dayNames = {
+        'M': 'Monday',
+        'T': 'Tuesday',
+        'W': 'Wednesday',
+        'R': 'Thursday',
+        'F': 'Friday'
+    };
+    return dayNames[day] || day;
 }
 
-/**
- * Gets the column index for a day abbreviation.
- * @param {string} day - Day abbreviation (M, T, W, R, F)
- * @returns {number} The column index (0-4), or -1 if invalid
- */
-function getDayIndex(day) {
-    const dayMapping = { 'M': 0, 'T': 1, 'W': 2, 'R': 3, 'F': 4 };
-    return dayMapping[day] !== undefined ? dayMapping[day] : -1;
+// Add style for highlight animation
+if (!document.getElementById('highlight-animation-style')) {
+    const style = document.createElement('style');
+    style.id = 'highlight-animation-style';
+    style.textContent = `
+        @keyframes highlight-pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+        }
+        .highlight-animation {
+            animation: highlight-pulse 1.5s ease;
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 /**
@@ -874,164 +958,6 @@ function getRandomCourseColor() {
 }
 
 /**
- * Adds a course to the schedule grid.
- * @param {number} dayIndex - Index of the day column (0-4)
- * @param {number} startHour - Starting hour index (0 = 8am, 1 = 9am, etc.)
- * @param {number} endHour - Ending hour index
- * @param {string} courseTitle - Course title to display
- * @param {string} location - Location to display
- * @param {string} instructor - Instructor to display
- * @param {string} color - Background color for the course
- */
-function addCourseToGrid(dayIndex, startHour, endHour, courseTitle, location, instructor, color) {
-    // Debug the input parameters
-    console.log('addCourseToGrid called with:', {
-        dayIndex, startHour, endHour, courseTitle, location, instructor, color
-    });
-    
-    const scheduleGrid = document.querySelector('.schedule-grid table tbody');
-    if (!scheduleGrid) {
-        console.error('Schedule grid tbody not found');
-        return;
-    }
-    
-    // Log what we found
-    console.log('Found schedule grid:', scheduleGrid);
-    
-    // Convert hour indices to actual table rows
-    const rows = scheduleGrid.querySelectorAll('tr');
-    console.log(`Found ${rows.length} rows in grid`);
-    
-    // Make sure start and end are within valid range
-    startHour = Math.max(0, Math.min(startHour, rows.length - 1));
-    endHour = Math.max(startHour + 1, Math.min(endHour, rows.length));
-    
-    // Calculate the row span
-    const rowSpan = endHour - startHour;
-    console.log(`Using startHour=${startHour}, endHour=${endHour}, rowSpan=${rowSpan}`);
-    
-    // Get the starting cell
-    const startRow = rows[startHour];
-    if (!startRow) {
-        console.error(`Start row not found at index ${startHour}`);
-        return;
-    }
-    
-    const cells = startRow.querySelectorAll('td');
-    console.log(`Found ${cells.length} cells in start row`);
-    
-    const cellIndex = dayIndex + 1; // +1 because first column is time
-    if (cellIndex >= cells.length) {
-        console.error(`Cell index ${cellIndex} out of bounds (max: ${cells.length - 1})`);
-        return;
-    }
-    
-    const startCell = cells[cellIndex];
-    if (!startCell) {
-        console.error(`Could not find cell for day ${dayIndex}, hour ${startHour} (index: ${cellIndex})`);
-        return;
-    }
-    
-    // Check if cell already has a course
-    if (startCell.classList.contains('has-course')) {
-        console.warn('Time slot conflict detected');
-        showNotification('Time slot conflict! This time slot already has a course.', 'error');
-        return;
-    }
-    
-    // Mark start cell as having a course
-    startCell.classList.add('has-course');
-    
-    // Set rowspan to cover the class duration
-    startCell.rowSpan = rowSpan;
-    
-    // Get time from the first cell in the row
-    const timeCell = rows[startHour].querySelector('td:first-child');
-    const startTimeText = timeCell.textContent.trim();
-    
-    // Calculate end time (approximation based on rowspan)
-    let endTimeText = '';
-    if (startHour + rowSpan < rows.length) {
-        endTimeText = rows[startHour + rowSpan].querySelector('td:first-child').textContent.trim();
-    } else {
-        // Last row or beyond, approximate
-        const time = startTimeText.split(':')[0];
-        const hour = parseInt(time) + rowSpan;
-        const period = startTimeText.includes('PM') ? 'PM' : 'AM';
-        endTimeText = `${hour}:00 ${period}`;
-    }
-    
-    // Add course details to the cell
-    startCell.innerHTML = `
-        <div class="course-block event-block" style="
-            background-color: ${color};
-            color: white;
-            height: 100%;
-            border-radius: 4px;
-            padding: 8px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        " data-start-time="${startTimeText}" data-end-time="${endTimeText}">
-            <div class="event-name course-title" style="font-weight: 600; font-size: 14px; margin-bottom: 5px;">${courseTitle}</div>
-            <div class="course-location" style="font-size: 12px;">${location}</div>
-            <div class="course-instructor event-time" style="font-size: 12px; margin-top: auto;">${instructor}</div>
-            
-            <button onclick="removeFromSchedule(event, this)" style="
-                position: absolute;
-                top: 5px;
-                right: 5px;
-                background-color: rgba(255,255,255,0.3);
-                border: none;
-                border-radius: 50%;
-                width: 20px;
-                height: 20px;
-                font-size: 12px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 0;
-                color: white;
-            ">×</button>
-        </div>
-    `;
-    
-    console.log(`Added course ${courseTitle} to cell at day ${dayIndex}, hour ${startHour}`);
-    
-    // Remove the cells that will be covered by this course's rowspan
-    for (let i = 1; i < rowSpan; i++) {
-        const rowToAdjust = rows[startHour + i];
-        if (rowToAdjust) {
-            const cellToRemove = rowToAdjust.querySelectorAll('td')[cellIndex];
-            if (cellToRemove) {
-                cellToRemove.remove();
-                console.log(`Removed cell at row ${startHour + i}, column ${cellIndex}`);
-            } else {
-                console.warn(`Cell to remove not found at row ${startHour + i}, column ${cellIndex}`);
-            }
-        } else {
-            console.warn(`Row to adjust not found at index ${startHour + i}`);
-        }
-    }
-    
-    // Add a tooltip to the course block
-    const courseBlock = startCell.querySelector('.course-block');
-    courseBlock.title = `${courseTitle}\nLocation: ${location}\nInstructor: ${instructor}`;
-    courseBlock.style.cursor = 'pointer';
-    
-    // Add double-click event listener for editing
-    courseBlock.addEventListener('dblclick', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        editEventOnSchedule(this);
-    });
-    
-    console.log('Successfully added course to grid');
-}
-
-/**
  * Updates the credit count displayed in the UI
  */
 function updateCreditCount() {
@@ -1055,58 +981,6 @@ function updateCreditCount() {
     if (creditDisplay) {
         creditDisplay.textContent = `${creditCount} Credits`;
     }
-}
-
-/**
- * Removes a course from the schedule grid.
- * @param {Event} event - The click event
- * @param {HTMLElement} button - The button element that was clicked
- */
-function removeFromSchedule(event, button) {
-    // Prevent the click from bubbling up
-    event.stopPropagation();
-    
-    // Get the course block and cell
-    const courseBlock = button.closest('.course-block');
-    const cell = courseBlock.closest('td');
-    
-    // Get the course title
-    const courseTitle = courseBlock.querySelector('div').textContent;
-    
-    // Ask for confirmation
-    if (confirm(`Remove ${courseTitle} from your schedule?`)) {
-        // We need to handle rowspan - this is a bit complex
-        // For this implementation, we'll refresh the entire grid
-        resetScheduleGrid();
-        
-        // Update the credit count
-        updateCreditCount();
-        
-        // Show confirmation
-        showNotification(`Removed ${courseTitle} from your schedule`, 'info');
-    }
-}
-
-/**
- * Resets the schedule grid to its empty state.
- */
-function resetScheduleGrid() {
-    const scheduleGrid = document.querySelector('.schedule-grid table tbody');
-    if (!scheduleGrid) return;
-    
-    // Create a fresh grid
-    scheduleGrid.innerHTML = `
-        <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">8:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-        <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">9:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-        <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">10:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-        <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">11:00 AM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-        <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">12:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-        <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">1:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-        <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">2:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-        <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">3:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-        <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">4:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-        <tr><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8; color: #495057; font-size: 13px; font-weight: 500;">5:00 PM</td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td><td style="height: 60px; text-align: center; vertical-align: middle; border: 1px solid #e0e4e8;"></td></tr>
-    `;
 }
 
 /**
@@ -1667,4 +1541,230 @@ function constructQueryString(criteria) {
     
     const queryString = params.toString();
     return queryString ? `?${queryString}` : '';
+}
+
+/**
+ * Shows a toast notification
+ * @param {string} message - The message to display
+ * @param {string} type - The type of toast (success, error)
+ */
+function showToast(message, type = 'success') {
+    // Check if we have a showNotification function available
+    if (typeof showNotification === 'function') {
+        showNotification(message, type);
+        return;
+    }
+    
+    console.log(`Toast notification: ${message} (${type})`);
+    
+    // Create a simple toast element if we don't have a notification system
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = message;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        background-color: ${type === 'success' ? '#4caf50' : '#f44336'};
+        color: white;
+        border-radius: 4px;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.5s ease';
+        setTimeout(() => {
+            toast.remove();
+        }, 500);
+    }, 3000);
+}
+
+// Find any test course button or element and remove it
+const testCourseButton = document.querySelector('.add-test-course-btn');
+if (testCourseButton) {
+    testCourseButton.remove();
+}
+
+// Remove any test course functions or references
+function addTestCourseToSchedule() {
+    // Remove this entire function
+}
+
+// Remove any event listeners for test course buttons
+document.removeEventListener('click', function(e) {
+    if (e.target.matches('.add-test-course-btn')) {
+        addTestCourseToSchedule();
+    }
+});
+
+function findTimeRow(timeText) {
+    try {
+        // Parse the time text into a standardized format
+        const timeParts = timeText.match(/(\d+):?(\d*)\s*(AM|PM)?/i);
+        if (!timeParts) return null;
+        
+        let hours = parseInt(timeParts[1], 10);
+        const minutes = timeParts[2] ? parseInt(timeParts[2], 10) : 0;
+        const period = timeParts[3] ? timeParts[3].toUpperCase() : null;
+        
+        // Convert to 24-hour format
+        if (period === 'PM' && hours < 12) hours += 12;
+        if (period === 'AM' && hours === 12) hours = 0;
+        
+        // The time in total minutes since midnight
+        const totalMinutes = hours * 60 + minutes;
+        
+        // Get all time cells from the schedule grid
+        const timeRows = Array.from(document.querySelectorAll('.schedule-grid tbody tr'));
+        if (!timeRows.length) {
+            console.error('No time rows found in schedule grid');
+            return null;
+        }
+        
+        // First try to find exact hour match
+        for (const row of timeRows) {
+            const timeCell = row.querySelector('td:first-child');
+            if (!timeCell) continue;
+            
+            const cellText = timeCell.textContent.trim();
+            const cellTimeParts = cellText.match(/(\d+):?(\d*)\s*(AM|PM)?/i);
+            
+            if (cellTimeParts) {
+                let cellHours = parseInt(cellTimeParts[1], 10);
+                const cellMinutes = cellTimeParts[2] ? parseInt(cellTimeParts[2], 10) : 0;
+                const cellPeriod = cellTimeParts[3] ? cellTimeParts[3].toUpperCase() : null;
+                
+                // Convert to 24-hour format
+                if (cellPeriod === 'PM' && cellHours < 12) cellHours += 12;
+                if (cellPeriod === 'AM' && cellHours === 12) cellHours = 0;
+                
+                const cellTotalMinutes = cellHours * 60 + cellMinutes;
+                
+                // Direct match for the hour
+                if (cellHours === hours && Math.abs(cellMinutes - minutes) < 15) {
+                    console.log(`Found exact time match: ${cellText} for ${timeText}`);
+                    return row;
+                }
+            }
+        }
+        
+        // If no exact match, find the closest row that's before or at our start time
+        let closestRow = null;
+        let smallestDifference = Infinity;
+        
+        for (const row of timeRows) {
+            const timeCell = row.querySelector('td:first-child');
+            if (!timeCell) continue;
+            
+            const cellText = timeCell.textContent.trim();
+            const cellTimeParts = cellText.match(/(\d+):?(\d*)\s*(AM|PM)?/i);
+            
+            if (cellTimeParts) {
+                let cellHours = parseInt(cellTimeParts[1], 10);
+                const cellMinutes = cellTimeParts[2] ? parseInt(cellTimeParts[2], 10) : 0;
+                const cellPeriod = cellTimeParts[3] ? cellTimeParts[3].toUpperCase() : null;
+                
+                // Convert to 24-hour format
+                if (cellPeriod === 'PM' && cellHours < 12) cellHours += 12;
+                if (cellPeriod === 'AM' && cellHours === 12) cellHours = 0;
+                
+                const cellTotalMinutes = cellHours * 60 + cellMinutes;
+                
+                // Find row that's at or before our target time
+                if (cellTotalMinutes <= totalMinutes) {
+                    const difference = totalMinutes - cellTotalMinutes;
+                    
+                    // If this is the closest one so far, update our selection
+                    if (difference < smallestDifference) {
+                        smallestDifference = difference;
+                        closestRow = row;
+                    }
+                }
+            }
+        }
+        
+        // If we found a close match, log it
+        if (closestRow) {
+            const timeCell = closestRow.querySelector('td:first-child');
+            console.log(`Found closest time match: ${timeCell.textContent.trim()} for ${timeText} (difference: ${smallestDifference} minutes)`);
+        } else {
+            console.warn(`No suitable time row found for ${timeText}`);
+        }
+        
+        return closestRow;
+    } catch (error) {
+        console.error('Error finding time row:', error);
+        return null;
+    }
+}
+
+/**
+ * Finds a section by its subject, course code and section number
+ * @param {string} subject - The course subject code (e.g., 'CPSC')
+ * @param {string} courseCode - The course number (e.g., '121')
+ * @param {string} sectionNumber - The section number (e.g., '01')
+ * @returns {Object|null} - The section data or null if not found
+ */
+function findSectionByNumber(subject, courseCode, sectionNumber) {
+    // Check if we have sections data available
+    if (!window.sectionsData || !Array.isArray(window.sectionsData)) {
+        console.error('No sections data available');
+        return null;
+    }
+    
+    // Find the section that matches all three criteria
+    const section = window.sectionsData.find(s => 
+        s.subject === subject && 
+        s.course_code === courseCode && 
+        s.section_number === sectionNumber
+    );
+    
+    if (!section) {
+        console.log(`Section not found: ${subject} ${courseCode} ${sectionNumber}`);
+        console.log('Available sections:', window.sectionsData);
+    }
+    
+    return section;
+}
+
+/**
+ * Parses a time string into a decimal hour value
+ * @param {string} timeString - Time string (e.g., "10:30 AM", "1:45PM")
+ * @returns {number} - Time as a decimal hour (e.g., 10.5)
+ */
+function parseTimeToHour(timeString) {
+    try {
+        // Normalize the time string by removing extra spaces and ensuring proper format
+        let normalizedTime = timeString.trim().replace(/\s+/g, ' ');
+        
+        // Handle format without space between time and AM/PM (e.g., "10:30AM")
+        normalizedTime = normalizedTime.replace(/(\d+:\d+)([AaPp][Mm])/, '$1 $2');
+        
+        // Parse hours, minutes, and period
+        const timeMatch = normalizedTime.match(/(\d+):(\d+)\s*([AaPp][Mm])?/i);
+        if (!timeMatch) return NaN;
+        
+        let hours = parseInt(timeMatch[1], 10);
+        const minutes = parseInt(timeMatch[2], 10);
+        const period = timeMatch[3] ? timeMatch[3].toUpperCase() : null;
+        
+        // Convert to 24-hour format
+        if (period === 'PM' && hours < 12) {
+            hours += 12;
+        } else if (period === 'AM' && hours === 12) {
+            hours = 0;
+        }
+        
+        // Return hours as decimal (e.g., 10:30 becomes 10.5)
+        return hours + (minutes / 60);
+    } catch (error) {
+        console.error('Error parsing time:', error, timeString);
+        return NaN;
+    }
 }

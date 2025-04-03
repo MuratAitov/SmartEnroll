@@ -1,25 +1,77 @@
 /* Event block styles */
-.event-block {
-    position: absolute;
-    width: 100%;  /* Take full width of cell */
-    left: 0;      /* Align to left edge of cell */
-    padding: 8px;
-    border-radius: 4px;
-    background-color: #808080;
-    color: white;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    box-sizing: border-box;  /* Include padding in width calculation */
+.event-block, .course-block, .test-course-block {
+    position: absolute !important;
+    width: 100% !important;  /* Take full width of cell */
+    left: 0 !important;      /* Align to left edge of cell */
+    top: 0 !important;       /* Align to top edge of cell */
+    right: 0 !important;     /* Extend to right edge of cell */
+    padding: 8px !important;
+    border-radius: 4px !important;
+    background-color: #4A90E2 !important;
+    color: white !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+    box-sizing: border-box !important;  /* Include padding in width calculation */
+    z-index: 2 !important;   /* Ensure it appears above grid lines */
+    opacity: 0.9 !important;
+    visibility: visible !important;
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    cursor: pointer !important;
+    position: relative !important; /* Ensure positioning context for delete button */
+}
+
+/* Delete button for course blocks */
+.course-delete-btn {
+    position: absolute !important;
+    top: 2px !important;
+    right: 2px !important;
+    width: 16px !important;
+    height: 16px !important;
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 10px !important;
+    cursor: pointer !important;
+    opacity: 0.7 !important;
+    transition: all 0.2s ease !important;
+    z-index: 3 !important;
+    border: none !important;
+    padding: 0 !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+}
+
+.course-delete-btn:hover {
+    background-color: rgba(255, 0, 0, 0.7) !important;
+    opacity: 1 !important;
+    transform: scale(1.1) !important;
+}
+
+/* Make sure the cell containing the course block has relative positioning */
+.schedule-grid td {
+    position: relative;
+}
+
+.event-block:hover, .course-block:hover, .test-course-block:hover {
+    opacity: 1 !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+    transform: translateY(-2px) !important;
 }
 
 .event-name {
-    font-weight: 500;
-    font-size: 0.9em;
+    font-weight: 600;
+    font-size: 0.95em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-bottom: 2px;
+    padding-right: 14px; /* Make room for the delete button */
 }
 
 .event-time {
@@ -28,6 +80,27 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.event-location {
+    font-size: 0.75em;
+    opacity: 0.8;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: auto;
+}
+
+/* Add animation for course blocks when added */
+@keyframes highlight-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
+    50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+
+.highlight-animation {
+    animation: highlight-pulse 1.5s ease;
 }
 
 /* Export dropdown and button styles */

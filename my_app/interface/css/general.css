@@ -331,101 +331,103 @@ main.schedule-only .schedule-grid {
     width: 100%;
 }
 
-/* Schedule Grid - additional adjustments */
+/* Schedule Grid Styling to match image */
 .schedule-grid {
     flex: 1;
-    background: white;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
 }
 
 .schedule-grid table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    border-spacing: 0;
-    margin-bottom: 0; /* Ensure no margin at bottom */
-    flex: 1;
+    margin-bottom: 0;
+    height: 100%;
+}
+
+.schedule-grid th, 
+.schedule-grid td {
+    border: 1px solid #e0e0e0;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    position: relative;
+    height: 60px;
 }
 
 .schedule-grid th {
-    background-color: #142A50; /* Changed from #00153B to #142A50 */
-    color: white;
-    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
     font-weight: 500;
     font-size: 14px;
-    text-align: center;
-    height: 44px;
-    border: none;
-    vertical-align: middle;
+    height: 36px;
 }
 
-/* Make sure the time column is perfectly centered */
+/* Special styling for time column */
 .schedule-grid td:first-child {
-    width: 100px;
-    color: #495057;
-    font-size: 18px !important;
-    font-weight: 500;
-    text-align: center !important;
-    padding: 0 !important;
-    vertical-align: middle;
+    color: #666;
+    font-size: 12px;
+    font-weight: 400;
+    width: 50px;
+    min-width: 50px;
+    background-color: #f8f9fa;
+    border-top: none;
+    border-bottom: none;
+    vertical-align: top;
+    padding-top: 0;
+    text-align: center;
+    position: relative;
 }
 
-/* Override any conflicting styles with very specific selector */
+/* Create a special container for the time label to position it correctly */
+.time-label {
+    position: absolute;
+    top: -10px; /* Position to sit above the horizontal line */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    display: inline-block;
+    white-space: nowrap;
+    background-color: #f8f9fa; /* Match the column background */
+    padding: 0 5px; /* Add padding to create space around the text */
+    z-index: 3; /* Ensure label appears above grid lines */
+    box-shadow: 0 0 0 3px #f8f9fa; /* Add a background "halo" to hide the line */
+}
+
+/* Hide the horizontal grid lines where they cross the time labels */
+.schedule-grid tbody tr td:first-child:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #f8f9fa; /* Same as column background */
+    z-index: 2; /* Higher than grid lines but lower than labels */
+}
+
+/* Ensure the first column has a right border */
 .schedule-grid tbody tr td:first-child {
-    font-size: 18px !important;
-    text-align: center !important;
-    padding-right: 0 !important;
-    padding-left: 0 !important;
+    border-right: 1px solid #e0e0e0;
 }
 
-/* Add even more specific selector to ensure the time text is larger */
-table.schedule-grid tbody tr td:first-child,
-.schedule-grid table tbody tr td:first-child {
-    font-size: 18px !important;
-    color: #495057; /* Reverted to original color */
-}
-
-/* Consistent styling for all cells */
-.schedule-grid td {
-    border-bottom: 1px solid #e9ecef;
-    border-right: 1px solid #e9ecef;
-    padding: 0;
-    height: 44px;
-    text-align: center;
-    vertical-align: middle;
-}
-
-/* This ensures the headers (M, T, W, R, F) are perfectly centered */
-.schedule-grid thead th:not(:first-child) {
-    width: calc((100% - 100px) / 5);
-}
-
-/* Remove unnecessary borders */
-.schedule-grid td:last-child {
-    border-right: none;
-}
-
-.schedule-grid td:first-child {
-    border-left: none;
-}
-
-/* This removes any default bottom margin on the last row */
-.schedule-grid tbody tr:last-child {
-    margin-bottom: 0;
-}
-
-/* Ensure the table doesn't have outer borders */
-.schedule-grid table {
-    border: none;
-}
-
-/* Ensure the table fills the container completely */
-.schedule-grid table, .schedule-grid {
-    height: 100%;
+.course-block {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    left: 0 !important;
+    top: 0 !important;
+    padding: 8px !important;
+    border-radius: 0 !important;
+    background-color: #4A90E2 !important;
+    color: white !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+    z-index: 2 !important;
+    box-sizing: border-box !important;
 }
 
 /* Specific styling for search button in Pre-Req Tree tab */
