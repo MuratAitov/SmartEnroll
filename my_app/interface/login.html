@@ -5,15 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Gonzaga University</title>
     <link rel="stylesheet" href="./css/forms.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            flex-shrink: 0;
+            background-color: #1A294A; /* Updated Gonzaga navy blue */
+            padding: 15px 0;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .login-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+        }
+        
+        .login-card {
+            max-height: 80vh;
+            overflow-y: auto;
+            max-width: 280px;
+            width: 80%;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            background-color: white;
+            padding: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo img {
+            max-width: 300px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="./assets/GU Logo/IMG_4571.jpg" alt="Gonzaga University Logo">
-            <div class="logo-text">
-                <span class="university-name">GONZAGA</span>
-                <span class="university-subtitle">UNIVERSITY</span>
-            </div>
+            <img src="./assets/GU Logo/login-gulogo.jpg" alt="Gonzaga University Logo">
         </div>
     </header>
 

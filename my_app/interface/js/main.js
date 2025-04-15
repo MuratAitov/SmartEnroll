@@ -4,8 +4,8 @@ import { addEventBlockListeners } from './eventListeners.js';
 import { editEventOnSchedule } from './eventEditing.js';
 
 function initApp() {
-    console.log('Initializing schedule app...');
-
+    console.log('Initializing application...');
+    
     // Completely remove the Finals tab when in Registration
     if (typeof removeAllFinalsContent === 'function') {
         removeAllFinalsContent();
@@ -32,8 +32,25 @@ function initApp() {
         addEventBlockListeners(block);
     });
     
-    // Initialize Registration view immediately
+    // Set up event listeners
+    setupTabChangeHandlers();
+    
+    // Initialize event listeners from eventListeners.js
+    import('./eventListeners.js').then(module => {
+        if (typeof module.initializeEventListeners === 'function') {
+            module.initializeEventListeners();
+        }
+    });
+    
+    // Switch to registration view by default
     forceSwitchToRegistration();
+    
+    // Initialize sidebar tabs for registration view
+    initSidebarTabs();
+    
+    // Other initialization code...
+    
+    // ... existing code ...
 }
 
 // Dedicated function to force switch to Registration view
@@ -101,6 +118,12 @@ function forceSwitchToRegistration() {
     if (typeof removeAllFinalsContent === 'function') {
         setTimeout(removeAllFinalsContent, 0);
     }
+    
+    // Make sure sidebar is visible
+    document.querySelector('.sidebar').style.display = 'block';
+    
+    // Initialize the sidebar tabs
+    initSidebarTabs();
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
@@ -358,3 +381,102 @@ function handleFinalsTabClick(tabButton) {
 // Make functions available globally
 window.forceSwitchToRegistration = forceSwitchToRegistration;
 window.handleFinalsTabClick = handleFinalsTabClick;
+
+/**
+ * Initializes the sidebar tabs for Registration view
+ */
+function initSidebarTabs() {
+    const sidebarTabs = document.querySelector('.sidebar-tabs');
+    if (!sidebarTabs) {
+        console.warn('Sidebar tabs container not found, creating it');
+        createSidebarTabs();
+    } else {
+        // Make sure the tabs are visible
+        sidebarTabs.style.display = 'flex';
+        
+        // Activate the default tab (Courses)
+        const courseTab = sidebarTabs.querySelector('a[data-tab="Courses"]');
+        if (courseTab) {
+            courseTab.classList.add('active');
+            
+            // Show the corresponding content
+            const courseContent = document.getElementById('Courses');
+            if (courseContent) {
+                document.querySelectorAll('.sidebar .tab-content').forEach(content => {
+                    content.classList.remove('active');
+                    content.style.display = 'none';
+                });
+                courseContent.classList.add('active');
+                courseContent.style.display = 'block';
+            }
+        }
+    }
+}
+
+/**
+ * Creates the sidebar tabs if they don't exist
+ */
+function createSidebarTabs() {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    
+    // Create tabs container
+    const tabsContainer = document.createElement('div');
+    tabsContainer.className = 'sidebar-tabs';
+    
+    // Create tab links with names matching the image
+    const tabs = [
+        { name: 'Courses', id: 'Courses' },
+        { name: 'Events', id: 'RecurringEvents' },
+        { name: 'PreReq', id: 'PrereqSearch' }
+    ];
+    
+    tabs.forEach(tab => {
+        const tabLink = document.createElement('a');
+        tabLink.href = '#';
+        tabLink.textContent = tab.name;
+        tabLink.dataset.tab = tab.id;
+        
+        tabLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.sidebar-tabs a').forEach(t => {
+                t.classList.remove('active');
+            });
+            
+            // Activate this tab
+            this.classList.add('active');
+            
+            // Hide all tab contents
+            document.querySelectorAll('.sidebar .tab-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none';
+            });
+            
+            // Show the selected tab content
+            const tabContent = document.getElementById(tab.id);
+            if (tabContent) {
+                tabContent.classList.add('active');
+                tabContent.style.display = 'block';
+            }
+        });
+        
+        tabsContainer.appendChild(tabLink);
+    });
+    
+    // Insert at the beginning of the sidebar
+    sidebar.insertBefore(tabsContainer, sidebar.firstChild);
+    
+    // Activate the first tab by default
+    const firstTab = tabsContainer.querySelector('a');
+    if (firstTab) {
+        firstTab.classList.add('active');
+        
+        const firstTabContent = document.getElementById(tabs[0].id);
+        if (firstTabContent) {
+            firstTabContent.classList.add('active');
+            firstTabContent.style.display = 'block';
+        }
+    }
+}

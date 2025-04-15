@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Registration - SmartEnroll</title>
+    <link rel="stylesheet" href="../css/registration.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        // Run immediately to ensure the schedule grid is visible
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOMContentLoaded - ensuring schedule grid is visible");
+            
+            function createAndShowScheduleGrid() {
+                // Find the main content container
+                const contentContainer = document.querySelector('.content-container, main');
+                if (!contentContainer) {
+                    console.error('Content container not found');
+                    return;
+                }
+                
+                // Check if schedule grid exists, create if not
+                let scheduleContainer = document.querySelector('.schedule-container');
+                if (!scheduleContainer) {
+                    console.log('Creating schedule container');
+                    
+                    // Create schedule container
+                    scheduleContainer = document.createElement('div');
+                    scheduleContainer.className = 'schedule-container';
+                    scheduleContainer.style.display = 'flex';
+                    scheduleContainer.style.flexDirection = 'column';
+                    scheduleContainer.style.flex = '1';
+                    scheduleContainer.style.minHeight = '600px';
+                    scheduleContainer.style.backgroundColor = '#fff';
+                    scheduleContainer.style.borderRadius = '8px';
+                    scheduleContainer.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
+                    
+                    // Add header
+                    const scheduleHeader = document.createElement('div');
+                    scheduleHeader.className = 'schedule-header';
+                    scheduleHeader.innerHTML = `
+                        <h2>Course Schedule</h2>
+                        <div class="term-selector">
+                            <button class="term-btn active">Term 1 (Fall)</button>
+                            <button class="term-btn">Term 2 (Winter)</button>
+                        </div>
+                    `;
+                    
+                    scheduleContainer.appendChild(scheduleHeader);
+                    
+                    // Create schedule view with grid
+                    const scheduleView = document.createElement('div');
+                    scheduleView.className = 'schedule-view';
+                    scheduleView.style.display = 'flex';
+                    scheduleView.style.flex = '1';
+                    
+                    // Add time column
+                    const timeColumn = document.createElement('div');
+                    timeColumn.className = 'time-column';
+                    timeColumn.innerHTML = `
+                        <div class="time-header"></div>
+                        <div class="time-slot">8:00</div>
+                        <div class="time-slot">9:00</div>
+                        <div class="time-slot">10:00</div>
+                        <div class="time-slot">11:00</div>
+                        <div class="time-slot">12:00</div>
+                        <div class="time-slot">13:00</div>
+                        <div class="time-slot">14:00</div>
+                        <div class="time-slot">15:00</div>
+                        <div class="time-slot">16:00</div>
+                        <div class="time-slot">17:00</div>
+                        <div class="time-slot">18:00</div>
+                        <div class="time-slot">19:00</div>
+                    `;
+                    
+                    scheduleView.appendChild(timeColumn);
+                    
+                    // Create schedule grid
+                    const scheduleGrid = document.createElement('div');
+                    scheduleGrid.className = 'schedule-grid';
+                    
+                    // Add day headers
+                    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                    days.forEach(day => {
+                        const dayHeader = document.createElement('div');
+                        dayHeader.className = 'day-header';
+                        dayHeader.textContent = day;
+                        scheduleGrid.appendChild(dayHeader);
+                    });
+                    
+                    // Add cells for each day and time
+                    const dayLetters = ['M', 'T', 'W', 'TH', 'F'];
+                    for (let hour = 8; hour <= 19; hour++) {
+                        for (let dayIndex = 0; dayIndex < 5; dayIndex++) {
+                            const cell = document.createElement('div');
+                            cell.className = 'schedule-cell';
+                            cell.dataset.day = dayLetters[dayIndex];
+                            cell.dataset.time = `${hour}:00`;
+                            scheduleGrid.appendChild(cell);
+                        }
+                    }
+                    
+                    scheduleView.appendChild(scheduleGrid);
+                    scheduleContainer.appendChild(scheduleView);
+                    
+                    // Add to content container
+                    contentContainer.appendChild(scheduleContainer);
+                }
+                
+                // Make sure the schedule container is visible
+                scheduleContainer.style.display = 'flex';
+                scheduleContainer.style.visibility = 'visible';
+                scheduleContainer.style.opacity = '1';
+                
+                return scheduleContainer;
+            }
+            
+            // Create and show the schedule grid
+            createAndShowScheduleGrid();
+            
+            // Try again after a short delay to handle race conditions
+            setTimeout(createAndShowScheduleGrid, 100);
+            setTimeout(createAndShowScheduleGrid, 500);
+        });
+    </script>
+    <script src="../js/registration.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <img src="../assets/logo.png" alt="SmartEnroll Logo">
+            <h1>SmartEnroll</h1>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="registration.html" class="active">Registration</a></li>
+                <li><a href="degree_requirements.html">Degree Requirements</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </nav>
+        <div class="user-controls">
+            <button class="notifications-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+            <div class="user-profile">
+                <img src="../assets/profile.jpg" alt="User Profile">
+                <span>Jane Student</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="content-container">
+        <div class="registration-sidebar">
+            <div class="sidebar-tabs">
+                <a href="#" class="active" data-tab="CourseSearch">Course Search</a>
+                <a href="#" data-tab="RecurringEvents">Personal Events</a>
+            </div>
+            
+            <div id="CourseSearch" class="tab-content active" style="display: block;">
+                <div class="search-section">
+                    <h2>Course Search</h2>
+                    <div class="search-form">
+                        <div class="form-group">
+                            <label for="course-subject">Subject</label>
+                            <input type="text" id="course-subject" placeholder="e.g. Computer Science">
+                        </div>
+                        <div class="form-group">
+                            <label for="course-code">Course Code</label>
+                            <input type="text" id="course-code" placeholder="e.g. 110">
+                        </div>
+                        <div class="form-group">
+                            <label for="course-instructor">Instructor</label>
+                            <input type="text" id="course-instructor" placeholder="e.g. John Smith">
+                        </div>
+                        
+                        <div class="division-buttons">
+                            <button id="undergrad-btn" class="division-button active">Undergraduate</button>
+                            <button id="grad-btn" class="division-button">Graduate</button>
+                        </div>
+                        
+                        <div class="day-selection">
+                            <label>Days of Week</label>
+                            <div class="day-buttons">
+                                <button class="day-button" data-day="M">M</button>
+                                <button class="day-button" data-day="T">T</button>
+                                <button class="day-button" data-day="W">W</button>
+                                <button class="day-button" data-day="T">T</button>
+                                <button class="day-button" data-day="F">F</button>
+                            </div>
+                        </div>
+                        
+                        <button class="search-btn">Search Courses</button>
+                    </div>
+                </div>
+                
+                <div class="search-results">
+                    <h2>Search Results</h2>
+                    <div class="no-results-message">Use the search form to find courses</div>
+                </div>
+            </div>
+            
+            <div id="RecurringEvents" class="tab-content">
+                <div class="recurring-events-view">
+                    <div class="form-group">
+                        <label for="event-name">Event Name</label>
+                        <input type="text" id="event-name" placeholder="e.g. Study Group">
+                    </div>
+                    <div class="form-group">
+                        <label>Time</label>
+                        <div class="time-inputs">
+                            <input type="time" id="event-start-time" placeholder="Start Time" class="time-input">
+                            <input type="time" id="event-end-time" placeholder="End Time" class="time-input">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Days of Week</label>
+                        <div class="day-selection">
+                            <div class="weekday-buttons">
+                                <button class="weekday-btn" data-day="M">M</button>
+                                <button class="weekday-btn" data-day="T">T</button>
+                                <button class="weekday-btn" data-day="W">W</button>
+                                <button class="weekday-btn" data-day="R">R</button>
+                                <button class="weekday-btn" data-day="F">F</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="add-event-btn" class="add-event-btn">Add to Schedule</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Schedule grid container will be added here by the script -->
+    </main>
+    
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="copyright">
+                &copy; 2023 SmartEnroll. All rights reserved.
+            </div>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="help.html">Help Center</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Final check to ensure schedule is visible
+        window.addEventListener('load', function() {
+            console.log("Window load - ensuring schedule grid is visible");
+            if (window.ensureScheduleGridVisible) {
+                window.ensureScheduleGridVisible();
+            } else if (window.createScheduleGrid) {
+                window.createScheduleGrid();
+            }
+        });
+    </script>
+</body>
+</html> 
