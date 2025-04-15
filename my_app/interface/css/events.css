@@ -171,3 +171,61 @@
         color: #C4C8CE;  /* Adjust for better visibility in dark mode */
     }
 }
+
+/* Styles for the event form in the Events tab */
+.event-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+}
+
+.time-inputs {
+    display: flex;
+    gap: 10px;
+}
+
+.day-selection {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.weekday-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f2f5;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    color: #142A50;
+    transition: all 0.2s ease;
+}
+
+.weekday-btn:hover {
+    background-color: #e0e4e8;
+}
+
+.weekday-btn.selected {
+    background-color: #142A50;
+    color: white;
+}
+
+.add-event-btn {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #142A50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.add-event-btn:hover {
+    background-color: #0d1b33;
+}

@@ -1,8 +1,10 @@
+import { createContextMenu } from './contextMenu.js';
+
 /**
  * Adds event listeners to an event block to handle context menu actions.
  * @param {HTMLElement} eventBlock - The event block element.
  */
-function addEventBlockListeners(eventBlock) {
+export function addEventBlockListeners(eventBlock) {
     eventBlock.addEventListener('click', handleEventBlockClick);
 }
 

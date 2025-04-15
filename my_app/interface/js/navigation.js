@@ -1,168 +1,241 @@
 /**
- * This file handles main navigation between different views of the application
+ * navigationManager.js
+ * Responsible for managing navigation, dropdowns, themes, and view switching.
  */
 
-// Store a flag to ensure the initialization only happens once
+// ------------------------- Initialization Control ------------------------- //
 let navigationInitialized = false;
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Prevent duplicate initialization
+document.addEventListener('DOMContentLoaded', () => {
     if (navigationInitialized) return;
     navigationInitialized = true;
-    
-    console.log('Initializing navigation...');
-    
-    // Auth check will be handled by auth.js, so we don't duplicate it here
 
-    // Set up navigation between main views
-    const navLinks = document.querySelectorAll('.nav-links a');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+    console.log('Initializing navigation...');
+    initializeNavigation();
+    initializeDropdowns();
+    initializeDefaultViews();
+    setupSidebarTabs();
+    applyThemeToggle();
+    configureDivisionButtons();
+    setupUserDropdown();
+
+    // Finals tab visibility
+    const finalsTab = document.getElementById('Finals');
+    if (finalsTab) finalsTab.style.display = 'none';
+
+    // Default view: registration
+    const registrationLink = document.querySelector('.nav-links a[data-view="registration"]');
+    if (registrationLink) {
+        registrationLink.classList.add('active');
+        const registrationView = document.getElementById('registration-view');
+        if (registrationView) registrationView.style.display = 'flex';
+    }
+});
+
+// ------------------------- Navigation Between Views ------------------------- //
+function initializeNavigation() {
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
-            
-            // Remove active class from all links
-            navLinks.forEach(navLink => {
-                navLink.classList.remove('active');
-            });
-            
-            // Add active class to clicked link
+            document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
             this.classList.add('active');
-            
-            // Get the view to show from data-view attribute
+
             const viewToShow = this.getAttribute('data-view');
-            
-            // Hide all view containers first
-            document.querySelectorAll('.view-container').forEach(container => {
-                container.style.display = 'none';
-            });
-            
-            // Show the selected view container
-            let viewContainer;
-            
-            // Handle different view transitions
-            if (viewToShow === 'map') {
-                console.log('Switching to Map view');
-                viewContainer = document.getElementById('map-view');
-            } else if (viewToShow === 'finals') {
-                console.log('Switching to Finals view');
-                viewContainer = document.getElementById('finals-view');
-            } else if (viewToShow === 'rmp') {
-                console.log('Switching to Rate My Professor view');
-                viewContainer = document.getElementById('rmp-view');
-            } else if (viewToShow === 'reflection') {
-                console.log('Switching to Reflection view');
-                viewContainer = document.getElementById('reflection-view');
-            } else {
-                // Default to registration view
-                console.log('Switching to Registration view');
-                viewContainer = document.getElementById('registration-view');
-            }
-            
-            // Display the selected view
-            if (viewContainer) {
-                viewContainer.style.display = 'flex';
-            }
+
+            // Finals tab visibility
+            const finalsTab = document.getElementById('Finals');
+            if (finalsTab) finalsTab.style.display = (viewToShow === 'finals') ? 'block' : 'none';
+
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) sidebar.style.display = (viewToShow === 'finals') ? 'none' : 'block';
+
+            const mainContent = document.querySelector('main');
+            if (mainContent) mainContent.style.gridTemplateColumns = (viewToShow === 'finals') ? '1fr' : '';
+
+            document.querySelectorAll('.view-container').forEach(container => container.style.display = 'none');
+
+            const viewContainer = document.getElementById(`${viewToShow}-view`) || document.getElementById('registration-view');
+            if (viewContainer) viewContainer.style.display = 'flex';
         });
     });
-    
-    // Show/hide dropdowns
-    document.addEventListener('click', function(e) {
-        // Close any open dropdown if clicking outside of it
-        if (!e.target.matches('.nav-button') && 
-            !e.target.matches('.export-button') && 
-            !e.target.matches('.arrow') && 
-            !e.target.matches('.semester-button')) {
-            const dropdowns = document.querySelectorAll('.dropdown-content, .export-dropdown, .semester-content');
-            dropdowns.forEach(dropdown => {
+
+    document.addEventListener('click', e => {
+        if (!e.target.matches('.nav-button, .export-button, .arrow, .semester-button')) {
+            document.querySelectorAll('.dropdown-content, .export-dropdown, .semester-content').forEach(dropdown => {
                 dropdown.classList.remove('show');
             });
         }
     });
 
-    // Export button functionality
     const exportButton = document.querySelector('.export-button');
     if (exportButton) {
-        exportButton.addEventListener('click', function(e) {
+        exportButton.addEventListener('click', e => {
             e.preventDefault();
-            e.stopPropagation(); // Prevent document click from immediately closing dropdown
-            document.querySelector('.export-dropdown').classList.toggle('show');
+            e.stopPropagation();
+            document.querySelector('.export-dropdown')?.classList.toggle('show');
         });
     }
 
-    // User dropdown functionality
     const navButton = document.querySelector('.nav-button');
     if (navButton) {
-        navButton.addEventListener('click', function(e) {
+        navButton.addEventListener('click', e => {
             e.preventDefault();
-            e.stopPropagation(); // Prevent document click from immediately closing dropdown
-            document.querySelector('.dropdown-content').classList.toggle('show');
+            e.stopPropagation();
+            document.querySelector('.dropdown-content')?.classList.toggle('show');
         });
     }
 
-    // Semester dropdown functionality
     const semesterButton = document.querySelector('.semester-button');
     if (semesterButton) {
-        semesterButton.addEventListener('click', function(e) {
+        semesterButton.addEventListener('click', e => {
             e.preventDefault();
-            e.stopPropagation(); // Prevent document click from immediately closing dropdown
-            document.querySelector('.semester-content').classList.toggle('show');
+            e.stopPropagation();
+            document.querySelector('.semester-content')?.classList.toggle('show');
         });
     }
+}
 
-    // We don't need to duplicate the logout handler since it's handled in auth.js
-});
+// ------------------------- Dropdowns & Sidebar ------------------------- //
+function initializeDropdowns() {
+    setupDropdown('.semester-button', '.semester-content');
+    setupDropdown('.user-dropdown .nav-button', '#userDropdown', ['.export-dropdown']);
+}
 
-// Function to change semester
+function setupSidebarTabs() {
+    document.querySelectorAll('.sidebar-tabs a').forEach(tab => {
+        tab.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.sidebar-tabs a').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+}
+
+function applyThemeToggle() {
+    document.querySelectorAll('.theme-toggle').forEach(toggle => {
+        toggle.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleTheme();
+        });
+    });
+}
+
+function configureDivisionButtons() {
+    const divisionBtns = document.querySelectorAll('.division-btn');
+    divisionBtns.forEach(btn => {
+        btn.addEventListener('click', function () {
+            divisionBtns.forEach(otherBtn => {
+                otherBtn.classList.remove('selected');
+                resetButtonStyle(otherBtn);
+            });
+            this.classList.add('selected');
+            setSelectedButtonStyle(this);
+        });
+    });
+}
+
+function setupUserDropdown() {
+    setupDropdown('.user-dropdown .nav-button', '#userDropdown', ['.export-dropdown']);
+}
+
+function initializeDefaultViews() {
+    const sidebar = document.querySelector('.sidebar');
+    setupNavView('.nav-links a[href="#registration"]', sidebar, createRegistrationSidebar, initializeRegistrationSidebar);
+    setupNavView('.nav-links a[href="#map"]', sidebar, createMapSidebar, setupMapView);
+    document.querySelector('.semester-button').innerHTML = 'Spring 2025 <span class="arrow">▼</span>';
+}
+
+function setupNavView(linkSelector, sidebar, sidebarContentFunc, initFunc) {
+    const link = document.querySelector(linkSelector);
+    if (link) {
+        link.classList.add('active');
+        sidebar.innerHTML = sidebarContentFunc();
+        initFunc();
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            sidebar.innerHTML = sidebarContentFunc();
+            initFunc();
+        });
+    }
+}
+
+function setupDropdown(buttonSelector, dropdownSelector, closeOtherSelectors = []) {
+    const button = document.querySelector(buttonSelector);
+    const dropdown = document.querySelector(dropdownSelector);
+    if (button && dropdown) {
+        button.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeOtherSelectors.forEach(selector => {
+                document.querySelector(selector)?.classList.remove('show');
+            });
+            dropdown.classList.toggle('show');
+        });
+        document.addEventListener('click', e => {
+            if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    }
+}
+
+// ------------------------- Utilities ------------------------- //
 function changeSemester(semester) {
     const semesterButton = document.querySelector('.semester-button');
     if (semesterButton) {
-        semesterButton.innerHTML = semester + ' <span class="arrow">▼</span>';
+        semesterButton.innerHTML = `${semester} <span class="arrow">▼</span>`;
     }
-    
-    // Close the dropdown
     const semesterContent = document.querySelector('.semester-content');
-    if (semesterContent) {
-        semesterContent.classList.remove('show');
-    }
-    
-    // You can add additional logic here to update content based on semester
+    if (semesterContent) semesterContent.classList.remove('show');
     console.log('Semester changed to:', semester);
-    
-    // Use the common notification system
     showToast(`Semester changed to ${semester}`);
 }
 
-// Function to display toast notifications
-// Making this a window property so it can be accessed from auth.js
 window.showToast = function(message, duration = 3000) {
     try {
-        // Use the common notification system from auth.js if available
         if (typeof showNotification === 'function') {
             return showNotification(message, 'info', duration);
         }
-        
-        // Remove any existing toast
         const existingToast = document.querySelector('.toast');
-        if (existingToast) {
-            existingToast.remove();
-        }
-        
-        // Create new toast
+        if (existingToast) existingToast.remove();
+
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.textContent = message;
-        
-        // Add to document
         document.body.appendChild(toast);
-        
-        // Remove after duration
-        setTimeout(() => {
-            if (toast && toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, duration);
+        setTimeout(() => toast.remove(), duration);
     } catch (error) {
         console.error('Error showing toast notification:', error);
     }
 };
+
+function setupMapView() {
+    const floorPlanTab = document.querySelector('.floor-plan-tab');
+    const scheduleTab = document.querySelector('.schedule-tab');
+    const floorTree = document.querySelector('.floor-tree');
+    const scheduleView = document.querySelector('.schedule-view');
+
+    if (floorPlanTab && scheduleTab && floorTree && scheduleView) {
+        const deactivateTabs = () => {
+            floorPlanTab.classList.remove('active');
+            scheduleTab.classList.remove('active');
+            floorTree.style.display = 'none';
+            scheduleView.style.display = 'none';
+        };
+        floorPlanTab.addEventListener('click', e => {
+            e.preventDefault();
+            deactivateTabs();
+            floorPlanTab.classList.add('active');
+            floorTree.style.display = 'block';
+        });
+        scheduleTab.addEventListener('click', e => {
+            e.preventDefault();
+            deactivateTabs();
+            scheduleTab.classList.add('active');
+            scheduleView.style.display = 'block';
+        });
+    }
+}

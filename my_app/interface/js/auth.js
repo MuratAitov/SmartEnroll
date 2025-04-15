@@ -1,186 +1,140 @@
-/**
- * Handles user authentication with the backend
- */
-
-// Store user data in sessionStorage after login
+// File: auth/session.js
 function storeUserSession(userData) {
     sessionStorage.setItem('user', JSON.stringify(userData));
     sessionStorage.setItem('isLoggedIn', 'true');
 }
 
-// Clear user data on logout
 function clearUserSession() {
     sessionStorage.removeItem('user');
     sessionStorage.removeItem('isLoggedIn');
 }
 
-// Check if user is logged in
 function isUserLoggedIn() {
     return sessionStorage.getItem('isLoggedIn') === 'true';
 }
 
-// Get current user data
 function getCurrentUser() {
     const userData = sessionStorage.getItem('user');
     return userData ? JSON.parse(userData) : null;
 }
 
-// Handle user login
+// File: auth/api.js
 async function loginUser(username, password) {
     try {
         const response = await fetch('http://localhost:5001/user_bp/login', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                user_name: username,
-                password: password
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_name: username, password })
         });
-
         const data = await response.json();
-        
         if (response.ok) {
-            console.log('Login successful:', data);
             storeUserSession(data.data);
             return { success: true, data: data.data };
         } else {
-            console.error('Login failed:', data.error);
             return { success: false, error: data.error };
         }
     } catch (error) {
-        console.error('Login error:', error);
         return { success: false, error: 'Network error. Please try again.' };
     }
 }
 
-// Handle user registration
 async function registerUser(username, email, password, name) {
     try {
         const response = await fetch('http://localhost:5001/user_bp/register', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                user_name: username,
-                email: email,
-                password: password,
-                name: name
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_name: username, email, password, name })
         });
-
         const data = await response.json();
-        
         if (response.ok) {
-            console.log('Registration successful:', data);
             return { success: true, data: data.data };
         } else {
-            console.error('Registration failed:', data.error);
             return { success: false, error: data.error };
         }
     } catch (error) {
-        console.error('Registration error:', error);
         return { success: false, error: 'Network error. Please try again.' };
     }
 }
 
-// Handle user logout
+// File: auth/ui.js
 function logoutUser() {
     clearUserSession();
-    window.location.href = 'login.html'; // Redirect to login page
+    window.location.href = 'login.html';
 }
 
-// Initialize the auth system
 function initAuth() {
-    console.log('Initializing auth system...');
-    
-    // Update UI based on login state
     updateUserInterface();
-    
-    // Add event listener for logout button
-    const logoutLinks = document.querySelectorAll('a[href="#signout"]');
-    logoutLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+    document.querySelectorAll('a[href="#signout"]').forEach(link => {
+        link.addEventListener('click', e => {
             e.preventDefault();
             logoutUser();
         });
     });
 }
 
-// Update the UI based on login state
 function updateUserInterface() {
     const user = getCurrentUser();
-    
-    // Check if we're on the login page
     const isLoginPage = window.location.href.includes('login.html');
-    
+
     if (user) {
-        // User is logged in, update UI elements
-        const studentNameElements = document.querySelectorAll('.student-name');
-        const studentIdElements = document.querySelectorAll('.student-id');
-        
-        studentNameElements.forEach(el => {
+        document.querySelectorAll('.student-name').forEach(el => {
             el.textContent = user.name || 'Student';
         });
-        
-        studentIdElements.forEach(el => {
+        document.querySelectorAll('.student-id').forEach(el => {
             el.textContent = `ID: ${user.user_id || ''}`;
         });
-        
-        console.log('UI updated with user data');
-        
-        // If on login page but logged in, redirect to index
-        if (isLoginPage) {
-            window.location.href = 'index.html';
-        }
-    } else {
-        // If on a protected page but not logged in, redirect to login
-        if (!isLoginPage) {
-            console.log('Not logged in, redirecting to login page');
-            window.location.href = 'login.html';
-        }
+        if (isLoginPage) window.location.href = 'index.html';
+    } else if (!isLoginPage) {
+        window.location.href = 'login.html';
     }
 }
 
-// Common notification system to be used across the application
-function showNotification(message, type = 'info', duration = 3000) {
-    // First try to use any existing notification system
-    if (typeof window.showToast === 'function') {
-        return window.showToast(message, duration);
-    }
-    
-    // Otherwise create our own toast notification
-    // Remove any existing toast
-    const existingToast = document.querySelector('.toast');
-    if (existingToast) {
-        existingToast.remove();
-    }
-    
-    // Create new toast
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    
-    // Add type-specific styling
-    if (type === 'error') {
-        toast.style.backgroundColor = 'rgba(220, 53, 69, 0.9)'; // Bootstrap danger
-    } else if (type === 'success') {
-        toast.style.backgroundColor = 'rgba(40, 167, 69, 0.9)'; // Bootstrap success
-    }
-    
-    toast.textContent = message;
-    
-    // Add to document
-    document.body.appendChild(toast);
-    
-    // Remove after duration
-    setTimeout(() => {
-        if (toast.parentNode) {
-            toast.parentNode.removeChild(toast);
-        }
-    }, duration);
+function openAuthTab(tabId, button) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    button.classList.add('active');
 }
 
-// Add DOMContentLoaded event listener
-document.addEventListener('DOMContentLoaded', initAuth); 
+function showStatusMessage(message, type) {
+    const statusElement = document.getElementById('status-message');
+    statusElement.textContent = message;
+    statusElement.className = 'status-message ' + type;
+    statusElement.style.display = 'block';
+    setTimeout(() => statusElement.style.display = 'none', 5000);
+    if (typeof showNotification === 'function') showNotification(message, type);
+}
+
+// File: auth/form-handlers.js
+document.addEventListener('DOMContentLoaded', () => {
+    initAuth();
+
+    document.getElementById('login-form')?.addEventListener('submit', async e => {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const result = await loginUser(username, password);
+        if (result.success) {
+            showStatusMessage('Login successful! Redirecting...', 'success');
+            setTimeout(() => window.location.href = 'index.html', 1500);
+        } else {
+            showStatusMessage(result.error || 'Login failed. Please try again.', 'error');
+        }
+    });
+
+    document.getElementById('register-form')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const name = document.getElementById('register-name').value;
+        const username = document.getElementById('register-username').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const result = await registerUser(username, email, password, name);
+        if (result.success) {
+            showStatusMessage('Registration successful! Please log in.', 'success');
+            this.reset();
+            openAuthTab('login-tab', document.querySelector('.tab-button'));
+        } else {
+            showStatusMessage(result.error || 'Registration failed. Please try again.', 'error');
+        }
+    });
+});

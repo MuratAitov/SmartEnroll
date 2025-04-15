@@ -1,14 +1,4 @@
-/**
- * Toggles the visibility of a day panel.
- * @param {HTMLElement} header - The header element of the day panel.
- */
-function toggleDayPanel(header) {
-    const content = header.nextElementSibling;
-    const arrow = header.querySelector('.arrow');
-    
-    content.classList.toggle('show');
-    arrow.style.transform = content.classList.contains('show') ? 'rotate(180deg)' : '';
-}
+import { getCurrentEventValues, createEditDialog } from './eventEditing.js';
 
 /**
  * Creates and displays a context menu at the specified position.
@@ -75,19 +65,6 @@ function handleEditEvent(eventBlock, menu) {
 
     document.body.appendChild(editDialog);
     menu.remove();
-}
-
-/**
- * Retrieves current event details from the event block.
- * @param {HTMLElement} eventBlock - The event block.
- * @returns {Object} - Object containing event name, start, and end time.
- */
-function getCurrentEventValues(eventBlock) {
-    return {
-        eventName: eventBlock.querySelector('.event-name').textContent,
-        start: eventBlock.querySelector('.event-time').textContent.split(' - ')[0],
-        end: eventBlock.querySelector('.event-time').textContent.split(' - ')[1]
-    };
 }
 
 /**
@@ -169,5 +146,147 @@ function closeMenuOnClickOutside(menu) {
             menu.remove();
             document.removeEventListener('click', closeMenu);
         }
+    });
+}
+
+/** 
+ * Initializes the context menu for event blocks.
+ */
+function setupContextMenu(eventBlock) {
+    const menu = createContextMenu(eventBlock);
+    addEventActionsToMenu(menu, eventBlock);
+    document.body.appendChild(menu);
+    closeMenuOnClickOutside(menu);
+}
+
+/**
+ * Closes menu when clicking outside.
+ */
+function closeMenuOnClickOutside(menu) {
+    document.addEventListener('click', function closeMenu(e) {
+        if (!menu.contains(e.target)) {
+            menu.remove();
+            document.removeEventListener('click', closeMenu);
+        }
+    });
+}
+
+/** 
+ * Adds different actions to the event context menu.
+ */
+function addEventActionsToMenu(menu, eventBlock) {
+    setupEditEventAction(menu, eventBlock);
+    setupColorChangeAction(menu, eventBlock);
+    setupDuplicateEventAction(menu, eventBlock);
+    setupDeleteEventAction(menu, eventBlock);
+    setupExportActions(menu, eventBlock);
+}
+
+/* ==================== Edit Event Actions ==================== */
+
+/**
+ * Enables editing of an event.
+ */
+function setupEditEventAction(menu, eventBlock) {
+    const editItem = menu.querySelector('.edit');
+    editItem.addEventListener('click', () => editEvent(eventBlock));
+}
+
+/**
+ * Opens the edit form dialog for modifying event details.
+ */
+function editEvent(eventBlock) {
+    const currentValues = getCurrentEventValues(eventBlock);
+    const editDialog = createEditDialog(currentValues, eventBlock);
+    document.body.appendChild(editDialog);
+}
+
+
+
+/* ==================== Color Change Action ==================== */
+
+/**
+ * Enables event color changing.
+ */
+function setupColorChangeAction(menu, eventBlock) {
+    const colors = ['#808080', '#4A90E2', '#B41231', '#357ABD', '#002467'];
+    const colorPicker = document.createElement('div');
+    colorPicker.className = 'color-picker';
+
+    colors.forEach(color => {
+        const colorOption = document.createElement('div');
+        colorOption.className = 'color-option';
+        colorOption.style.backgroundColor = color;
+        colorOption.addEventListener('click', () => {
+            eventBlock.style.backgroundColor = color;
+            document.body.removeChild(colorPicker);
+        });
+        colorPicker.appendChild(colorOption);
+    });
+
+    document.body.appendChild(colorPicker);
+}
+
+/* ==================== Duplicate & Delete Actions ==================== */
+
+/**
+ * Duplicates an event block.
+ */
+function setupDuplicateEventAction(menu, eventBlock) {
+    const duplicate = eventBlock.cloneNode(true);
+    duplicate.querySelector('.event-name').textContent += ' (copy)';
+    eventBlock.parentNode.insertBefore(duplicate, eventBlock.nextSibling);
+}
+
+/**
+ * Deletes an event block.
+ */
+function setupDeleteEventAction(menu, eventBlock) {
+    menu.querySelector('.delete').addEventListener('click', () => eventBlock.remove());
+}
+
+/* ==================== Export Actions ==================== */
+
+/**
+ * Adds export functionality to the menu.
+ */
+function setupExportActions(menu, eventBlock) {
+    const exportApple = document.createElement('button');
+    exportApple.textContent = 'Export to Apple Calendar';
+    exportApple.addEventListener('click', () => exportEvent(eventBlock, 'apple-calendar'));
+    menu.appendChild(exportApple);
+
+    const exportGoogle = document.createElement('button');
+    exportGoogle.textContent = 'Export to Google Calendar';
+    exportGoogle.addEventListener('click', () => exportEvent(eventBlock, 'google-calendar'));
+    menu.appendChild(exportGoogle);
+}
+
+/**
+ * Exports event details to the backend API.
+ */
+function exportEvent(eventBlock, calendarType) {
+    const eventName = eventBlock.querySelector('.event-name').textContent;
+    const eventTime = eventBlock.querySelector('.event-time').textContent;
+    const [startTime, endTime] = eventTime.split(' - ');
+
+    const eventData = {
+        name: eventName,
+        start_time: startTime,
+        end_time: endTime
+    };
+
+    fetch(`http://localhost:5000/export/${calendarType}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.success ? `Event exported to ${calendarType.replace('-', ' ')}` : `Failed to export: ${data.error}`);
+    })
+    .catch(error => {
+        console.error('Export error:', error);
+        alert('An error occurred while exporting.');
     });
 }
