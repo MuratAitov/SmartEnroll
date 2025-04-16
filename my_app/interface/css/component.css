@@ -45,22 +45,23 @@ button:hover {
     width: 100%;
 }
 .sidebar-tabs a {
-    display: inline-block;
+    flex: 1;
     padding: 10px 15px;
-    font-size: 14px;
-    font-weight: 500;
+    color: #6c757d;
     text-decoration: none;
-    color: #999 !important;
-    position: relative;
+    text-align: center;
+    font-weight: 500;
     transition: all 0.2s ease;
     border-bottom: 2px solid transparent;
+    font-size: 14px;
 }
 .sidebar-tabs a.active {
-    color: #000 !important;
-    border-bottom: 3px solid #FF0000 !important;
+    color: #142A50;
+    border-bottom: 2px solid #142A50;
+    font-weight: 600;
 }
 .sidebar-tabs a:hover:not(.active) {
-    color: #142A50 !important;
+    color: #142A50;
 }
 
 /* Make sure the sidebar tab content is visible */

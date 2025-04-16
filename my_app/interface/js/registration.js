@@ -11,7 +11,7 @@ function createRegistrationSidebar() {
         const tabs = [
             { id: 'Courses', name: 'Courses' },
             { id: 'RecurringEvents', name: 'Events' },
-            { id: 'PrereqSearch', name: 'PreReq' }
+            { id: 'PrereqSearch', name: 'PreReq' },
         ];
         
         tabs.forEach(tab => {
@@ -50,49 +50,40 @@ function createRegistrationSidebar() {
     const coursesTab = document.createElement('div');
     coursesTab.id = 'Courses';
     coursesTab.className = 'tab-content active';
-    coursesTab.style.background = 'white';
     
     // Add course search form that matches the image
     coursesTab.innerHTML = `
-        <div class="search-form" style="background: white; padding: 15px; border-radius: 8px;">
+        <div class="search-form">
+            
         <div class="form-group">
-                <input type="text" id="subject-input" placeholder="Subject" autocomplete="off" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px; background: white;">
+                <label for="subject-input">Subject</label>
+                <input type="text" id="subject-input" placeholder="Subject" autocomplete="off">
         </div>
             
         <div class="form-group">
-                <input type="text" id="course-code-input" placeholder="Course code" autocomplete="off" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px; background: white;">
+                <label for="course-code-input">Course Code</label>
+                <input type="text" id="course-code-input" placeholder="Course code" autocomplete="off">
         </div>
         
-            <div class="division-buttons" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                <button class="division-btn" id="lower-div-btn" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">Lower Division</button>
-                <button class="division-btn" id="upper-div-btn" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">Upper Division</button>
+            <div class="form-group">
+                <label for="instructor-input">Instructor</label>
+                <input type="text" id="instructor-input" placeholder="Instructor" autocomplete="off">
         </div>
         
-        <div class="form-group">
-                <input type="text" id="attributes-input" placeholder="Attributes" autocomplete="off" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px; background: white; font-style: italic;">
+            <div class="division-buttons">
+                <button class="division-btn">Undergraduate</button>
+                <button class="division-btn">Graduate</button>
         </div>
             
-        <div class="form-group">
-                <input type="text" id="instructor-input" placeholder="Instructor" autocomplete="off" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px; background: white; font-style: italic;">
-        </div>
-            
-        <div class="form-group">
-                <input type="text" id="campus-input" placeholder="Campus" autocomplete="off" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px; background: white; font-style: italic;">
-        </div>
-            
-        <div class="form-group">
-                <input type="text" id="methods-input" placeholder="Instructional Methods" autocomplete="off" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px; background: white; font-style: italic;">
-        </div>
-        
-            <button id="search-courses-btn" class="search-btn" style="width: 100%; padding: 12px; background: #142A50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; margin-top: 5px;">
-                Search Courses
+            <button id="search-courses-btn" class="search-btn">
+                <i class="fas fa-search"></i> Search Courses
             </button>
         </div>
         
-        <div id="sections-list" class="search-results" style="background: white;">
+        <div id="sections-list" class="search-results">
             <div class="no-results">
                 Enter search criteria above and click "Search Courses"
-            </div>
+        </div>
         </div>
     `;
     
@@ -113,8 +104,8 @@ function createRegistrationSidebar() {
         }
         
         // Add event listeners for division buttons
-        const lowerDivBtn = document.getElementById('lower-div-btn');
-        const upperDivBtn = document.getElementById('upper-div-btn');
+        const lowerDivBtn = document.querySelector('.division-btn');
+        const upperDivBtn = document.querySelector('.division-btn');
         
         if (lowerDivBtn) {
             lowerDivBtn.addEventListener('click', function() {
@@ -192,6 +183,26 @@ function createRegistrationSidebar() {
     
     sidebar.appendChild(prereqTab);
     
+    // Create MapView tab content
+    const mapViewTab = document.createElement('div');
+    mapViewTab.id = 'MapView';
+    mapViewTab.className = 'tab-content';
+    
+    // Add map view content
+    mapViewTab.innerHTML = `
+        <h3>Campus Buildings</h3>
+        <ul class="building-list">
+            <li><a href="#" class="building-link" data-building="herak">Herak Center</a></li>
+            <li><a href="#" class="building-link" data-building="jepson1">Jepson Center (First Floor)</a></li>
+            <li><a href="#" class="building-link" data-building="jepsonB">Jepson Center (Basement)</a></li>
+        </ul>
+        <div class="map-placeholder">
+            Select a building to view its floor plan
+        </div>
+    `;
+    
+    sidebar.appendChild(mapViewTab);
+    
     // Activate the Courses tab by default
     switchSidebarTab('Courses');
     
@@ -251,7 +262,7 @@ function displaySections(sections) {
     if (!sectionsList) return;
     
     if (!sections || sections.length === 0) {
-        sectionsList.innerHTML = '<div class="no-results-message">No courses found matching your criteria</div>';
+        displayNoResults();
         return;
     }
     
@@ -324,11 +335,11 @@ function displaySections(sections) {
                 <p class="section-credits"><strong>Credits:</strong> ${section.credits}</p>
                     <div class="section-actions">
                         <button class="add-section-btn" 
-                    onclick="addSectionToSchedule('${section.subject}', '${section.course_code}', '${section.section_number}')">
+                        onclick="addSectionToSchedule('${section.subject}', '${section.course_code}', '${section.section_number}')">
                             Add to Schedule
                         </button>
                         <button class="search-prereq-btn"
-                    onclick="displayPrerequisiteTree('${section.subject}${section.course_code}')">
+                        onclick="displayPrerequisiteTree('${section.subject}${section.course_code}')">
                             View Prerequisites
                         </button>
                 </div>
@@ -386,9 +397,6 @@ window.displaySections = displaySections;
 window.initializeRegistrationView = initializeRegistrationView;
 window.removeAllFinalsContent = removeAllFinalsContent;
 
-// Add this line to export createRegistrationSidebar as initializeRegistrationSidebar
-window.initializeRegistrationSidebar = createRegistrationSidebar;
-
 // Auto-initialize on script load with highest priority
 document.addEventListener('DOMContentLoaded', function() {
     // Remove Finals content immediately
@@ -413,22 +421,27 @@ document.addEventListener('DOMContentLoaded', function() {
 function setupSearchAutocomplete() {
     console.log('Setting up autocomplete for search inputs');
     
-    // First, make sure the inputs exist
-    const subjectInput = document.querySelector('#subject-input');
-    const courseCodeInput = document.querySelector('#course-code-input');
-    const attributesInput = document.querySelector('#attributes-input');
-    const instructorInput = document.querySelector('#instructor-input');
-    const campusInput = document.querySelector('#campus-input');
-    const methodsInput = document.querySelector('#methods-input');
+    // First, make sure the inputs exist - check using multiple selectors to be thorough
+    let subjectInput = document.querySelector('#Courses input[placeholder="Subject"]');
+    if (!subjectInput) {
+        subjectInput = document.querySelector('#subject-input');
+    }
+    
+    let courseCodeInput = document.querySelector('#Courses input[placeholder="Course code"]');
+    if (!courseCodeInput) {
+        courseCodeInput = document.querySelector('#course-code-input');
+    }
+    
+    let instructorInput = document.querySelector('#Courses input[placeholder="Instructor"]');
+    if (!instructorInput) {
+        instructorInput = document.querySelector('#instructor-input');
+    }
     
     // Log the found inputs for debugging
     console.log('Found inputs:', {
         subject: subjectInput,
         courseCode: courseCodeInput,
-        attributes: attributesInput,
-        instructor: instructorInput,
-        campus: campusInput,
-        methods: methodsInput
+        instructor: instructorInput
     });
     
     // Common subjects for autocomplete
@@ -445,12 +458,6 @@ function setupSearchAutocomplete() {
         '321', '322', '350', '401', '402', '421'
     ];
     
-    // Common attributes for autocomplete
-    const commonAttributes = [
-        'Core Curriculum', 'Writing Intensive', 'Service Learning',
-        'Global Studies', 'Social Justice', 'Fine Arts'
-    ];
-    
     // Common instructor names for autocomplete
     const commonInstructors = [
         'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 
@@ -458,85 +465,51 @@ function setupSearchAutocomplete() {
         'Olivares', 'Anderson', 'Thomas', 'Jackson', 'White'
     ];
     
-    // Common campus locations for autocomplete
-    const commonCampuses = [
-        'Main Campus', 'Downtown', 'Extension Center', 'Online'
-    ];
-    
-    // Common instructional methods for autocomplete
-    const commonMethods = [
-        'In Person', 'Online', 'Hybrid', 'Field Study', 'Independent Study'
-    ];
-    
-    // Setup autocomplete for each input
+    // Setup autocomplete for subject input
     if (subjectInput) {
+        console.log('Setting up autocomplete for subject input');
         setupInputAutocomplete(subjectInput, commonSubjects);
-    }
-    
-    if (courseCodeInput) {
-        setupInputAutocomplete(courseCodeInput, commonCourseCodes);
-    }
-    
-    if (attributesInput) {
-        setupInputAutocomplete(attributesInput, commonAttributes);
-    }
-    
-    if (instructorInput) {
-        setupInputAutocomplete(instructorInput, commonInstructors);
-    }
-    
-    if (campusInput) {
-        setupInputAutocomplete(campusInput, commonCampuses);
-    }
-    
-    if (methodsInput) {
-        setupInputAutocomplete(methodsInput, commonMethods);
-    }
-    
-    // Try again after a delay if any inputs weren't found
-    setTimeout(() => {
-        if (!subjectInput) {
-            const delayedSubjectInput = document.querySelector('#subject-input');
+    } else {
+        // If the input isn't found now, try again after a short delay
+        setTimeout(() => {
+            const delayedSubjectInput = document.querySelector('#Courses input[placeholder="Subject"]') || 
+                                      document.querySelector('#subject-input');
             if (delayedSubjectInput) {
+                console.log('Found subject input on delayed attempt');
                 setupInputAutocomplete(delayedSubjectInput, commonSubjects);
             }
-        }
-        
-        if (!courseCodeInput) {
-            const delayedCourseCodeInput = document.querySelector('#course-code-input');
+        }, 500);
+    }
+    
+    // Setup autocomplete for course code input
+    if (courseCodeInput) {
+        console.log('Setting up autocomplete for course code input');
+        setupInputAutocomplete(courseCodeInput, commonCourseCodes);
+    } else {
+        setTimeout(() => {
+            const delayedCourseCodeInput = document.querySelector('#Courses input[placeholder="Course code"]') || 
+                                         document.querySelector('#course-code-input');
             if (delayedCourseCodeInput) {
+                console.log('Found course code input on delayed attempt');
                 setupInputAutocomplete(delayedCourseCodeInput, commonCourseCodes);
             }
-        }
-        
-        if (!attributesInput) {
-            const delayedAttributesInput = document.querySelector('#attributes-input');
-            if (delayedAttributesInput) {
-                setupInputAutocomplete(delayedAttributesInput, commonAttributes);
-            }
-        }
-        
-        if (!instructorInput) {
-            const delayedInstructorInput = document.querySelector('#instructor-input');
+        }, 500);
+    }
+    
+    // Setup autocomplete for instructor input
+    if (instructorInput) {
+        console.log('Setting up autocomplete for instructor input');
+        setupInputAutocomplete(instructorInput, commonInstructors);
+    } else {
+        setTimeout(() => {
+            const delayedInstructorInput = document.querySelector('#Courses input[placeholder="Instructor"]') || 
+                                         document.querySelector('#instructor-input');
             if (delayedInstructorInput) {
+                console.log('Found instructor input on delayed attempt');
                 setupInputAutocomplete(delayedInstructorInput, commonInstructors);
             }
-        }
-        
-        if (!campusInput) {
-            const delayedCampusInput = document.querySelector('#campus-input');
-            if (delayedCampusInput) {
-                setupInputAutocomplete(delayedCampusInput, commonCampuses);
-            }
-        }
-        
-        if (!methodsInput) {
-            const delayedMethodsInput = document.querySelector('#methods-input');
-            if (delayedMethodsInput) {
-                setupInputAutocomplete(delayedMethodsInput, commonMethods);
-            }
-        }
-    }, 500);
+        }, 500);
+    }
 }
 
 /**
@@ -554,6 +527,459 @@ function setupInputAutocomplete(inputElement, items) {
     }
     
     // Create autocomplete container
+    const container = document.createElement('div');
+    container.className = 'autocomplete-container';
+    container.style.position = 'relative';
+    container.style.width = '100%';
+    
+    // Add a data attribute to help with debugging
+    container.dataset.autocomplete = 'active';
+    
+    // Replace the input with our container + input
+    inputElement.parentNode.insertBefore(container, inputElement);
+    container.appendChild(inputElement);
+    
+    // Create autocomplete list with direct styling for visibility
+    const autocompleteList = document.createElement('div');
+    autocompleteList.className = 'autocomplete-list';
+    autocompleteList.style.display = 'none';
+    autocompleteList.style.position = 'absolute';
+    autocompleteList.style.zIndex = '1000';
+    autocompleteList.style.top = '100%';
+    autocompleteList.style.left = '0';
+    autocompleteList.style.right = '0';
+    autocompleteList.style.maxHeight = '200px';
+    autocompleteList.style.overflowY = 'auto';
+    autocompleteList.style.backgroundColor = 'white';
+    autocompleteList.style.border = '1px solid #4A90E2';
+    autocompleteList.style.borderTop = 'none';
+    autocompleteList.style.boxShadow = '0 6px 12px rgba(0,0,0,0.2)';
+    
+    container.appendChild(autocompleteList);
+    
+    // Track current selection
+    let currentFocus = -1;
+    
+    // Show autocomplete immediately on focus
+    inputElement.addEventListener('focus', function() {
+        console.log('Input focused:', this.placeholder || this.id);
+        
+        // Show all options
+        showOptions(items.slice(0, 7));
+        
+        // Add visual indication that autocomplete is active
+        this.style.borderColor = '#4A90E2';
+    });
+    
+    // Update on input
+    inputElement.addEventListener('input', function() {
+        const value = this.value.trim();
+        console.log('Input changed:', value);
+        
+        if (!value) {
+            // Show all options if input is empty
+            showOptions(items.slice(0, 7));
+            return;
+        }
+        
+        // Filter items that match the input value
+        const matches = items.filter(item => 
+            item.toLowerCase().includes(value.toLowerCase())
+        );
+        
+        // Sort matches to show exact matches first
+        matches.sort((a, b) => {
+            const aStartsWith = a.toLowerCase().startsWith(value.toLowerCase());
+            const bStartsWith = b.toLowerCase().startsWith(value.toLowerCase());
+            
+            if (aStartsWith && !bStartsWith) return -1;
+            if (!aStartsWith && bStartsWith) return 1;
+            return a.localeCompare(b);
+        });
+        
+        // Show matching options
+        showOptions(matches.slice(0, 7), value);
+    });
+    
+    // Helper function to show options in the dropdown
+    function showOptions(options, highlightText = '') {
+        console.log('Showing options:', options.length);
+        
+        // Clear the list
+        autocompleteList.innerHTML = '';
+        
+        // Make sure the list is visible
+        autocompleteList.style.display = 'block';
+        
+        // If we have no options, show a message
+        if (options.length === 0) {
+            const noMatch = document.createElement('div');
+            noMatch.className = 'autocomplete-item';
+            noMatch.style.padding = '12px 15px';
+            noMatch.style.cursor = 'pointer';
+            noMatch.style.borderBottom = '1px solid #f0f0f0';
+            noMatch.textContent = 'No matches found';
+            autocompleteList.appendChild(noMatch);
+            return;
+        }
+        
+        // Add each option to the autocomplete list
+        options.forEach(option => {
+            const item = document.createElement('div');
+            item.className = 'autocomplete-item';
+            item.style.padding = '12px 15px';
+            item.style.cursor = 'pointer';
+            item.style.borderBottom = '1px solid #f0f0f0';
+            
+            // Highlight the matching part if there's text to highlight
+            if (highlightText) {
+                const matchIndex = option.toLowerCase().indexOf(highlightText.toLowerCase());
+                if (matchIndex !== -1) {
+                    const before = option.substring(0, matchIndex);
+                    const highlight = option.substring(matchIndex, matchIndex + highlightText.length);
+                    const after = option.substring(matchIndex + highlightText.length);
+                    item.innerHTML = before + '<strong style="color: #4A90E2; text-decoration: underline;">' + highlight + '</strong>' + after;
+                } else {
+                    item.textContent = option;
+                }
+            } else {
+                item.textContent = option;
+            }
+            
+            // Add hover effect
+            item.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f0f7ff';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+            });
+            
+            // Add click event to select the item
+            item.addEventListener('click', function() {
+                console.log('Option selected:', option);
+                inputElement.value = option;
+                autocompleteList.style.display = 'none';
+                
+                // Trigger search on selection
+                if (inputElement.parentNode.parentNode.querySelector('button.search-btn')) {
+                    setTimeout(() => {
+                        console.log('Triggering search after selection');
+                        fetchCourses();
+                    }, 100);
+                }
+            });
+            
+            autocompleteList.appendChild(item);
+        });
+    }
+    
+    // Close list when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target !== inputElement && !container.contains(e.target)) {
+            autocompleteList.style.display = 'none';
+        }
+    });
+    
+    // Add direct event listener to the search button to ensure autocomplete works
+    const searchButton = document.querySelector('#search-courses-btn');
+    if (searchButton) {
+        searchButton.addEventListener('click', function() {
+            console.log('Search button clicked');
+            // Close any open autocomplete lists
+            document.querySelectorAll('.autocomplete-list').forEach(list => {
+                list.style.display = 'none';
+            });
+            
+            fetchCourses();
+        });
+    }
+}
+
+/**
+ * Creates the tab content containers if they don't exist
+ */
+function createTabContentContainers() {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    
+    // Create Courses tab content if not exists
+    if (!document.getElementById('Courses')) {
+        const coursesTab = document.createElement('div');
+        coursesTab.id = 'Courses';
+        coursesTab.className = 'tab-content';
+        
+        // Add course search form WITH DIRECT AUTOCOMPLETE IMPLEMENTATION
+        coursesTab.innerHTML = `
+            <div class="search-form">
+                <div class="form-group autocomplete-wrapper">
+                    <label for="subject-input">Subject</label>
+                    <input type="text" id="subject-input" placeholder="Subject">
+                    <div class="autocomplete-dropdown" id="subject-dropdown"></div>
+                </div>
+                <div class="form-group autocomplete-wrapper">
+                    <label for="course-code-input">Course Code</label>
+                    <input type="text" id="course-code-input" placeholder="Course code">
+                    <div class="autocomplete-dropdown" id="course-dropdown"></div>
+                </div>
+                <div class="form-group autocomplete-wrapper">
+                    <label for="instructor-input">Instructor</label>
+                    <input type="text" id="instructor-input" placeholder="Instructor">
+                    <div class="autocomplete-dropdown" id="instructor-dropdown"></div>
+                </div>
+                <div class="level-buttons">
+                    <button class="division-btn" data-level="lower">Lower Division</button>
+                    <button class="division-btn" data-level="upper">Upper Division</button>
+                    <button class="division-btn" data-level="graduate">Graduate</button>
+                </div>
+                <button id="search-courses-btn" class="search-btn">Search Courses</button>
+            </div>
+            <div id="sections-list"></div>
+        `;
+        
+        sidebar.appendChild(coursesTab);
+        
+        // Apply direct autocomplete once the tab is added
+        setTimeout(() => {
+            applyDirectAutocomplete();
+        }, 100);
+    }
+    
+    // Create RecurringEvents tab content if not exists
+    if (!document.getElementById('RecurringEvents')) {
+        const eventsTab = document.createElement('div');
+        eventsTab.id = 'RecurringEvents';
+        eventsTab.className = 'tab-content';
+        
+        // Add recurring events form
+        eventsTab.innerHTML = `
+            <div class="recurring-events-view">
+                <div class="form-group">
+                    <input type="text" placeholder="Event Name">
+                </div>
+                <div class="form-group">
+                    <div class="time-inputs">
+                        <input type="time" placeholder="Start Time" class="time-input">
+                        <input type="time" placeholder="End Time" class="time-input">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="day-selection">
+                        <div class="weekday-buttons">
+                            <button class="weekday-btn" data-day="M">M</button>
+                            <button class="weekday-btn" data-day="T">T</button>
+                            <button class="weekday-btn" data-day="W">W</button>
+                            <button class="weekday-btn" data-day="R">R</button>
+                            <button class="weekday-btn" data-day="F">F</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="add-event-btn">Add Event</button>
+            </div>
+        `;
+        
+        sidebar.appendChild(eventsTab);
+    }
+    
+    // Create PrereqSearch tab content if not exists
+    if (!document.getElementById('PrereqSearch')) {
+        const prereqTab = document.createElement('div');
+        prereqTab.id = 'PrereqSearch';
+        prereqTab.className = 'tab-content';
+        
+        // Add prerequisite search form
+        prereqTab.innerHTML = `
+            <div class="prereq-search">
+                <div class="form-group">
+                    <input type="text" id="prereq-search-input" placeholder="Course Code (e.g., CPSC 121)">
+                </div>
+                <button id="search-prereq-btn" class="search-btn">Search Prerequisites</button>
+            </div>
+            <div id="prereq-results"></div>
+        `;
+        
+        sidebar.appendChild(prereqTab);
+    }
+}
+
+/**
+ * Switches between sidebar tabs
+ * @param {string} tabId - The ID of the tab to switch to
+ */
+function switchSidebarTab(tabId) {
+    // Deactivate all tabs
+    document.querySelectorAll('.sidebar-tabs a').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Hide all tab contents
+    document.querySelectorAll('.sidebar .tab-content').forEach(content => {
+        content.classList.remove('active');
+        content.style.display = 'none';
+    });
+    
+    // Activate the selected tab
+    const selectedTab = document.querySelector(`.sidebar-tabs a[data-tab="${tabId}"]`);
+    if (selectedTab) {
+        selectedTab.classList.add('active');
+    }
+    
+    // Show the selected tab content
+    const tabContent = document.getElementById(tabId);
+    if (tabContent) {
+        tabContent.classList.add('active');
+        tabContent.style.display = 'block';
+    }
+}
+
+// Function to handle the course search
+function fetchCourses() {
+    console.log('Fetching courses...');
+    const subjectInput = document.querySelector('#Courses input[placeholder="Subject"]');
+    const courseCodeInput = document.querySelector('#Courses input[placeholder="Course code"]');
+    const instructorInput = document.querySelector('#Courses input[placeholder="Instructor"]');
+    
+    // Get filter values
+    const criteria = {};
+    if (subjectInput && subjectInput.value.trim()) {
+        criteria.subject = subjectInput.value.trim().toUpperCase();
+    }
+    if (courseCodeInput && courseCodeInput.value.trim()) {
+        criteria.course_code = courseCodeInput.value.trim();
+    }
+    if (instructorInput && instructorInput.value.trim()) {
+        criteria.instructor = instructorInput.value.trim();
+    }
+    
+    // Show loading
+    const sectionsList = document.getElementById('sections-list');
+    if (sectionsList) {
+        sectionsList.innerHTML = '<div class="loading-indicator"><div class="spinner"></div><p>Loading courses...</p></div>';
+    }
+    
+    // First check if the backend is connected
+    checkBackendConnection()
+        .then(result => {
+            if (result.connected) {
+                // Backend is available, try to fetch real data
+                fetchSectionsFromBackend(criteria)
+                    .then(sections => {
+                        displaySections(sections);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching sections:', error);
+                        fallbackToMockData(criteria);
+                    });
+            } else {
+                // Backend is unavailable, use mock data immediately
+                console.log('Backend unavailable, using mock data');
+                fallbackToMockData(criteria);
+            }
+        });
+}
+
+function fetchSectionsFromBackend(criteria) {
+    // Construct query string for the API call
+    const queryParams = new URLSearchParams();
+    if (criteria.subject) queryParams.append('subject', criteria.subject);
+    if (criteria.course_code) queryParams.append('course_code', criteria.course_code);
+    if (criteria.instructor) queryParams.append('instructor', criteria.instructor);
+    
+    const url = `http://localhost:5001/sections_bp/search?${queryParams.toString()}`;
+    console.log('Fetching from:', url);
+    
+    return fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Fetched sections:', data);
+            return data.data || [];
+        });
+}
+
+function fallbackToMockData(criteria) {
+    console.log('Falling back to mock data with criteria:', criteria);
+    // Import the mock data generator if it exists
+    if (typeof generateMockSections === 'function') {
+        const mockSections = generateMockSections(criteria);
+        displaySections(mockSections);
+        
+        // Show notification about using mock data
+        if (typeof showNotification === 'function') {
+            showNotification('Using sample course data (backend unavailable)', 'info');
+        }
+            } else {
+        // If mock data generator is not available
+        import('./mockdata.js')
+            .then(module => {
+                if (typeof module.generateMockSections === 'function') {
+                    const mockSections = module.generateMockSections(criteria);
+                    displaySections(mockSections);
+                    
+                    if (typeof showNotification === 'function') {
+                        showNotification('Using sample course data (backend unavailable)', 'info');
+                    }
+                } else {
+                    displayConnectionError();
+            }
+        })
+        .catch(error => {
+                console.error('Error loading mock data:', error);
+                displayConnectionError();
+        });
+    }
+}
+
+function displayConnectionError() {
+    const sectionsList = document.getElementById('sections-list');
+    if (sectionsList) {
+        sectionsList.innerHTML = `
+            <div class="connection-error">
+                <h3>Connection Error</h3>
+                <p>Could not connect to the course database. The backend server may not be running.</p>
+                <button id="try-sample-data" class="btn">Load Sample Courses</button>
+            </div>
+        `;
+        
+        // Add event listener to the sample data button
+        document.getElementById('try-sample-data')?.addEventListener('click', () => {
+            const criteria = {};
+            // Try to get criteria from inputs
+            const subjectInput = document.querySelector('#Courses input[placeholder="Subject"]');
+            if (subjectInput && subjectInput.value.trim()) {
+                criteria.subject = subjectInput.value.trim().toUpperCase();
+            }
+            
+            fallbackToMockData(criteria);
+        });
+    }
+}
+
+// Make the function globally available
+window.fetchCourses = fetchCourses;
+
+// Function to add a section to the schedule
+function addSectionToSchedule(subject, courseCode, sectionNumber) {
+    console.log(`Adding ${subject} ${courseCode} section ${sectionNumber} to schedule`);
+    
+    // Find the section in the data
+    const sections = window.sectionsData || [];
+    const section = sections.find(s => 
+        s.subject === subject && 
+        s.course_code === courseCode && 
+        s.section_number === sectionNumber
+    );
+    
+    if (!section) {
+        console.error('Section not found in data');
+        alert('Error: Could not find section details');
+        return;
+    }
+    
     // Parse the schedule to get days and times
     const scheduleInfo = parseSchedule(section.schedule);
     if (!scheduleInfo) {
@@ -782,6 +1208,7 @@ function toggleDivisionButton(clickedButton, otherButton) {
 function checkBackendConnection() {
     console.log('Checking backend connection status...');
     
+    // Change from /health to an endpoint that actually exists in your backend
     return fetch('http://localhost:5001/user_bp/login', {
         method: 'OPTIONS', // Use OPTIONS instead of GET to avoid triggering authentication errors
         cache: 'no-cache'
@@ -819,41 +1246,41 @@ function addBackendStatusIndicator(coursesTab) {
                 statusElement.className = 'status-connected';
                 console.log('Backend connection established');
             } else {
-                statusElement.textContent = 'Disconnected';
+                statusElement.textContent = 'Disconnected (Using Sample Data)';
                 statusElement.className = 'status-disconnected';
-                console.log('Backend connection failed');
+                console.log('Using sample data due to backend connection failure');
                 
-                // Display a message about connection failure
-                const connectionMessage = document.createElement('div');
-                connectionMessage.className = 'connection-error-notice';
-                connectionMessage.innerHTML = `
-                    <p>Unable to connect to the backend server. Please ensure the server is running.</p>
+                // Display a message about using mock data
+                const mockMessage = document.createElement('div');
+                mockMessage.className = 'mock-data-notice';
+                mockMessage.innerHTML = `
+                    <p>The application is running with sample data. Course registration features will be limited.</p>
                     <button id="refresh-connection" class="btn">Refresh Connection</button>
                 `;
-                coursesTab.appendChild(connectionMessage);
+                coursesTab.appendChild(mockMessage);
                 
                 // Add refresh button functionality
                 document.getElementById('refresh-connection')?.addEventListener('click', () => {
                     statusElement.textContent = 'Reconnecting...';
                     statusElement.className = 'status-connecting';
-                    connectionMessage.style.display = 'none';
+                    mockMessage.style.display = 'none';
                     
                     checkBackendConnection()
                         .then(newResult => {
                             if (newResult.connected) {
-                                statusElement.textContent = 'Connected';
+                statusElement.textContent = 'Connected';
                                 statusElement.className = 'status-connected';
                                 // Show success toast
                                 if (typeof showNotification === 'function') {
                                     showNotification('Successfully connected to the backend server', 'success');
                                 }
             } else {
-                                statusElement.textContent = 'Disconnected';
+                                statusElement.textContent = 'Disconnected (Using Sample Data)';
                                 statusElement.className = 'status-disconnected';
-                                connectionMessage.style.display = 'block';
+                                mockMessage.style.display = 'block';
                                 // Show error toast
                                 if (typeof showNotification === 'function') {
-                                    showNotification('Still unable to connect to the backend server.', 'error');
+                                    showNotification('Still unable to connect to the backend. Using sample data.', 'error');
                                 }
                             }
                         });
@@ -870,31 +1297,21 @@ function applyDirectAutocomplete() {
     const subjects = ["ACCT", "ADMN", "AERO", "AMST", "ANTH", "AORT", "ARAB", "ARTA", "ASTR", "BADM", "BIOE", "BIOL", "BLOC", "BMIS", "BMM", "BRCT", "BUSN", "CATH", "CHEM", "CHIN", "CLAS", "CMCN", "COGS", "COML", "COMM", "COSC", "CPSC", "CRJS", "CSCI", "DANC", "DAUS", "DATA", "DEBG", "ECON", "EDCE", "EDDI", "EDEL", "EDPE", "EDSP", "EDTE", "EDUC", "EECE", "EGNR", "ELED", "ELTD", "ENGL", "ENVS", "ETHN", "ETRM", "EURO", "EXSC", "FACE", "FILM", "FINA", "FREN", "GEOG", "GEOL", "GERM", "GLOB", "GNBH", "GREK", "GRGC", "GUWC", "HEAL", "HIST", "HONS", "HPHY", "HRMT", "IBUS", "INST", "INTE", "IRPS", "ITAL", "ITEC", "JAPN", "JOUR", "KORN", "LACE", "LATN", "LAW", "LBUS", "LIBR", "LSCI", "MAIC", "MATH", "MBA", "METL", "MFAT", "MFIN", "MGMT", "MILS", "MKTG", "MSBA", "MSCR", "MSIN", "MTAX", "MUSC", "NTAS", "NURS", "OPER", "PJMN", "PHIL", "PHYS", "POLS", "PRLS", "PSYC", "RELI", "SOCI", "SPAN", "SPED", "SPMT", "THEA", "UNIV", "WGST"];
     const courses = ["100", "101", "102", "110", "121", "122", "200", "201", "202", "211", "212", "221", "223", "224", "260", "300", "301", "302", "310", "311", "312", "320", "321", "322", "323", "324", "325", "330", "331", "332", "340", "341", "342", "350", "351", "352", "360", "361", "362", "400", "401", "402", "410", "411", "412", "420", "421", "422", "430", "431", "432", "440", "441", "442", "450", "451", "452", "460", "461", "462", "470", "471", "472", "480", "481", "482", "490", "491", "492", "499"];
     const instructors = ["Smith, John", "Johnson, Sarah", "Robert Johnson", "Emily Davis", "Michael Brown"];
-    const attributes = ["Core Curriculum", "Writing Intensive", "Service Learning", "Global Studies", "Social Justice", "Fine Arts"];
-    const campuses = ["Main Campus", "Downtown", "Extension Center", "Online"];
-    const methods = ["In Person", "Online", "Hybrid", "Field Study", "Independent Study"];
 
     // First, let's inject the CSS directly into the document to ensure styles are applied
     injectAutocompleteStyles();
     
     // Select all search inputs in the course tab
-    const subjectInput = document.querySelector('#subject-input');
-    const courseInput = document.querySelector('#course-code-input');
-    const attributesInput = document.querySelector('#attributes-input');
-    const instructorInput = document.querySelector('#instructor-input');
-    const campusInput = document.querySelector('#campus-input');
-    const methodsInput = document.querySelector('#methods-input');
+    const subjectInput = document.querySelector('#Courses input[placeholder="Subject"]');
+    const courseInput = document.querySelector('#Courses input[placeholder="Course code"]');
+    const instructorInput = document.querySelector('#Courses input[placeholder="Instructor"]');
     
     console.log("Found inputs:", { 
         subject: subjectInput,
-        course: courseInput,
-        attributes: attributesInput,
-        instructor: instructorInput,
-        campus: campusInput,
-        methods: methodsInput
+        course: courseInput, 
+        instructor: instructorInput 
     });
     
-    // Create dropdowns for each input
     if (subjectInput) {
         createDirectDropdown(subjectInput, 'subject-dropdown', subjects);
     }
@@ -903,20 +1320,8 @@ function applyDirectAutocomplete() {
         createDirectDropdown(courseInput, 'course-dropdown', courses);
     }
     
-    if (attributesInput) {
-        createDirectDropdown(attributesInput, 'attributes-dropdown', attributes);
-    }
-    
     if (instructorInput) {
         createDirectDropdown(instructorInput, 'instructor-dropdown', instructors);
-    }
-    
-    if (campusInput) {
-        createDirectDropdown(campusInput, 'campus-dropdown', campuses);
-    }
-    
-    if (methodsInput) {
-        createDirectDropdown(methodsInput, 'methods-dropdown', methods);
     }
 }
 
@@ -1165,7 +1570,7 @@ function injectAutocompleteStyles() {
 }
 
 function initializeFormHandlers() {
-    // Course search form - get elements and check if they exist
+    // Course search form
     const subjectInput = document.getElementById('course-subject');
     const courseCodeInput = document.getElementById('course-code');
     const instructorInput = document.getElementById('course-instructor');
@@ -1186,80 +1591,68 @@ function initializeFormHandlers() {
     const dayButtons = document.querySelectorAll('.day-button');
     let selectedDays = [];
     
-    // Initialize division buttons - check if elements exist first
-    if (undergradBtn && gradBtn) {
-        undergradBtn.addEventListener('click', () => {
-            undergradBtn.classList.add('active');
-            gradBtn.classList.remove('active');
-            currentDivision = 'undergrad';
-        });
-        
-        gradBtn.addEventListener('click', () => {
-            gradBtn.classList.add('active');
-            undergradBtn.classList.remove('active');
-            currentDivision = 'grad';
-        });
-    }
+    // Initialize division buttons
+    undergradBtn.addEventListener('click', () => {
+        undergradBtn.classList.add('active');
+        gradBtn.classList.remove('active');
+        currentDivision = 'undergrad';
+    });
     
-    // Initialize day selection - check if elements exist
-    if (dayButtons && dayButtons.length > 0) {
-        dayButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                button.classList.toggle('selected');
-                const day = button.getAttribute('data-day');
-                
-                if (button.classList.contains('selected')) {
-                    selectedDays.push(day);
-                } else {
-                    selectedDays = selectedDays.filter(d => d !== day);
-                }
-            });
-        });
-    }
+    gradBtn.addEventListener('click', () => {
+        gradBtn.classList.add('active');
+        undergradBtn.classList.remove('active');
+        currentDivision = 'grad';
+    });
     
-    // Initialize autocomplete for subjects - check if element exists
-    if (subjectInput) {
-        initializeAutocomplete(subjectInput, getSubjects);
-    }
-    
-    // Initialize autocomplete for instructors - check if element exists
-    if (instructorInput) {
-        initializeAutocomplete(instructorInput, getInstructors);
-    }
-    
-    // Search button event - check if element exists
-    if (searchButton) {
-        searchButton.addEventListener('click', () => {
-            const searchParams = {
-                subject: subjectInput ? subjectInput.value : '',
-                courseCode: courseCodeInput ? courseCodeInput.value : '',
-                instructor: instructorInput ? instructorInput.value : '',
-                division: currentDivision,
-                days: selectedDays
-            };
+    // Initialize day selection
+    dayButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            button.classList.toggle('selected');
+            const day = button.getAttribute('data-day');
             
-            searchCourses(searchParams);
-        });
-    }
-    
-    // Add personal event button - check if element exists
-    if (addEventButton && eventNameInput && startTimeInput && endTimeInput) {
-        addEventButton.addEventListener('click', () => {
-            const eventData = {
-                name: eventNameInput.value,
-                startTime: startTimeInput.value,
-                endTime: endTimeInput.value,
-                days: selectedDays
-            };
-            
-            if (validateEventData(eventData)) {
-                addPersonalEvent(eventData);
-                clearEventForm();
-            } else {
-                showNotification('Please fill in all event fields and select at least one day', 'error');
+            if (button.classList.contains('selected')) {
+                selectedDays.push(day);
+    } else {
+                selectedDays = selectedDays.filter(d => d !== day);
             }
         });
-    }
+    });
+    
+    // Initialize autocomplete for subjects
+    initializeAutocomplete(subjectInput, getSubjects);
+    
+    // Initialize autocomplete for instructors
+    initializeAutocomplete(instructorInput, getInstructors);
+    
+    // Search button event
+    searchButton.addEventListener('click', () => {
+        const searchParams = {
+            subject: subjectInput.value,
+            courseCode: courseCodeInput.value,
+            instructor: instructorInput.value,
+            division: currentDivision,
+            days: selectedDays
+        };
+        
+        searchCourses(searchParams);
+    });
+    
+    // Add personal event button
+    addEventButton.addEventListener('click', () => {
+        const eventData = {
+            name: eventNameInput.value,
+            startTime: startTimeInput.value,
+            endTime: endTimeInput.value,
+            days: selectedDays
+        };
+        
+        if (validateEventData(eventData)) {
+            addPersonalEvent(eventData);
+            clearEventForm();
+        } else {
+            showNotification('Please fill in all event fields and select at least one day', 'error');
+        }
+    });
 }
 
 function initializeAutocomplete(inputElement, dataFetchFunction) {
@@ -1388,40 +1781,57 @@ function getInstructors(query) {
 }
 
 function searchCourses(params) {
-    // This function should now make actual API calls
+    // This would typically make an API call to fetch course data
     console.log('Searching courses with params:', params);
     
     // For now, just update the UI with a message
     const resultsContainer = document.querySelector('.search-results');
     
-    if (!params.subject && !params.courseCode && !params.instructor && 
-        !params.attributes && !params.campus && !params.methods && !params.division) {
+    if (!params.subject && !params.courseCode && !params.instructor) {
         resultsContainer.innerHTML = '<div class="no-results-message">Please enter search criteria</div>';
         return;
     }
     
-    // Construct criteria object for the backend
-    const criteria = {};
-    if (params.subject) criteria.subject = params.subject;
-    if (params.courseCode) criteria.course_code = params.courseCode;
-    if (params.attributes) criteria.attributes = params.attributes;
-    if (params.instructor) criteria.instructor = params.instructor;
-    if (params.campus) criteria.campus = params.campus;
-    if (params.methods) criteria.methods = params.methods;
-    if (params.division) criteria.division = params.division;
-    
-    // Start loading
-    resultsContainer.innerHTML = '<div class="loading-indicator"><div class="spinner"></div><p>Searching courses...</p></div>';
-    
-    // Call the fetch function
-    fetchSectionsFromBackend(criteria)
-        .then(sections => {
-            displaySections(sections);
-        })
-        .catch(error => {
-            console.error('Error fetching courses:', error);
-            resultsContainer.innerHTML = '<div class="error-message">Failed to fetch courses. Please try again later.</div>';
-        });
+    // Mock results for demonstration
+    resultsContainer.innerHTML = `
+        <div class="search-results-message">Found 3 courses matching your criteria</div>
+        <div class="course-item" draggable="true">
+            <div class="course-header">
+                <h3>CPSC 110</h3>
+                <span class="course-credits">4 credits</span>
+            </div>
+            <p class="course-title">Computation, Programs, and Programming</p>
+            <div class="course-details">
+                <span class="course-instructor">John Smith</span>
+                <span class="course-time">MWF 10:00-11:00</span>
+            </div>
+        </div>
+        <div class="course-item" draggable="true">
+            <div class="course-header">
+                <h3>CPSC 121</h3>
+                <span class="course-credits">4 credits</span>
+            </div>
+            <p class="course-title">Models of Computation</p>
+            <div class="course-details">
+                <span class="course-instructor">Jane Doe</span>
+                <span class="course-time">TTh 14:00-15:30</span>
+            </div>
+        </div>
+        <div class="course-item" draggable="true">
+            <div class="course-header">
+                <h3>CPSC 210</h3>
+                <span class="course-credits">4 credits</span>
+            </div>
+            <p class="course-title">Software Construction</p>
+            <div class="course-details">
+                <span class="course-instructor">Robert Johnson</span>
+                <span class="course-time">MWF 13:00-14:00</span>
+            </div>
+                    </div>
+                `;
+                
+    // Initialize drag and drop for the course items
+    initializeDragAndDrop();
 }
 
 function validateEventData(eventData) {
@@ -1437,14 +1847,9 @@ function addPersonalEvent(eventData) {
 }
 
 function clearEventForm() {
-    const eventNameInput = document.getElementById('event-name');
-    const startTimeInput = document.getElementById('event-start-time');
-    const endTimeInput = document.getElementById('event-end-time');
-    
-    // Check if elements exist before manipulating them
-    if (eventNameInput) eventNameInput.value = '';
-    if (startTimeInput) startTimeInput.value = '';
-    if (endTimeInput) endTimeInput.value = '';
+    document.getElementById('event-name').value = '';
+    document.getElementById('event-start-time').value = '';
+    document.getElementById('event-end-time').value = '';
     
     // Deselect all day buttons
     document.querySelectorAll('.day-button.selected').forEach(btn => {
@@ -1523,8 +1928,7 @@ function initializeDragAndDrop() {
 // Initialize the form handlers when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     createRegistrationSidebar();
-    // Wait a bit to ensure elements are created before initializing form handlers
-    setTimeout(initializeFormHandlers, 500);
+    initializeFormHandlers();
 });
 
 /**

@@ -160,38 +160,36 @@
             
             <div id="CourseSearch" class="tab-content active" style="display: block;">
                 <div class="search-section">
-                    <h2>Course Search</h2>
                     <div class="search-form">
                         <div class="form-group">
-                            <label for="course-subject">Subject</label>
-                            <input type="text" id="course-subject" placeholder="e.g. Computer Science">
+                            <input type="text" id="course-subject" placeholder="Subject">
                         </div>
                         <div class="form-group">
-                            <label for="course-code">Course Code</label>
-                            <input type="text" id="course-code" placeholder="e.g. 110">
+                            <input type="text" id="course-code" placeholder="Course code">
                         </div>
+                        
+                        <div class="division-buttons" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <button id="lower-division-btn" class="division-button" style="flex: 1; background-color: #f8f9fa; color: #495057; border: 1px solid #dee2e6;">Lower Division</button>
+                            <button id="upper-division-btn" class="division-button" style="flex: 1; background-color: #f8f9fa; color: #495057; border: 1px solid #dee2e6;">Upper Division</button>
+                        </div>
+                        
                         <div class="form-group">
-                            <label for="course-instructor">Instructor</label>
-                            <input type="text" id="course-instructor" placeholder="e.g. John Smith">
+                            <input type="text" id="course-attributes" placeholder="Attributes">
                         </div>
                         
-                        <div class="division-buttons">
-                            <button id="undergrad-btn" class="division-button active">Undergraduate</button>
-                            <button id="grad-btn" class="division-button">Graduate</button>
+                        <div class="form-group">
+                            <input type="text" id="course-instructor" placeholder="Instructor">
                         </div>
                         
-                        <div class="day-selection">
-                            <label>Days of Week</label>
-                            <div class="day-buttons">
-                                <button class="day-button" data-day="M">M</button>
-                                <button class="day-button" data-day="T">T</button>
-                                <button class="day-button" data-day="W">W</button>
-                                <button class="day-button" data-day="T">T</button>
-                                <button class="day-button" data-day="F">F</button>
-                            </div>
+                        <div class="form-group">
+                            <input type="text" id="course-campus" placeholder="Campus">
                         </div>
                         
-                        <button class="search-btn">Search Courses</button>
+                        <div class="form-group">
+                            <input type="text" id="course-methods" placeholder="Instructional Methods">
+                        </div>
+                        
+                        <button class="search-btn" style="margin-top: 20px;">Search Courses</button>
                     </div>
                 </div>
                 
