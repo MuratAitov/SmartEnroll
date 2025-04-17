@@ -7,3 +7,4 @@ my_app/back-end/services/credentials.py
 
 back-end/graph/credentials.py
 /my_app/back-end/services/__pycache__
+data/credentials.py
